@@ -1,0 +1,18 @@
+{
+	"xhtml-table-caption-insert": {
+		"label": "t__Add caption",
+		"description": "t__Add a caption to this table.",
+		"steps": [
+			{
+				"type": "operation/horizontal-insert",
+				"data": {
+					"childNodeStructure": [
+						"caption",
+						[{ "bindTo": "selection", "empty": true }]
+					],
+					"contextNodeId": "{{contextNodeId}}"
+				}
+			}
+		]
+	}
+}

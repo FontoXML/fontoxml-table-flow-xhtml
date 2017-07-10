@@ -1,0 +1,146 @@
+{
+	"xhtml-set-cell-horizontal-alignment-left": {
+		"label": "t__Align left",
+		"description": "t__Align the content of the current cell to its left.",
+		"icon": "align-left",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": ["td", "th"]
+				}
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "left"
+					}
+				}
+			}
+		]
+	},
+	"xhtml-set-cell-horizontal-alignment-right": {
+		"label": "t__Align right",
+		"description": "t__Align the content of the current cell to its right.",
+		"icon": "align-right",
+		"steps":  [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": ["td", "th"]
+				}
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "right"
+					}
+				}
+			}
+		]
+	},
+	"xhtml-set-cell-horizontal-alignment-center": {
+		"label": "t__Align center",
+		"description": "t__Center the content of the current cell.",
+		"icon": "align-center",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": ["td", "th"]
+				}
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "center"
+					}
+				}
+			}
+		]
+	},
+	"xhtml-set-cell-horizontal-alignment-justify": {
+		"label": "t__Justify",
+		"description": "t__Justify the content of the current cell.",
+		"icon": "align-justify",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": ["td", "th"]
+				}
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "justify"
+					}
+				}
+			}
+		]
+	},
+	"xhtml-set-cell-vertical-alignment-top": {
+		"label": "t__Align top",
+		"description": "t__Align the content of the current cell to its top.",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": ["td", "th"]
+				}
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "top"
+					}
+				}
+			}
+		]
+	},
+	"xhtml-set-cell-vertical-alignment-bottom": {
+		"label": "t__Align bottom",
+		"description": "t__Align the content of the current cell to its bottom.",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": ["td", "th"]
+				}
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "bottom"
+					}
+				}
+			}
+		]
+	},
+	"xhtml-set-cell-vertical-alignment-center": {
+		"label": "t__Align center",
+		"description": "t__Center the content of the current cell.",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": ["td", "th"]
+				}
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "middle"
+					}
+				}
+			}
+		]
+	}
+}

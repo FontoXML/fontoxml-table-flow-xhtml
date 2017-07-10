@@ -1,0 +1,46 @@
+{
+	"xhtml-table-insert": {
+		"label": "t__Table",
+		"description": "t__Insert a table.",
+		"icon": "table",
+		"initialData": {
+			"childNodeStructure": [
+				"table"
+			],
+			"rows": 1,
+			"columns": 1
+		},
+		"getStateSteps": [
+			{
+				"type": "command/table-insert"
+			}
+		],
+		"steps": [
+			{
+				"type": "command/table-insert"
+			},
+			{
+				"type": "operation/set-cursor-to-first-text-position",
+				"data": {
+					"contextNodeId": "{{tableNodeId}}"
+				}
+			}
+		]
+	},
+	"xhtml-table-delete": {
+		"label": "t__Remove table",
+		"description": "t__Remove the current table from the document.",
+		"icon": "times",
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorNodeSpec": "self::table"
+				}
+			},
+			{
+				"type": "operation/table-contextual-delete"
+			}
+		]
+	}
+}
