@@ -1,7 +1,7 @@
 import blueprints from 'fontoxml-blueprints';
 import core from 'fontoxml-core';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
-import TableStructureManager from 'fontoxml-table-flow/TableStructureManager';
+import tableStructureManager from 'fontoxml-table-flow/tableStructureManager';
 import * as slimdom from 'slimdom';
 
 import buildGridModel from 'fontoxml-table-flow-xhtml/tableStructure/buildGridModel';
@@ -24,7 +24,7 @@ describe('buildGridModel()', () => {
 		blueprint = new Blueprint(coreDocument.dom);
 		xhtmlTableStructure = new XhtmlTableStructure({});
 
-		TableStructureManager.addTableStructure(xhtmlTableStructure);
+		tableStructureManager.addTableStructure(xhtmlTableStructure);
 	});
 
 	it('can build a gridModel from a basic XHTML table', () => {

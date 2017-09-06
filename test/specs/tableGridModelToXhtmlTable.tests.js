@@ -2,7 +2,7 @@ import blueprints from 'fontoxml-blueprints';
 import core from 'fontoxml-core';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
 import tableFlow from 'fontoxml-table-flow';
-import TableStructureManager from 'fontoxml-table-flow/TableStructureManager';
+import tableStructureManager from 'fontoxml-table-flow/tableStructureManager';
 import * as slimdom from 'slimdom';
 
 import createDefaultRowSpec from 'fontoxml-table-flow-xhtml/tableStructure/specs/createDefaultRowSpec';
@@ -42,7 +42,7 @@ describe('tableGridModelToXhtmlTable', () => {
 		tableNode = documentNode.createElement('table');
 
 		xhtmlTableStructure = new XhtmlTableStructure({});
-		TableStructureManager.addTableStructure(xhtmlTableStructure);
+		tableStructureManager.addTableStructure(xhtmlTableStructure);
 
 		coreDocument.dom.mutate(() => {
 			// tableNode.appendChild(tbodyNode);

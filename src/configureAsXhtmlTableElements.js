@@ -5,7 +5,7 @@ define([
 	'fontoxml-families/configureAsStructure',
 	'fontoxml-families/configureAsTable',
 	'fontoxml-table-flow/TableValidator',
-	'fontoxml-table-flow/TableStructureManager',
+	'fontoxml-table-flow/tableStructureManager',
 
 	'./templates/CellTemplate',
 	'./templates/TableTemplate',
