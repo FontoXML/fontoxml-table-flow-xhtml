@@ -92,10 +92,10 @@ define([
 		builder.model.borders = evaluateXPathToBoolean('./@border = "1"', table, blueprint);
 
 		// var rowElements = evaluateXPathToNodes('./' + tableStructure.selectorParts.tr, table, blueprint);
-		var rowElements = evaluateXPathToNodes('./' + tableStructure.selectorParts.row +
-				' | ./' + tableStructure.selectorParts.thead + '/' + tableStructure.selectorParts.row +
-				' | ./' + tableStructure.selectorParts.tbody + '/' + tableStructure.selectorParts.row +
-				' | ./' + tableStructure.selectorParts.tfoot + '/' + tableStructure.selectorParts.row
+		var rowElements = evaluateXPathToNodes('./' + tableStructure.selectorParts.tr +
+				' | ./' + tableStructure.selectorParts.thead + '/' + tableStructure.selectorParts.tr +
+				' | ./' + tableStructure.selectorParts.tbody + '/' + tableStructure.selectorParts.tr +
+				' | ./' + tableStructure.selectorParts.tfoot + '/' + tableStructure.selectorParts.tr
 				, table, blueprint);
 
 		var columnInfo = parseDefaultColumnInfo(tableStructure, table, blueprint),
@@ -112,11 +112,9 @@ define([
 			builder.newRow();
 
 			var tableCellElements = evaluateXPathToNodes(
-				'./*[self::' +
-				tableStructure.selectorParts.td +
-				' or self::' +
-				tableStructure.selectorParts.th +
-				']', rowElements[row], blueprint);
+				'child::' + tableStructure.selectorParts.td + ' | child::' + tableStructure.selectorParts.th,
+				rowElements[row],
+				blueprint);
 
 			if (tableCellElements.some(function (cellElement) {
 					return evaluateXPathToBoolean('self::' + tableStructure.selectorParts.th, cellElement, blueprint);
