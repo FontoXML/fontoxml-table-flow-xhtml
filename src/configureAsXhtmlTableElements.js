@@ -44,7 +44,7 @@ define([
 		var priority = options.priority;
 
 		// Table (table)
-		var tableSelector = 'self::' + tableStructure.namespacedSelectorParts.table;
+		var tableSelector = 'self::' + tableStructure.selectorParts.table;
 		configureAsTable(sxModule, tableSelector, undefined, {});
 
 		sxModule.configure('fontoxml-templated-views').stylesheet('content')
@@ -52,19 +52,19 @@ define([
 				.withTemplate(new TableTemplate());
 
 		// Title (caption)
-		var captionSelector = 'self::' + tableStructure.namespacedSelectorParts.caption;
+		var captionSelector = 'self::' + tableStructure.selectorParts.caption;
 		configureAsBlock(sxModule, captionSelector, undefined, {});
 
 		// Column group (colgroup)
-		var colgroupSelector = 'self::' + tableStructure.namespacedSelectorParts.colgroup;
+		var colgroupSelector = 'self::' + tableStructure.selectorParts.colgroup;
 		configureAsRemoved(sxModule, colgroupSelector, undefined);
 
 		// Column (col)
-		var colSelector = 'self::' + tableStructure.namespacedSelectorParts.col;
+		var colSelector = 'self::' + tableStructure.selectorParts.col;
 		configureAsRemoved(sxModule, colSelector, undefined);
 
 		// Row (tr)
-		var trSelector = 'self::' + tableStructure.namespacedSelectorParts.tr;
+		var trSelector = 'self::' + tableStructure.selectorParts.tr;
 		configureAsStructure(sxModule, trSelector, undefined, {});
 
 		sxModule.configure('fontoxml-templated-views').stylesheet('content')
@@ -72,7 +72,7 @@ define([
 				.asSingleElement('tr');
 
 		// Cell (td)
-		var tdSelector = 'self::' + tableStructure.namespacedSelectorParts.td;
+		var tdSelector = 'self::' + tableStructure.selectorParts.td;
 		configureAsFrameWithBlock(sxModule, tdSelector, undefined, {});
 
 		sxModule.configure('fontoxml-templated-views').stylesheet('content')
@@ -80,7 +80,7 @@ define([
 				.withTemplate(new CellTemplate());
 
 		// Header Cell (th)
-		var thSelector = 'self::' + tableStructure.namespacedSelectorParts.th;
+		var thSelector = 'self::' + tableStructure.selectorParts.th;
 		configureAsFrameWithBlock(sxModule, thSelector, undefined, {});
 
 		sxModule.configure('fontoxml-templated-views').stylesheet('content')

@@ -3,14 +3,12 @@ define([
 	'fontoxml-dom-identification/getNodeId',
 	'fontoxml-dom-namespaces/namespaceManager',
 	'fontoxml-selectors/evaluateXPathToBoolean',
-	'fontoxml-selectors/evaluateXPathToFirstNode',
 	'fontoxml-selectors/evaluateXPathToNodes'
 ], function (
 	blueprints,
 	getNodeId,
 	namespaceManager,
 	evaluateXPathToBoolean,
-	evaluateXPathToFirstNode,
 	evaluateXPathToNodes
 ) {
 	'use strict';
@@ -24,18 +22,27 @@ define([
 	}
 
 	function convertCellElement (elementNameToConvertTo, namespaceUri, blueprint, tableCellElement) {
-		var newElement = namespaceManager.createElementNS(tableCellElement.ownerDocument, namespaceUri, elementNameToConvertTo),
-			parentNode = evaluateXPathToFirstNode('./parent::*', tableCellElement, blueprint);
+		var newElement = namespaceManager.createElementNS(tableCellElement.ownerDocument, namespaceUri, elementNameToConvertTo);
 
-		if (!parentNode) {
-			return false;
+		// Use unsafeMoveNodes to prevent selections
+		if (blueprint.getFirstChild(tableCellElement)) {
+			unsafeMoveNodes(
+				blueprint.getFirstChild(tableCellElement),
+				blueprint.getLastChild(tableCellElement),
+				blueprint,
+				newElement,
+				null,
+				true);
+		}
+		// When there are no child nodes, there should be only one position
+		else {
+			blueprint.movePosition(tableCellElement, 0, newElement, 0);
 		}
 
-		blueprint.replaceChild(parentNode, newElement, tableCellElement);
-
-		evaluateXPathToNodes('./child::*', tableCellElement, blueprint).forEach(function (child) {
-			blueprint.appendChild(newElement, child);
-		});
+		var parentNode = blueprint.getParentNode(tableCellElement);
+		if (parentNode) {
+			blueprint.replaceChild(parentNode, newElement, tableCellElement);
+		}
 
 		return newElement;
 	}
@@ -55,7 +62,7 @@ define([
 
 		// Get the already existing rows in the table
 		var bodyRows = evaluateXPathToNodes(
-				'//' + tableStructure.selectorParts.tr +
+				'descendant::' + tableStructure.selectorParts.tr +
 				'[not(parent::' + tableStructure.selectorParts.thead +
 				') and not(parent::' + tableStructure.selectorParts.tfoot + ')]', tableNode, blueprint);
 
@@ -126,10 +133,6 @@ define([
 				}
 
 				var tableCellElement = tableCell.element;
-
-				if (!tableCellElement.parent) {
-					blueprint.appendChild(row, tableCellElement);
-				}
 
 				if (tableCell.origin.row <= tableGridModel.getLowestHeaderRowIndex() &&
 						evaluateXPathToBoolean('self::' + tableStructure.selectorParts.td, tableCellElement, blueprint)) {

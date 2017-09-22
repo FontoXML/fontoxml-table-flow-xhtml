@@ -145,4 +145,61 @@ describe('tableGridModelToXhtmlTable', () => {
 				]
 			]);
 	});
+
+	it('moves the selection over to new <th> elements with an empty original <td>', () => {
+		const tableGridModel = createTable(4, 4, true, documentNode);
+
+		const cellWithSelection = tableGridModel.getCellAtCoordinates(0, 0);
+		const cellElement = cellWithSelection.element;
+
+		const positionId = blueprint.registerPosition(cellElement, 0, false);
+
+		const success = tableGridModelToXhtmlTable(xhtmlTableStructure, tableGridModel, tableNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
+
+		blueprint.realize();
+		const position = blueprint.getPosition(positionId);
+		chai.assert.deepEqual(position.container, tableNode.firstChild.firstChild);
+		chai.assert.equal(position.offset, 0);
+	});
+
+	it('moves the selection over to new <th> elements with nodes inside the original <td>', () => {
+		const tableGridModel = createTable(4, 4, true, documentNode);
+
+		const cellWithSelection = tableGridModel.getCellAtCoordinates(0, 0);
+		const cellElement = cellWithSelection.element;
+		blueprint.appendChild(cellElement, documentNode.createTextNode('bla'));
+
+		const positionId = blueprint.registerPosition(cellElement, 0, false);
+
+		const success = tableGridModelToXhtmlTable(xhtmlTableStructure, tableGridModel, tableNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
+
+		blueprint.realize();
+		const position = blueprint.getPosition(positionId);
+		chai.assert.deepEqual(position.container, tableNode.firstChild.firstChild);
+		chai.assert.equal(position.offset, 0);
+	});
+
+	it('moves the non-collapsed selection over to new <th> elements with nodes inside the original <td>', () => {
+		const tableGridModel = createTable(4, 4, true, documentNode);
+
+		const cellWithSelection = tableGridModel.getCellAtCoordinates(0, 0);
+		const cellElement = cellWithSelection.element;
+		blueprint.appendChild(cellElement, documentNode.createTextNode('bla'));
+
+		const startPositionId = blueprint.registerPosition(cellElement, 0, false);
+		const endPositionId = blueprint.registerPosition(cellElement, 1, false);
+
+		const success = tableGridModelToXhtmlTable(xhtmlTableStructure, tableGridModel, tableNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
+
+		blueprint.realize();
+		const startPosition = blueprint.getPosition(startPositionId);
+		const endPosition = blueprint.getPosition(endPositionId);
+		chai.assert.deepEqual(startPosition.container, tableNode.firstChild.firstChild);
+		chai.assert.equal(startPosition.offset, 0);
+		chai.assert.deepEqual(endPosition.container, tableNode.firstChild.firstChild);
+		chai.assert.equal(endPosition.offset, 1);
+	});
 });
