@@ -1,5 +1,21 @@
 {
 	"xhtml-table-insert": {
+		"__documentation": {
+			"summary": "Insert an XHTML table",
+			"fontosdk": true,
+			"params": [
+				{
+					"name": "[rows=1]",
+					"type": "number",
+					"description": "The number of rows to create for the new table"
+				},
+				{
+					"name": "[columns=1]",
+					"type": "number",
+					"description": "The number of columns to create for the new table"
+				}
+			]
+		},
 		"label": "t__Table",
 		"description": "t__Insert a table.",
 		"icon": "table",
@@ -28,6 +44,10 @@
 		]
 	},
 	"xhtml-table-delete": {
+		"__documentation": {
+			"summary": "Remove the XHTML table containing the cursor from the document",
+			"fontosdk": true
+		},
 		"label": "t__Remove table",
 		"description": "t__Remove the current table from the document.",
 		"icon": "times",
