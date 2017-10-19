@@ -28,6 +28,12 @@ define([
 	'use strict';
 
 	/**
+	 * Configure XHTML tables.
+	 *
+	 * @fontosdk
+	 *
+	 * @category add-on/fontoxml-table-flow-xhtml
+	 *
 	 * @param  {Object}  sxModule
 	 * @param  {Object}  [options]
 	 * @param  {number}  [options.priority]               Selector priority for all elements configured by this function

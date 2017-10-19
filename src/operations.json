@@ -2,6 +2,7 @@
 	"xhtml-table-insert": {
 		"__documentation": {
 			"summary": "Insert an XHTML table",
+			"category": "add-on/fontoxml-table-flow-xhtml",
 			"fontosdk": true,
 			"params": [
 				{
@@ -40,26 +41,6 @@
 				"data": {
 					"contextNodeId": "{{tableNodeId}}"
 				}
-			}
-		]
-	},
-	"xhtml-table-delete": {
-		"__documentation": {
-			"summary": "Remove the XHTML table containing the cursor from the document",
-			"fontosdk": true
-		},
-		"label": "t__Remove table",
-		"description": "t__Remove the current table from the document.",
-		"icon": "times",
-		"steps": [
-			{
-				"type": "transform/setContextNodeIdToSelectionAncestor",
-				"data": {
-					"selectionAncestorNodeSpec": "self::table"
-				}
-			},
-			{
-				"type": "operation/table-contextual-delete"
 			}
 		]
 	}

@@ -1,5 +1,7 @@
-FontoXML/table-flow-xhtml
-------------------------
-Provides a XHTML-specific implementation of the generic table-flow package.
+category: add-on/fontoxml-table-flow-xhtml
 
-This packages exposes a single configureAsXhtmlTableElements function for configuring XHTML table elements.
+# XHTML tables (fontoxml-table-flow-xhtml)
+
+Provide support for XHTML compatible tables.
+
+This packages exposes a single {@link configureAsXhtmlTableElements} function for configuring XHTML table elements.
