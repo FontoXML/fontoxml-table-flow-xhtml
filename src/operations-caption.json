@@ -1,5 +1,17 @@
 {
 	"xhtml-table-caption-insert": {
+		"__documentation": {
+			"summary": "Add a caption to the XHTML table",
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml",
+			"params": [
+				{
+					"name": "contextNodeId",
+					"type": "NodeId",
+					"description": "The node ID of the table to add the caption to"
+				}
+			]
+		},
 		"label": "t__Add caption",
 		"description": "t__Add a caption to this table.",
 		"steps": [

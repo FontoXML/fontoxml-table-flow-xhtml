@@ -1,5 +1,9 @@
 {
 	"xhtml-set-cell-horizontal-alignment-left": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
 		"label": "t__Align left",
 		"description": "t__Align the content of the current cell to its left.",
 		"icon": "align-left",
@@ -21,6 +25,10 @@
 		]
 	},
 	"xhtml-set-cell-horizontal-alignment-right": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
 		"label": "t__Align right",
 		"description": "t__Align the content of the current cell to its right.",
 		"icon": "align-right",
@@ -42,6 +50,10 @@
 		]
 	},
 	"xhtml-set-cell-horizontal-alignment-center": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
 		"label": "t__Align center",
 		"description": "t__Center the content of the current cell.",
 		"icon": "align-center",
@@ -63,6 +75,10 @@
 		]
 	},
 	"xhtml-set-cell-horizontal-alignment-justify": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
 		"label": "t__Justify",
 		"description": "t__Justify the content of the current cell.",
 		"icon": "align-justify",
@@ -84,6 +100,10 @@
 		]
 	},
 	"xhtml-set-cell-vertical-alignment-top": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
 		"label": "t__Align top",
 		"description": "t__Align the content of the current cell to its top.",
 		"steps": [
@@ -104,6 +124,10 @@
 		]
 	},
 	"xhtml-set-cell-vertical-alignment-bottom": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
 		"label": "t__Align bottom",
 		"description": "t__Align the content of the current cell to its bottom.",
 		"steps": [
@@ -124,6 +148,10 @@
 		]
 	},
 	"xhtml-set-cell-vertical-alignment-center": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
 		"label": "t__Align center",
 		"description": "t__Center the content of the current cell.",
 		"steps": [
