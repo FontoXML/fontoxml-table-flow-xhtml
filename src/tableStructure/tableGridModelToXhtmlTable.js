@@ -15,14 +15,14 @@ define([
 
 	var unsafeMoveNodes = blueprints.blueprintMutations.unsafeMoveNodes;
 
-	function createNewRow (parentElement, namespaceUri, blueprint) {
-		var row = namespaceManager.createElementNS(parentElement.ownerDocument, namespaceUri, 'tr');
+	function createNewRow (parentElement, namespaceURI, blueprint) {
+		var row = namespaceManager.createElementNS(parentElement.ownerDocument, namespaceURI, 'tr');
 		blueprint.appendChild(parentElement, row);
 		return row;
 	}
 
-	function convertCellElement (elementNameToConvertTo, namespaceUri, blueprint, tableCellElement) {
-		var newElement = namespaceManager.createElementNS(tableCellElement.ownerDocument, namespaceUri, elementNameToConvertTo);
+	function convertCellElement (elementNameToConvertTo, namespaceURI, blueprint, tableCellElement) {
+		var newElement = namespaceManager.createElementNS(tableCellElement.ownerDocument, namespaceURI, elementNameToConvertTo);
 
 		// Use unsafeMoveNodes to prevent selections
 		if (blueprint.getFirstChild(tableCellElement)) {
@@ -96,7 +96,7 @@ define([
 
 			row = bodyRows[rowIndex];
 			if (!row) {
-				row = createNewRow(tableNode, tableStructure.namespaceUri, blueprint);
+				row = createNewRow(tableNode, tableStructure.namespaceURI, blueprint);
 				bodyRows[rowIndex] = row;
 			}
 
@@ -137,7 +137,7 @@ define([
 				if (tableCell.origin.row <= tableGridModel.getLowestHeaderRowIndex() &&
 						evaluateXPathToBoolean('self::' + tableStructure.selectorParts.td, tableCellElement, blueprint)) {
 					// We need to convert the td into a th element
-					var newThElement = convertCellElement('th', tableStructure.namespaceUri, blueprint, tableCellElement);
+					var newThElement = convertCellElement('th', tableStructure.namespaceURI, blueprint, tableCellElement);
 
 					if (newThElement) {
 						tableCellElement = newThElement;
@@ -147,7 +147,7 @@ define([
 				else if (tableCell.origin.row > tableGridModel.getLowestHeaderRowIndex() &&
 						evaluateXPathToBoolean('self::' + tableStructure.selectorParts.th, tableCellElement, blueprint)) {
 					// We need to convert the th into a td element
-					var newTdElement = convertCellElement('td', tableStructure.namespaceUri, blueprint, tableCellElement);
+					var newTdElement = convertCellElement('td', tableStructure.namespaceURI, blueprint, tableCellElement);
 
 					if (newTdElement) {
 						tableCellElement = newTdElement;

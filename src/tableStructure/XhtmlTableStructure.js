@@ -27,9 +27,9 @@ define([
 		createNewTableCreator = tableFlow.primitives.createNewTableCreater;
 
 	function XhtmlTableStructure (options) {
-		this.namespaceUri = options.table && options.table.namespaceUri ? options.table.namespaceUri : '';
+		this.namespaceURI = options.table && options.table.namespaceURI ? options.table.namespaceURI : '';
 
-		var namespaceSelector = 'Q{' + this.namespaceUri + '}';
+		var namespaceSelector = 'Q{' + this.namespaceURI + '}';
 		this.selectorParts = {
 			table: namespaceSelector + 'table',
 			thead: namespaceSelector + 'thead',
@@ -84,7 +84,7 @@ define([
 	};
 
 	XhtmlTableStructure.prototype.createTableBase = function (ownerDocument) {
-		return namespaceManager.createElementNS(ownerDocument, this.namespaceUri, 'table');
+		return namespaceManager.createElementNS(ownerDocument, this.namespaceURI, 'table');
 	};
 
 	return XhtmlTableStructure;

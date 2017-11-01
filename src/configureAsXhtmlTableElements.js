@@ -36,11 +36,16 @@ define([
 	 *
 	 * @param  {Object}  sxModule
 	 * @param  {Object}  [options]
-	 * @param  {number}  [options.priority]               Selector priority for all elements configured by this function
-	 * @param  {Object}  [options.table]                  Options for the table element
-	 * @param  {string}  [options.table.namespaceUri='']  The namespace URI for this table
+	 * @param  {number}  [options.priority]                Selector priority for all elements configured by this function
+	 * @param  {Object}  [options.table]                   Options for the table element
+	 * @param  {string}  [options.table.namespaceURI='']   The namespace URI for this table
+	 * @param  {Object}  [options.td]                      Configuration options for the td element
+	 * @param  {string}  [options.td.defaultTextContainer] The default text container for the td element
+	 * @param  {Object}  [options.th]                      Configuration options for the th element
+	 * @param  {string}  [options.th.defaultTextContainer] The default text container for the th element
 	 */
 	return function configureAsXhtmlTableElements (sxModule, options) {
+		options = options || {};
 		var tableStructure = new XhtmlTableStructure(options);
 		tableStructureManager.addTableStructure(tableStructure);
 
@@ -79,7 +84,11 @@ define([
 
 		// Cell (td)
 		var tdSelector = 'self::' + tableStructure.selectorParts.td;
-		configureAsFrameWithBlock(sxModule, tdSelector, undefined, {});
+		configureAsFrameWithBlock(sxModule, tdSelector, undefined, {
+			defaultTextContainer: options.td && options.td.defaultTextContainer ?
+				options.td.defaultTextContainer :
+				null
+		});
 
 		sxModule.configure('fontoxml-templated-views').stylesheet('content')
 			.renderNodesMatching(tdSelector, priority)
@@ -87,7 +96,11 @@ define([
 
 		// Header Cell (th)
 		var thSelector = 'self::' + tableStructure.selectorParts.th;
-		configureAsFrameWithBlock(sxModule, thSelector, undefined, {});
+		configureAsFrameWithBlock(sxModule, thSelector, undefined, {
+			defaultTextContainer: options.th && options.th.defaultTextContainer ?
+				options.th.defaultTextContainer :
+				null
+		});
 
 		sxModule.configure('fontoxml-templated-views').stylesheet('content')
 			.renderNodesMatching(thSelector, priority)

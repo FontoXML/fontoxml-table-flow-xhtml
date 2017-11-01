@@ -1,7 +1,7 @@
 define([
 	'fontoxml-blueprints/readOnlyBlueprint',
-	'fontoxml-families/shared/mapBlockBodyVisualizationOptionsToCvAttributes',
-	'fontoxml-families/shared/mapCommonVisualizationOptionsToCvAttributes',
+	'fontoxml-families/mapBlockBodyVisualizationOptionsToCvAttributes',
+	'fontoxml-families/mapCommonVisualizationOptionsToCvAttributes',
 	'fontoxml-families/replaceBlockWidgetAreaPlaceholdersInJsonMl',
 	'fontoxml-selectors/evaluateXPathToFirstNode',
 	'fontoxml-selectors/evaluateXPathToNodes',
