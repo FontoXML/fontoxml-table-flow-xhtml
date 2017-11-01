@@ -1,6 +1,8 @@
+---
 category: add-on/fontoxml-table-flow-xhtml
+---
 
-# XHTML tables (fontoxml-table-flow-xhtml)
+# XHTML table support
 
 Provide support for XHTML compatible tables.
 
