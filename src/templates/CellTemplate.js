@@ -1,7 +1,11 @@
 define([
+	'fontoxml-families/determineCommonVisualizationOptions',
+	'fontoxml-families/mapCommonVisualizationOptionsToCvAttributes',
 	'fontoxml-table-flow',
 	'fontoxml-templated-views'
 ], function (
+	determineCommonVisualizationOptions,
+	mapCommonVisualizationOptionsToCvAttributes,
 	tableFlow,
 	templatedViews
 ) {
@@ -24,13 +28,14 @@ define([
 
 		// Create a dependency on the attributes to ensure a re-render when they are changed
 		// DO NOT REMOVE
-		nodeRenderer.sourceNode.getAttribute('colspan');
-		nodeRenderer.sourceNode.getAttribute('rowspan');
-		nodeRenderer.sourceNode.getAttribute('align');
-		nodeRenderer.sourceNode.getAttribute('valign');
+		var sourceNode = nodeRenderer.sourceNode;
+		sourceNode.getAttribute('colspan');
+		sourceNode.getAttribute('rowspan');
+		sourceNode.getAttribute('align');
+		sourceNode.getAttribute('valign');
 
 		// Since we are looking upwards from either a td or th we know this lookup always returns the table node.
-		var tableNode = nodeRenderer.sourceNode.parentNode.parentNode;
+		var tableNode = sourceNode.parentNode.parentNode;
 
 		// Create a dependency on the attributes of the col elements within the table to ensure a re-render when they are changed.
 		// DO NOT REMOVE
@@ -60,8 +65,26 @@ define([
 			cellViewNode.setAttribute('cv-table-row-separator', '1');
 		}
 
-		// Set the node-id for triggering the right click context menu
-		cellViewNode.setAttribute('node-id', nodeRenderer.sourceNode.nodeId);
+		var visualization = determineCommonVisualizationOptions(sourceNode, nodeRenderer);
+
+		var finalVisualization = Object.assign(
+			{},
+			mapCommonVisualizationOptionsToCvAttributes(sourceNode, visualization),
+			{
+				'node-id': sourceNode.nodeId
+			}
+		);
+
+		if (finalVisualization.backgroundColor) {
+			cellViewNode.setAttribute('cv-frame-background', finalVisualization.backgroundColor);
+		}
+		if (finalVisualization.showWhen) {
+			cellViewNode.setAttribute('cv-show-when', finalVisualization.showWhen);
+		}
+
+		Object.keys(finalVisualization).forEach(function (key) {
+			cellViewNode.setAttribute(key, finalVisualization[key]);
+		});
 
 		nodeRenderer.appendViewNode(cellViewNode);
 		nodeRenderer.traverse(cellViewNode);
