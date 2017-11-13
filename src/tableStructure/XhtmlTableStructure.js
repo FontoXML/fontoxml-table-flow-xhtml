@@ -83,9 +83,5 @@ define([
 			this);
 	};
 
-	XhtmlTableStructure.prototype.createTableBase = function (ownerDocument) {
-		return namespaceManager.createElementNS(ownerDocument, this.namespaceURI, 'table');
-	};
-
 	return XhtmlTableStructure;
 });
