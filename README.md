@@ -46,3 +46,27 @@ configureAsXhtmlTableElements(sxModule, {
 ```
 
 To configure the markup labels and contextual operations, use the {@link configureProperties} function.
+
+## Specification
+
+Fonto supports a subset of the [XHTML 1.0 2nd edition](https://www.w3.org/TR/xhtml1/dtds.html) table specification. The
+following parts are supported.
+
+| Element    | Attributes                      |
+|------------|---------------------------------|
+| table      | border                          |
+| caption    |                                 |
+| (colgroup) |                                 |
+| (col)      |                                 |
+| thead      |                                 |
+| (tfoot)    |                                 |
+| tbody      |                                 |
+| tr         |                                 |
+| th         | rowspan, colspan, align, valign |
+| td         | rowspan, colspan, align, valign |
+
+## Implementation notes
+
+- Fonto prefers to not use the `<tfoot>` element and instead create a `<tr>` as child of `<table>` or `<tbody>`.
+
+- Fonto does not use `<col>` or `<colgroup>`, but will respect those elements if they already exist.
