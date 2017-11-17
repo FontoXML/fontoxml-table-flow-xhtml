@@ -1,19 +1,12 @@
 import blueprints from 'fontoxml-blueprints';
 import core from 'fontoxml-core';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
-import tableFlow from 'fontoxml-table-flow';
-import tableStructureManager from 'fontoxml-table-flow/tableStructureManager';
 import * as slimdom from 'slimdom';
 
-import createDefaultRowSpec from 'fontoxml-table-flow-xhtml/tableStructure/specs/createDefaultRowSpec';
-import createDefaultColSpec from 'fontoxml-table-flow-xhtml/tableStructure/specs/createDefaultColSpec';
-import createDefaultCellSpec from 'fontoxml-table-flow-xhtml/tableStructure/specs/createDefaultCellSpec';
-import tableGridModelToXhtmlTable from 'fontoxml-table-flow-xhtml/tableStructure/tableGridModelToXhtmlTable';
 import XhtmlTableStructure from 'fontoxml-table-flow-xhtml/tableStructure/XhtmlTableStructure';
 
 const Blueprint = blueprints.Blueprint;
 const CoreDocument = core.Document;
-const createNewTableCreater = tableFlow.primitives.createNewTableCreater;
 
 const stubFormat = {
 		synthesizer: {
@@ -24,82 +17,75 @@ const stubFormat = {
 		}
 	};
 
-const createTable = createNewTableCreater('td', createDefaultRowSpec, createDefaultColSpec, createDefaultCellSpec);
-
 describe('tableGridModelToXhtmlTable', () => {
 	let documentNode,
+		createTable,
 		coreDocument,
 		blueprint,
 		tableNode,
-		xhtmlTableStructure;
+		tableStructure;
 
 	beforeEach(() => {
 		documentNode = new slimdom.Document();
 		coreDocument = new CoreDocument(documentNode);
-
 		blueprint = new Blueprint(coreDocument.dom);
 
 		tableNode = documentNode.createElement('table');
 
-		xhtmlTableStructure = new XhtmlTableStructure({});
-		tableStructureManager.addTableStructure(xhtmlTableStructure);
+		tableStructure = new XhtmlTableStructure({});
+		createTable = tableStructure.getNewTableCreater();
 
 		coreDocument.dom.mutate(() => {
-			// tableNode.appendChild(tbodyNode);
 			documentNode.appendChild(tableNode);
 		});
 	});
 
-	it('can serialize a table in a basic one by one GridModel to an actual table', () => {
-		const tableGridModel = createTable(1, 1, true, documentNode);
+	it('can serialize a table in a basic two by two GridModel to an actual table with a tbody element', () => {
+		const tableGridModel = createTable(2, 2, false, documentNode);
+		const tableStructure = new XhtmlTableStructure({ useTbody: true });
 
-		const success = tableGridModelToXhtmlTable(xhtmlTableStructure, tableGridModel, tableNode, blueprint, stubFormat);
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
 			['table',
 				{ border: '1' },
-				['tr',
-					['td']
+				['tbody',
+					['tr', ['td'], ['td']],
+					['tr', ['td'], ['td']]
 				]
+			]);
+	});
+
+	it('can serialize a table in a basic one by one GridModel to an actual table', () => {
+		const tableGridModel = createTable(1, 1, true, documentNode);
+
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
+
+		blueprint.realize();
+		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
+			['table',
+				{ border: '1' },
+				['tr', ['td']]
 			]);
 	});
 
 	it('can serialize a table in a basic n by n GridModel to an actual xhtml table', () => {
 		const tableGridModel = createTable(4, 4, true, documentNode);
 
-		const success = tableGridModelToXhtmlTable(xhtmlTableStructure, tableGridModel, tableNode, blueprint, stubFormat);
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
 			['table',
 				{ border: '1' },
-				['tr',
-					['th'],
-					['th'],
-					['th'],
-					['th']
-				],
-				['tr',
-					['td'],
-					['td'],
-					['td'],
-					['td']
-				],
-				['tr',
-					['td'],
-					['td'],
-					['td'],
-					['td']
-				],
-				['tr',
-					['td'],
-					['td'],
-					['td'],
-					['td']
-				]
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
 			]);
 	});
 
@@ -115,34 +101,17 @@ describe('tableGridModelToXhtmlTable', () => {
 		tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
 		tableGridModel.setCellAtCoordinates(spanningCell, 2, 2);
 
-		const success = tableGridModelToXhtmlTable(xhtmlTableStructure, tableGridModel, tableNode, blueprint, stubFormat);
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
 			['table',
 				{ border: '1' },
-				['tr',
-					['th'],
-					['th'],
-					['th'],
-					['th']
-				],
-				['tr',
-					['td'],
-					['td', { colspan: '2', rowspan: '2' }],
-					['td']
-				],
-				['tr',
-					['td'],
-					['td']
-				],
-				['tr',
-					['td'],
-					['td'],
-					['td'],
-					['td']
-				]
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td', { colspan: '2', rowspan: '2' }], ['td']],
+				['tr', ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
 			]);
 	});
 
@@ -154,7 +123,7 @@ describe('tableGridModelToXhtmlTable', () => {
 
 		const positionId = blueprint.registerPosition(cellElement, 0, false);
 
-		const success = tableGridModelToXhtmlTable(xhtmlTableStructure, tableGridModel, tableNode, blueprint, stubFormat);
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
@@ -172,7 +141,7 @@ describe('tableGridModelToXhtmlTable', () => {
 
 		const positionId = blueprint.registerPosition(cellElement, 0, false);
 
-		const success = tableGridModelToXhtmlTable(xhtmlTableStructure, tableGridModel, tableNode, blueprint, stubFormat);
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
@@ -191,7 +160,7 @@ describe('tableGridModelToXhtmlTable', () => {
 		const startPositionId = blueprint.registerPosition(cellElement, 0, false);
 		const endPositionId = blueprint.registerPosition(cellElement, 1, false);
 
-		const success = tableGridModelToXhtmlTable(xhtmlTableStructure, tableGridModel, tableNode, blueprint, stubFormat);
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
@@ -201,5 +170,57 @@ describe('tableGridModelToXhtmlTable', () => {
 		chai.assert.equal(startPosition.offset, 0);
 		chai.assert.deepEqual(endPosition.container, tableNode.firstChild.firstChild);
 		chai.assert.equal(endPosition.offset, 1);
+	});
+
+	it('can serialize a table to an actual table with only th elements', () => {
+		const tableGridModel = createTable(2, 2, true, documentNode);
+		const tableStructure = new XhtmlTableStructure({ useTh: true });
+
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
+
+		blueprint.realize();
+		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
+			['table',
+				{ border: '1' },
+				['tr', ['th'], ['th']],
+				['tr', ['td'], ['td']]
+			]);
+	});
+
+	it('can serialize a table to an actual table with only a thead element', () => {
+		const tableGridModel = createTable(2, 2, true, documentNode);
+		const tableStructure = new XhtmlTableStructure({ useThead: true });
+
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
+
+		blueprint.realize();
+		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
+			['table',
+				{ border: '1' },
+				['thead',
+					['tr', ['td'], ['td']]
+				],
+				['tr', ['td'], ['td']]
+			]);
+	});
+
+	it('can serialize a table to an actual table with one row in a thead and th elements', () => {
+		const tableGridModel = createTable(2, 2, true, documentNode);
+		const tableStructure = new XhtmlTableStructure({ useThead: true, useTh: true });
+
+		const success = tableStructure.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
+		chai.assert.isTrue(success);
+
+		blueprint.realize();
+		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
+			['table',
+				{ border: '1' },
+				['thead',
+					['tr', ['th'], ['th']]
+				],
+				['tr', ['td'], ['td']]
+			]);
 	});
 });

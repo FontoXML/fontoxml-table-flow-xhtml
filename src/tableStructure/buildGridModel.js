@@ -78,49 +78,58 @@ define([
 	/**
 	 * Build a generic gridModel from the XHTML table
 	 *
-	 * @param   {XhtmlTableStructure}  tableStructure      The XhtmlTableStructure to used to build the gridModel with
-	 * @param   {Node}               tableElement        The root of the table
-	 * @param   {Blueprint}          blueprint           The blueprint in which to consider the table
+	 * @param   {XhtmlTableStructure}  tableStructure  The XhtmlTableStructure to used to build the gridModel with
+	 * @param   {Node}                 tableElement    The root of the table
+	 * @param   {Blueprint}            blueprint       The blueprint in which to consider the table
 	 *
 	 * @return  {GridModel}  The build gridModel
 	 */
 	return function buildGridModel (tableStructure, tableElement, blueprint) {
+		// Alias table parts
+		var thead = tableStructure.selectorParts.thead;
+		var tbody = tableStructure.selectorParts.tbody;
+		var tfoot = tableStructure.selectorParts.tfoot;
+		var tr = tableStructure.selectorParts.tr;
+		var th = tableStructure.selectorParts.th;
+		var td = tableStructure.selectorParts.td;
+
 		// Table in this case is the <table> element.
 		var table = tableElement,
 			builder = new TableGridBuilder(tableStructure);
 
 		builder.model.borders = evaluateXPathToBoolean('./@border = "1"', table, blueprint);
 
-		// var rowElements = evaluateXPathToNodes('./' + tableStructure.selectorParts.tr, table, blueprint);
-		var rowElements = evaluateXPathToNodes('./' + tableStructure.selectorParts.tr +
-				' | ./' + tableStructure.selectorParts.thead + '/' + tableStructure.selectorParts.tr +
-				' | ./' + tableStructure.selectorParts.tbody + '/' + tableStructure.selectorParts.tr +
-				' | ./' + tableStructure.selectorParts.tfoot + '/' + tableStructure.selectorParts.tr
-				, table, blueprint);
+		var rowNodes = evaluateXPathToNodes(
+				'./' + tr +
+				' | ./' + thead + '/' + tr +
+				' | ./' + tbody + '/' + tr +
+				' | ./' + tfoot + '/' + tr, table, blueprint);
 
 		var columnInfo = parseDefaultColumnInfo(tableStructure, table, blueprint),
 			columnSpecifications = columnInfo.columnSpecifications;
 		builder.model.columnSpecifications = columnSpecifications;
 
-		// Create the TableCell objects and fill the TableGridModel.
-		for (var row = 0, length = rowElements.length; row < length; row++) {
-			// We need to strip any potential <head> from within the table from the rowElements.
-			if (rowElements[row].localName === 'head') {
-				continue;
-			}
+		// Determine the number of header rows
+		// if thead -> return number of tr in thead
+		// if tbody -> return number of tr before tbody
+		// else     -> return number of tr containing only th ocurring before the first tr not containing only th
+		var numberOfHeaderRows = evaluateXPathToNumber(
+			'let $hasTbody := ./' + tbody + ', $hasThead := ./' + thead + ' return ' +
+			'if ($hasThead) then ./' + thead + '/' + tr + ' => count() ' +
+			'else ' +
+				'(if ($hasTbody) then (./' + tbody + ')[1]/preceding-sibling::' + tr + ' => count() ' +
+				'else (./' + tr + '[./' + td + '])[1]/preceding-sibling::' + tr +
+					'[./' + th + ' => count() = ./*[self::' + td + ' | self::' + th + '] => count()] => count())', table, blueprint);
+		builder.model.headerRowCount = numberOfHeaderRows;
 
+		// Create the TableCell objects and fill the TableGridModel.
+		for (var row = 0, length = rowNodes.length; row < length; row++) {
 			builder.newRow();
 
 			var tableCellElements = evaluateXPathToNodes(
-				'child::' + tableStructure.selectorParts.td + ' | child::' + tableStructure.selectorParts.th,
-				rowElements[row],
+				'child::' + td + ' | child::' + th,
+				rowNodes[row],
 				blueprint);
-
-			if (tableCellElements.some(function (cellElement) {
-					return evaluateXPathToBoolean('self::' + tableStructure.selectorParts.th, cellElement, blueprint);
-				})) {
-				builder.model.headerRowCount += 1;
-			}
 
 			for (var counter = 0; counter < tableCellElements.length; counter++) {
 				var cell = tableCellElements[counter],

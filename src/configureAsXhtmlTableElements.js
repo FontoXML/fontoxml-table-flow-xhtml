@@ -37,6 +37,9 @@ define([
 	 * @param  {Object}  sxModule
 	 * @param  {Object}  [options]
 	 * @param  {number}  [options.priority]                Selector priority for all elements configured by this function
+	 * @param  {boolean} [options.useTh]                   Set to true if th should be used
+	 * @param  {boolean} [options.useThead]                Set to true if thead should be used
+	 * @param  {boolean} [options.useTbody]                Set to true if tbody should be used
 	 * @param  {Object}  [options.table]                   Options for the table element
 	 * @param  {string}  [options.table.namespaceURI='']   The namespace URI for this table
 	 * @param  {Object}  [options.td]                      Configuration options for the td element

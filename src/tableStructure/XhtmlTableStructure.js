@@ -1,6 +1,5 @@
 define([
 	'fontoxml-blueprints/readOnlyBlueprint',
-	'fontoxml-dom-namespaces/namespaceManager',
 	'fontoxml-selectors/evaluateXPathToBoolean',
 	'fontoxml-table-flow',
 
@@ -11,7 +10,6 @@ define([
 	'./specs/createDefaultRowSpec'
 ], function (
 	readOnlyBlueprint,
-	namespaceManager,
 	evaluateXPathToBoolean,
 	tableFlow,
 
@@ -27,6 +25,26 @@ define([
 		createNewTableCreator = tableFlow.primitives.createNewTableCreater;
 
 	function XhtmlTableStructure (options) {
+		this.useThead = !!options.useThead;
+		this.useTbody = !!options.useTbody;
+		this.useTh = !!options.useTh;
+
+		// Warn the developer that thead is used as header-defining element. This is required when
+		// using tbody.
+		if (this.useTbody && !this.useThead && options.useThead !== undefined) {
+			throw new Error('XHTML table: Using tbody requires the use of thead.');
+		}
+
+		// Warn the developer that th is being used as header-defining element. At least one header
+		// type is required.
+		if (!this.useThead && !this.useTh && options.useThead !== undefined && options.useTh !== undefined) {
+			throw new Error('XHTML table: At least one header type (th or thead) muse be used.');
+		}
+
+		if (!this.useThead && !this.useTh) {
+			this.useTh = true;
+		}
+
 		this.namespaceURI = options.table && options.table.namespaceURI ? options.table.namespaceURI : '';
 
 		var namespaceSelector = 'Q{' + this.namespaceURI + '}';
@@ -42,7 +60,6 @@ define([
 			col: namespaceSelector + 'col',
 			caption: namespaceSelector + 'caption[parent::' + this.table + ']'
 		};
-
 
 		this._tablePartsSelector = Object.keys(this.selectorParts).map(function (key) {
 				return 'self::' + this.selectorParts[key];
