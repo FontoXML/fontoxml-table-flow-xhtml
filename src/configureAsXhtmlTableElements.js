@@ -77,6 +77,30 @@ define([
 		var colSelector = 'self::' + tableStructure.selectorParts.col;
 		configureAsRemoved(sxModule, colSelector, undefined);
 
+		// thead
+		var theadSelector = 'self::' + tableStructure.selectorParts.thead;
+		configureAsStructure(sxModule, theadSelector, undefined);
+
+		sxModule.configure('fontoxml-templated-views').stylesheet('content')
+			.renderNodesMatching(theadSelector, priority)
+				.asSingleElement('thead');
+
+		// tbody
+		var tbodySelector = 'self::' + tableStructure.selectorParts.tbody;
+		configureAsStructure(sxModule, tbodySelector, undefined);
+
+		sxModule.configure('fontoxml-templated-views').stylesheet('content')
+			.renderNodesMatching(tbodySelector, priority)
+				.asSingleElement('tbody');
+
+		// tfoot
+		var tfootSelector = 'self::' + tableStructure.selectorParts.tfoot;
+		configureAsStructure(sxModule, tfootSelector, undefined);
+
+		sxModule.configure('fontoxml-templated-views').stylesheet('content')
+			.renderNodesMatching(tfootSelector, priority)
+				.asSingleElement('tfoot');
+
 		// Row (tr)
 		var trSelector = 'self::' + tableStructure.selectorParts.tr;
 		configureAsStructure(sxModule, trSelector, undefined, {});

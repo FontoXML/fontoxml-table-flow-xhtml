@@ -53,13 +53,12 @@ define([
 							['cv-content',
 								['table',
 									captionNode ? ['caption', renderer.createRelatedNodePlaceholder(captionNode, '')] : '',
-									[
-										'tbody',
+									['tbody',
 										{
 											'cv-table-border': tableGridModel.borders ? 'all' : 'none'
 										}
 									].concat(
-										evaluateXPathToNodes('./tr', sourceNode, readOnlyBlueprint).map(function (row) {
+										evaluateXPathToNodes('.//tr', sourceNode, readOnlyBlueprint).map(function (row) {
 											return renderer.createRelatedNodePlaceholder(row, '');
 										}))
 								],
