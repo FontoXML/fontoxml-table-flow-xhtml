@@ -313,6 +313,7 @@ define([
 				var tableCellElement = tableCell.element;
 
 				var isHeadCell = tableCell.origin.row <= lastHeaderRowIndex;
+				var wasHeadCell = tableCell.origin.row < headerRowNodes.length;
 				var isThElement = evaluateXPathToBoolean('self::' + th, tableCellElement, blueprint);
 
 				if (isHeadCell && useTh && !isThElement) {
@@ -324,7 +325,7 @@ define([
 						tableCell.element = newThElement;
 					}
 				}
-				if (isThElement && isHeadCell && !useTh) {
+				if (isThElement && ((isHeadCell && !useTh) || (wasHeadCell && !isHeadCell))) {
 					// We need to convert the th into a td element
 					var newTdElement = convertCellElement('td', namespaceURI, blueprint, tableCellElement);
 

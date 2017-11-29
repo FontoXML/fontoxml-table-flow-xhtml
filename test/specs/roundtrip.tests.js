@@ -54,7 +54,6 @@ describe('XHTML tables: XML to XML', () => {
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
-		console.log(jsonMLMapper.serialize(documentNode.firstChild));
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), jsonOut);
 	}
 
@@ -412,6 +411,36 @@ describe('XHTML tables: XML to XML', () => {
 					useThead: true,
 					useTbody: true,
 					useTh: false
+				};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can transform a table based on tbody, thead and th, removing 1 header row', () => {
+			const jsonIn = ['table',
+					['thead',
+						['tr', ['th'], ['th'], ['th'], ['th']]
+					],
+					['tbody',
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']]
+					]
+				];
+
+			const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
+
+			const jsonOut = ['table',
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']]
+				];
+
+			const options = {
+					useThead: false,
+					useTbody: false,
+					useTh: true
 				};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
