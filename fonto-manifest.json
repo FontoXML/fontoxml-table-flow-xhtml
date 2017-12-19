@@ -1,14 +1,14 @@
 {
 	"dependencies": {
-		"fontoxml-blueprints": "^1.4.0",
-		"fontoxml-core": "^1.1.8",
-		"fontoxml-dom-identification": "^2.0.0",
-		"fontoxml-families": "^4.0.0",
-		"fontoxml-operations": "^2.0.0",
-		"fontoxml-table-flow": "^4.0.0"
+		"fontoxml-blueprints": "^1.4.1",
+		"fontoxml-core": "^1.1.9",
+		"fontoxml-dom-identification": "^2.0.1",
+		"fontoxml-families": "^4.1.0",
+		"fontoxml-operations": "^2.1.0",
+		"fontoxml-table-flow": "^4.1.0"
 	},
 	"devDependencies": {
-		"fontoxml-vendors": "^3.0.0"
+		"fontoxml-vendors": "^4.0.0"
 	},
 	"role": "add-on"
 }
