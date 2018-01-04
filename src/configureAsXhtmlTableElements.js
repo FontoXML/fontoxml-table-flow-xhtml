@@ -1,29 +1,13 @@
 define([
 	'fontoxml-families/configureAsBlock',
-	'fontoxml-families/configureAsFrameWithBlock',
-	'fontoxml-families/configureAsRemoved',
-	'fontoxml-families/configureAsStructure',
-	'fontoxml-families/configureAsTable',
-	'fontoxml-table-flow/TableValidator',
-	'fontoxml-table-flow/tableStructureManager',
+	'fontoxml-table-flow/configureAsTableElements',
 
-	'./templates/CellTemplate',
-	'./templates/TableTemplate',
-
-	'./tableStructure/XhtmlTableStructure'
+	'./table-definition/XhtmlTableDefinition'
 ], function (
 	configureAsBlock,
-	configureAsFrameWithBlock,
-	configureAsRemoved,
-	configureAsStructure,
-	configureAsTable,
-	TableValidator,
-	tableStructureManager,
+	configureAsTableElements,
 
-	CellTemplate,
-	TableTemplate,
-
-	XhtmlTableStructure
+	XhtmlTableDefinition
 ) {
 	'use strict';
 
@@ -41,6 +25,7 @@ define([
 	 * @param  {boolean} [options.useThead]                Set to true if thead should be used
 	 * @param  {boolean} [options.useTbody]                Set to true if tbody should be used
 	 * @param  {Object}  [options.table]                   Options for the table element
+	 * @param  {XPathTest}  [options.table.tableSelector]  An optional additional selector for the table which will be used to refine whether a table element should be considered as an xhtml table
 	 * @param  {string}  [options.table.namespaceURI='']   The namespace URI for this table
 	 * @param  {Object}  [options.td]                      Configuration options for the td element
 	 * @param  {string}  [options.td.defaultTextContainer] The default text container for the td element
@@ -49,89 +34,26 @@ define([
 	 */
 	return function configureAsXhtmlTableElements (sxModule, options) {
 		options = options || {};
-		var tableStructure = new XhtmlTableStructure(options);
-		tableStructureManager.addTableStructure(tableStructure);
-
-		sxModule.configure('format')
-			.addRestrictingValidator(new TableValidator(tableStructure));
-
+		options['cell'] = {
+			defaultTextContainer: options.td && options.td.defaultTextContainer ?
+					options.td.defaultTextContainer :
+					null
+		};
+		options['headerCell'] = {
+			defaultTextContainer: options.th && options.th.defaultTextContainer ?
+					options.th.defaultTextContainer :
+					null
+		};
+		var tableDefinition = new XhtmlTableDefinition(options);
+		configureAsTableElements(sxModule, options, tableDefinition);
 		var priority = options.priority;
 
-		// Table (table)
-		var tableSelector = 'self::' + tableStructure.selectorParts.table;
-		configureAsTable(sxModule, tableSelector, undefined, {});
-
-		sxModule.configure('fontoxml-templated-views').stylesheet('content')
-			.renderNodesMatching(tableSelector, priority)
-				.withTemplate(new TableTemplate());
-
 		// Title (caption)
-		var captionSelector = 'self::' + tableStructure.selectorParts.caption;
-		configureAsBlock(sxModule, captionSelector, undefined, {});
-
-		// Column group (colgroup)
-		var colgroupSelector = 'self::' + tableStructure.selectorParts.colgroup;
-		configureAsRemoved(sxModule, colgroupSelector, undefined);
-
-		// Column (col)
-		var colSelector = 'self::' + tableStructure.selectorParts.col;
-		configureAsRemoved(sxModule, colSelector, undefined);
-
-		// thead
-		var theadSelector = 'self::' + tableStructure.selectorParts.thead;
-		configureAsStructure(sxModule, theadSelector, undefined);
-
-		sxModule.configure('fontoxml-templated-views').stylesheet('content')
-			.renderNodesMatching(theadSelector, priority)
-				.asSingleElement('thead');
-
-		// tbody
-		var tbodySelector = 'self::' + tableStructure.selectorParts.tbody;
-		configureAsStructure(sxModule, tbodySelector, undefined);
-
-		sxModule.configure('fontoxml-templated-views').stylesheet('content')
-			.renderNodesMatching(tbodySelector, priority)
-				.asSingleElement('tbody');
-
-		// tfoot
-		var tfootSelector = 'self::' + tableStructure.selectorParts.tfoot;
-		configureAsStructure(sxModule, tfootSelector, undefined);
-
-		sxModule.configure('fontoxml-templated-views').stylesheet('content')
-			.renderNodesMatching(tfootSelector, priority)
-				.asSingleElement('tfoot');
-
-		// Row (tr)
-		var trSelector = 'self::' + tableStructure.selectorParts.tr;
-		configureAsStructure(sxModule, trSelector, undefined, {});
-
-		sxModule.configure('fontoxml-templated-views').stylesheet('content')
-			.renderNodesMatching(trSelector, priority)
-				.asSingleElement('tr');
-
-		// Cell (td)
-		var tdSelector = 'self::' + tableStructure.selectorParts.td;
-		configureAsFrameWithBlock(sxModule, tdSelector, undefined, {
-			defaultTextContainer: options.td && options.td.defaultTextContainer ?
-				options.td.defaultTextContainer :
-				null
+		var captionSelector = 'self::' + tableDefinition.selectorParts.caption;
+		configureAsBlock(sxModule, captionSelector, undefined, {
+			priority: priority
 		});
 
-		sxModule.configure('fontoxml-templated-views').stylesheet('content')
-			.renderNodesMatching(tdSelector, priority)
-				.withTemplate(new CellTemplate());
-
-		// Header Cell (th)
-		var thSelector = 'self::' + tableStructure.selectorParts.th;
-		configureAsFrameWithBlock(sxModule, thSelector, undefined, {
-			defaultTextContainer: options.th && options.th.defaultTextContainer ?
-				options.th.defaultTextContainer :
-				null
-		});
-
-		sxModule.configure('fontoxml-templated-views').stylesheet('content')
-			.renderNodesMatching(thSelector, priority)
-				.withTemplate(new CellTemplate());
-
+		configureAsTableElements(sxModule, options, tableDefinition);
 	};
 });
