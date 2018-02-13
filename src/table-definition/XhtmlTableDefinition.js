@@ -82,7 +82,12 @@ define([
 		var col = selectorParts.columnSpecification;
 		var colGroup = selectorParts.columnSpecificationGroup;
 
-		var tableNodesSelector = 'self::' + col + ' or self::' + colGroup + ' or self::' + tr  + ' or self::' + thead + ' or self::' + tbody + ' or self::' + tfoot;
+		var tableNodesSelector = 'self::' + col +
+			' or self::' + colGroup +
+			' or self::' + tr +
+			' or self::' + thead +
+			' or self::' + tbody +
+			' or self::' + tfoot;
 
 		var properties = {
 			selectorParts: selectorParts,
@@ -99,7 +104,9 @@ define([
 			// Defining node selectors
 			tableDefiningNodeSelector: 'self::' + table,
 			cellDefiningNodeSelector: 'self::' + td + ' or self::' + th,
-			tablePartsNodeSelector: Object.keys(selectorParts).map(function (key) {
+			tablePartsNodeSelector: Object.keys(selectorParts)
+				.filter(function (selector) { return selector !== 'caption'; })
+				.map(function (key) {
 					return 'self::' + selectorParts[key];
 				}.bind(this)).join(' or '),
 

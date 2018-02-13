@@ -25,7 +25,7 @@ define([
 	 * @param  {boolean} [options.useThead]                Set to true if thead should be used
 	 * @param  {boolean} [options.useTbody]                Set to true if tbody should be used
 	 * @param  {Object}  [options.table]                   Options for the table element
-	 * @param  {XPathTest}  [options.table.tableSelector]  An optional additional selector for the table which will be used to refine whether a table element should be considered as an xhtml table
+	 * @param  {XPathTest}  [options.table.tableFilterSelector]  An optional additional selector for the table which will be used to refine whether a table element should be considered as an xhtml table
 	 * @param  {string}  [options.table.namespaceURI='']   The namespace URI for this table
 	 * @param  {Object}  [options.td]                      Configuration options for the td element
 	 * @param  {string}  [options.td.defaultTextContainer] The default text container for the td element
