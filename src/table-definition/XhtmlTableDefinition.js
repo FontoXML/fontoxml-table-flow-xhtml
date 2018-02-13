@@ -1,29 +1,17 @@
 define([
 	'fontoxml-table-flow/TableDefinition',
-
-	'fontoxml-table-flow/normalizeContainerNodeStrategies',
-	'fontoxml-table-flow/normalizeCellNodeStrategies',
-
+	'fontoxml-table-flow/createCreateRowStrategy',
 	'fontoxml-table-flow/getAttributeStrategies',
-
-	'fontoxml-table-flow/setAttributeStrategies',
-
-	'fontoxml-table-flow/Width',
-
-	'fontoxml-table-flow/createCreateRowStrategy'
+	'fontoxml-table-flow/normalizeCellNodeStrategies',
+	'fontoxml-table-flow/normalizeContainerNodeStrategies',
+	'fontoxml-table-flow/setAttributeStrategies'
 ], function (
 	TableDefinition,
-
-	normalizeContainerNodeStrategies,
-	normalizeCellNodeStrategies,
-
+	createCreateRowStrategy,
 	getAttributeStrategies,
-
-	setAttributeValueStrategies,
-
-	Width,
-
-	createCreateRowStrategy
+	normalizeCellNodeStrategies,
+	normalizeContainerNodeStrategies,
+	setAttributeValueStrategies
 ) {
 	'use strict';
 
@@ -151,22 +139,6 @@ define([
 						normalizeCellNodeStrategies.createConvertHeaderCellNodeToNormalCellNodeStrategy(namespaceURI, 'td'),
 					normalizeCellNodeStrategies.createConvertFormerHeaderCellNodeToNormalCellNodeStrategy(namespaceURI, 'td')
 				],
-
-			// Defaults
-			getDefaultColumnSpecificationStrategy: function (context) {
-					return {
-						columnName: 'column-' + context.columnIndex,
-						columnNumber: context.columnIndex,
-						columnWidth: new Width('1*')
-					};
-				},
-			getDefaultCellSpecificationStrategy: function (_context) {
-					return {
-						rows: '1',
-						cols: '1',
-						width: new Width('1*')
-					};
-				},
 
 			// Creates
 			createRowStrategy: createCreateRowStrategy(namespaceURI, 'tr'),
