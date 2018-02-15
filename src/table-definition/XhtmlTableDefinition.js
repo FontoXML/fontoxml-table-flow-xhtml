@@ -145,7 +145,7 @@ define([
 
 			// Specification
 			getTableSpecificationStrategies: [
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('border', '1')
+					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('borders', './@border = "1"')
 				],
 
 			getColumnSpecificationStrategies: [
@@ -159,7 +159,7 @@ define([
 
 			// Set attributes
 			setTableNodeAttributeStrategies: [
-					setAttributeValueStrategies.createStringValueAsAttributeStrategy('border', 'borders')
+					setAttributeValueStrategies.createBooleanValueAsAttributeStrategy('border', 'borders', null, '1', '0')
 				],
 
 			setCellNodeAttributeStrategies: [

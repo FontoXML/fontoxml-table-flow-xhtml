@@ -66,7 +66,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td']]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tr', ['td']]
 				];
 
@@ -85,7 +85,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -112,7 +112,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -138,7 +138,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -164,7 +164,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -190,7 +190,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -218,7 +218,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -248,7 +248,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']]
@@ -278,7 +278,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -306,7 +306,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -336,7 +336,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['th'], ['th'], ['th'], ['th']]
 						],
@@ -366,7 +366,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['th'], ['th'], ['th'], ['th']],
 							['tr', ['th'], ['th'], ['th'], ['th']]
@@ -396,7 +396,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -424,7 +424,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['th'], ['th'], ['th'], ['th']]
 						],
@@ -456,7 +456,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -490,7 +490,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']]
@@ -524,7 +524,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
@@ -556,7 +556,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -590,7 +590,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['th'], ['th'], ['th'], ['th']]
 						],
@@ -624,7 +624,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['th'], ['th'], ['th'], ['th']],
 							['tr', ['th'], ['th'], ['th'], ['th']]
@@ -658,7 +658,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
@@ -690,7 +690,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['th'], ['th'], ['th'], ['th']]
 						],
@@ -726,7 +726,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -762,7 +762,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.increaseHeaderRowCount(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']]
@@ -798,7 +798,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
@@ -832,7 +832,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.decreaseHeaderRowCount();
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -868,7 +868,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.insertRow(0, false);
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -900,7 +900,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.insertRow(2, false);
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -931,7 +931,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.insertRow(3, true);
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -964,7 +964,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.insertRow(0, false);
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -999,7 +999,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const mutateGridModel = (gridModel) => gridModel.insertRow(1, true);
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1035,7 +1035,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1064,7 +1064,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(2);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1093,7 +1093,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(3);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1122,7 +1122,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1147,7 +1147,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(2);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1172,7 +1172,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(3);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1199,7 +1199,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1224,7 +1224,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1249,7 +1249,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1278,7 +1278,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1305,7 +1305,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -1334,7 +1334,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -1367,7 +1367,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1398,7 +1398,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -1431,7 +1431,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteRow(1);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
@@ -1466,7 +1466,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(0, false);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1496,7 +1496,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(2, false);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1526,7 +1526,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(3, true);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1556,7 +1556,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(0, false);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1582,7 +1582,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(2, false);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1608,7 +1608,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(3, true);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1640,7 +1640,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(0, false);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
 						],
@@ -1674,7 +1674,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(2, false);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
 						],
@@ -1708,7 +1708,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(3, true);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
 						],
@@ -1744,7 +1744,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteColumn(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td']],
@@ -1774,7 +1774,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteColumn(2);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td']],
@@ -1804,7 +1804,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteColumn(3);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tbody',
 							['tr', ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td']],
@@ -1834,7 +1834,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteColumn(0);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
@@ -1860,7 +1860,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteColumn(2);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
@@ -1886,7 +1886,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.deleteColumn(3);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
@@ -1918,7 +1918,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(0, false);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
 						],
@@ -1952,7 +1952,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(2, false);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
 						],
@@ -1986,7 +1986,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const mutateGridModel = (gridModel) => gridModel.insertColumn(3, true);
 
-				const jsonOut = ['table',
+				const jsonOut = ['table', { border: '0' },
 						['thead',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
 						],
@@ -2021,7 +2021,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				mergeCellWithCellAbove(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td', { rowspan: '2' }], ['td']],
 						['tr', ['td'], ['td']],
@@ -2050,7 +2050,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				mergeCellWithCellToTheRight(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td', { colspan: '2' }]],
@@ -2079,7 +2079,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				mergeCellWithCellBelow(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td', { rowspan: '2' }], ['td']],
@@ -2108,7 +2108,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				mergeCellWithCellToTheLeft(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td', { colspan: '2' }], ['td']],
@@ -2139,7 +2139,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				splitCellIntoRows(gridModel, gridModel.getCellAtCoordinates(1, 1));
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
@@ -2168,7 +2168,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			const mutateGridModel = (gridModel) =>
 				splitCellIntoColumns(gridModel, gridModel.getCellAtCoordinates(1, 1));
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
@@ -2201,7 +2201,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -2225,7 +2225,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -2251,7 +2251,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -2275,7 +2275,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['thead',
 						['tr', ['td'], ['td'], ['td'], ['td']]
 					],
@@ -2301,7 +2301,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['thead',
 						['tr', ['th'], ['th'], ['th'], ['th']]
 					],
@@ -2327,7 +2327,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['thead',
 						['tr', ['td'], ['td'], ['td'], ['td']]
 					],
@@ -2355,7 +2355,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['thead',
 						['tr', ['th'], ['th'], ['th'], ['th']]
 					],
@@ -2387,7 +2387,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					]
 				];
 
-			const jsonOut = ['table',
+			const jsonOut = ['table', { border: '0' },
 					['tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
