@@ -153,6 +153,8 @@ define([
 				],
 
 			getCellSpecificationStrategies: [
+					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('columnSeparator', './ancestor::' + table + '[1]/@border = "1"'),
+					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('rowSeparator', './ancestor::' + table + '[1]/@border = "1"'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('horizontalAlignment', './@align'),
 					getAttributeStrategies.createGetAttributeValueAsStringStrategy('verticalAlignment', './@valign')
 				],
