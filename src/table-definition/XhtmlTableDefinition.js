@@ -82,12 +82,7 @@ define([
 			namespaceURI: namespaceURI,
 			cellLocalName: 'td',
 
-			// Table borders
-			defaultBorderValue: '1',
-			tableBorderToCvkTableBorder: {
-				'0': 'none',
-				'1': 'all'
-			},
+			supportsBorders: true,
 
 			// Defining node selectors
 			tableDefiningNodeSelector: 'self::' + table,
