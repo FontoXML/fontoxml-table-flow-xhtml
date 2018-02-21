@@ -1,14 +1,14 @@
 define([
 	'fontoxml-table-flow/TableDefinition',
 	'fontoxml-table-flow/createCreateRowStrategy',
-	'fontoxml-table-flow/getAttributeStrategies',
+	'fontoxml-table-flow/getSpecificationValueStrategies',
 	'fontoxml-table-flow/normalizeCellNodeStrategies',
 	'fontoxml-table-flow/normalizeContainerNodeStrategies',
 	'fontoxml-table-flow/setAttributeStrategies'
 ], function (
 	TableDefinition,
 	createCreateRowStrategy,
-	getAttributeStrategies,
+	getSpecificationValueStrategies,
 	normalizeCellNodeStrategies,
 	normalizeContainerNodeStrategies,
 	setAttributeValueStrategies
@@ -140,18 +140,18 @@ define([
 
 			// Specification
 			getTableSpecificationStrategies: [
-					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('borders', './@border = "1"')
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('borders', './@border = "1"')
 				],
 
 			getColumnSpecificationStrategies: [
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('columnWidth', '"1*"')
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnWidth', '"1*"')
 				],
 
 			getCellSpecificationStrategies: [
-					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('columnSeparator', './ancestor::' + table + '[1]/@border = "1"'),
-					getAttributeStrategies.createGetAttributeValueAsBooleanStrategy('rowSeparator', './ancestor::' + table + '[1]/@border = "1"'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('horizontalAlignment', './@align'),
-					getAttributeStrategies.createGetAttributeValueAsStringStrategy('verticalAlignment', './@valign')
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator', './ancestor::' + table + '[1]/@border = "1"'),
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', './ancestor::' + table + '[1]/@border = "1"'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign')
 				],
 
 			// Set attributes
