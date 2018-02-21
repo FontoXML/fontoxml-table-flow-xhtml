@@ -130,9 +130,9 @@ define([
 
 			normalizeCellNodeStrategies: [
 					useTh ?
-						normalizeCellNodeStrategies.createConvertHeaderCellNodeToNormalCellNodeStrategy(namespaceURI, 'th') :
-						normalizeCellNodeStrategies.createConvertHeaderCellNodeToNormalCellNodeStrategy(namespaceURI, 'td'),
-					normalizeCellNodeStrategies.createConvertFormerHeaderCellNodeToNormalCellNodeStrategy(namespaceURI, 'td')
+						normalizeCellNodeStrategies.createConvertHeaderCellNodeStrategy(namespaceURI, 'th') :
+						normalizeCellNodeStrategies.createConvertHeaderCellNodeStrategy(namespaceURI, 'td'),
+					normalizeCellNodeStrategies.createConvertFormerHeaderCellNodeStrategy(namespaceURI, 'td')
 				],
 
 			// Creates
