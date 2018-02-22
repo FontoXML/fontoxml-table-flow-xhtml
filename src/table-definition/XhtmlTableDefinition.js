@@ -13,7 +13,7 @@ define([
 	getSpecificationValueStrategies,
 	normalizeCellNodeStrategies,
 	normalizeContainerNodeStrategies,
-	setAttributeValueStrategies
+	setAttributeStrategies
 ) {
 	'use strict';
 
@@ -85,8 +85,6 @@ define([
 			supportsBorders: true,
 
 			// Defining node selectors
-			tableDefiningNodeSelector: 'self::' + table,
-			cellDefiningNodeSelector: 'self::' + td + ' or self::' + th,
 			tablePartsNodeSelector: Object.keys(selectorParts)
 				.filter(function (selector) { return selector !== 'caption'; })
 				.map(function (key) {
@@ -157,14 +155,14 @@ define([
 
 			// Set attributes
 			setTableNodeAttributeStrategies: [
-					setAttributeValueStrategies.createBooleanValueAsAttributeStrategy('border', 'borders', null, '1', '0')
+					setAttributeStrategies.createBooleanValueAsAttributeStrategy('border', 'borders', null, '1', '0')
 				],
 
 			setCellNodeAttributeStrategies: [
-					setAttributeValueStrategies.createRowSpanAsAttributeStrategy('rowspan'),
-					setAttributeValueStrategies.createColumnSpanAsAttributeStrategy('colspan'),
-					setAttributeValueStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
-					setAttributeValueStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
+					setAttributeStrategies.createRowSpanAsAttributeStrategy('rowspan'),
+					setAttributeStrategies.createColumnSpanAsAttributeStrategy('colspan'),
+					setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
+					setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
 				],
 		};
 
