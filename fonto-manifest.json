@@ -1,7 +1,7 @@
 {
 	"dependencies": {
-		"fontoxml-platform-base": "^3.1.0",
-		"fontoxml-table-flow": "^4.1.0"
+		"fontoxml-platform-base": "^3.1.1",
+		"fontoxml-table-flow": "^5.0.0"
 	},
 	"role": "add-on"
 }
