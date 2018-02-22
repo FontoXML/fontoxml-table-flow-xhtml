@@ -1,5 +1,6 @@
 define([
 	'fontoxml-table-flow/TableDefinition',
+	'fontoxml-table-flow/createCreateCellNodeStrategy',
 	'fontoxml-table-flow/createCreateRowStrategy',
 	'fontoxml-table-flow/getSpecificationValueStrategies',
 	'fontoxml-table-flow/normalizeCellNodeStrategies',
@@ -7,6 +8,7 @@ define([
 	'fontoxml-table-flow/setAttributeStrategies'
 ], function (
 	TableDefinition,
+	createCreateCellNodeStrategy,
 	createCreateRowStrategy,
 	getSpecificationValueStrategies,
 	normalizeCellNodeStrategies,
@@ -79,8 +81,6 @@ define([
 
 		var properties = {
 			selectorParts: selectorParts,
-			namespaceURI: namespaceURI,
-			cellLocalName: 'td',
 
 			supportsBorders: true,
 
@@ -136,6 +136,7 @@ define([
 				],
 
 			// Creates
+			createCellNodeStrategy: createCreateCellNodeStrategy(namespaceURI, 'td'),
 			createRowStrategy: createCreateRowStrategy(namespaceURI, 'tr'),
 
 			// Specification
