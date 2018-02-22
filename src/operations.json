@@ -23,24 +23,11 @@
 		"initialData": {
 			"childNodeStructure": [
 				"table"
-			],
-			"rows": 1,
-			"columns": 1
+			]
 		},
-		"getStateSteps": [
-			{
-				"type": "command/table-insert"
-			}
-		],
 		"steps": [
 			{
-				"type": "command/table-insert"
-			},
-			{
-				"type": "operation/set-cursor-to-first-text-position",
-				"data": {
-					"contextNodeId": "{{tableNodeId}}"
-				}
+				"type": "operation/table-insert"
 			}
 		]
 	}
