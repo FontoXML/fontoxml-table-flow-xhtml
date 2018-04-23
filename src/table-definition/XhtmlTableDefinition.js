@@ -26,6 +26,7 @@ define([
 		var useThead = !!options.useThead;
 		var useTbody = !!options.useTbody;
 		var useTh = !!options.useTh;
+		var useBorders = options.useBorders !== false;
 
 		// Warn the developer that thead is used as header-defining element. This is required when
 		// using tbody.
@@ -82,11 +83,13 @@ define([
 		var properties = {
 			selectorParts: selectorParts,
 
-			supportsBorders: true,
+			supportsBorders: useBorders,
 
 			// Defining node selectors
 			tablePartsNodeSelector: Object.keys(selectorParts)
-				.filter(function (selector) { return selector !== 'caption'; })
+				.filter(function (selector) {
+					return selector !== 'caption';
+				})
 				.map(function (key) {
 					return 'self::' + selectorParts[key];
 				}.bind(this)).join(' or '),
@@ -138,32 +141,33 @@ define([
 			createRowStrategy: createCreateRowStrategy(namespaceURI, 'tr'),
 
 			// Specification
-			getTableSpecificationStrategies: [
+			getTableSpecificationStrategies: useBorders ? [
 					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('borders', './@border = "1"')
-				],
+				] : [],
 
 			getColumnSpecificationStrategies: [
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnWidth', '"1*"')
 				],
 
 			getCellSpecificationStrategies: [
-					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator', './ancestor::' + table + '[1]/@border = "1"'),
-					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', './ancestor::' + table + '[1]/@border = "1"'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
 					getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign')
-				],
+				].concat(useBorders ? [
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator', './ancestor::' + table + '[1]/@border = "1"'),
+					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', './ancestor::' + table + '[1]/@border = "1"')
+				] : []),
 
 			// Set attributes
-			setTableNodeAttributeStrategies: [
+			setTableNodeAttributeStrategies: useBorders ? [
 					setAttributeStrategies.createBooleanValueAsAttributeStrategy('border', 'borders', null, '1', '0')
-				],
+				] : [],
 
 			setCellNodeAttributeStrategies: [
 					setAttributeStrategies.createRowSpanAsAttributeStrategy('rowspan'),
 					setAttributeStrategies.createColumnSpanAsAttributeStrategy('colspan'),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
-				],
+				]
 		};
 
 		TableDefinition.call(this, properties);

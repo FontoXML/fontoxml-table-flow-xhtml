@@ -717,7 +717,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
 						],
 						['tfoot',
 							['tr', ['td'], ['td'], ['td'], ['td']]
@@ -2186,7 +2186,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 		});
 	});
 
-	describe('Tables not conforming to settings (useThead, useTbody, useTh)', () => {
+	describe('Tables not conforming to settings (useThead, useTbody, useTh, useBorders)', () => {
 		it('can transform a table based on thead, tbody, tfoot with 1 header row to a table based on rows only', () => {
 			const jsonIn = ['table',
 					['thead',
@@ -2194,7 +2194,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					],
 					['tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']]
 					],
 					['tfoot',
 						['tr', ['td'], ['td'], ['td'], ['td']]
@@ -2400,6 +2400,29 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					useThead: true,
 					useTbody: true,
 					useTh: true
+				};
+
+			transformTable(jsonIn, jsonOut, options);
+		});
+
+		it('can turn borders off', () => {
+			const jsonIn = ['table',
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']]
+				];
+
+			const jsonOut = ['table',
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']]
+				];
+
+			const options = {
+					useTh: true,
+					useBorders: false
 				};
 
 			transformTable(jsonIn, jsonOut, options);
