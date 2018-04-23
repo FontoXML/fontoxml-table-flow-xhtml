@@ -24,6 +24,7 @@ define([
 	 * @param  {boolean} [options.useTh]                   Set to true if th should be used
 	 * @param  {boolean} [options.useThead]                Set to true if thead should be used
 	 * @param  {boolean} [options.useTbody]                Set to true if tbody should be used
+	 * @param  {boolean} [options.useBorders=true]         Set to false if the borders attribute should not be used
 	 * @param  {Object}  [options.table]                   Options for the table element
 	 * @param  {XPathTest}  [options.table.tableFilterSelector]  An optional additional selector for the table which will be used to refine whether a table element should be considered as an xhtml table
 	 * @param  {string}  [options.table.namespaceURI='']   The namespace URI for this table
