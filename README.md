@@ -27,6 +27,12 @@ configureAsXhtmlTableElements(sxModule, {
 	// True if a tbody element should be used.
 	useTbody: true,
 
+	// False if the borders attribute should not be used
+	useBorder: true,
+
+	// True if the table should include <col> elements by default
+	shouldCreateColumnSpecificationNodes: false,
+
 	// The namespace uri for the table element and its descendant elements (optional)
 	table: {
 		namespaceURI: 'http://some-uri.com/'
