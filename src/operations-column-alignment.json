@@ -1,0 +1,95 @@
+{
+	"_xhtml-set-column-align": {
+		"steps": [
+			{
+				"type": "transform/setContextNodeIdToSelectionAncestor",
+				"data": {
+					"selectionAncestorMatchesSomeOf": ["self::td", "self::th"]
+				}
+			},
+			{
+				"type": "transform/setContextNodeIdToFirstMatchingNodeFromContextNode",
+				"data": {
+					"xPathQuery": "let $current := . return $current/ancestor::table[1]/col[position() = count($current/preceding-sibling::td) + 1]"
+				}
+			},
+			{
+				"type": "operation/set-attributes",
+				"data": {
+					"attributes": {
+						"align": "{{align}}"
+					},
+					"disabledWhenUnchanged": true
+				}
+			}
+		]
+	},
+	"xhtml-set-col-horizontal-alignment-left": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
+		"label": "t__Align left",
+		"description": "t__Align the content of the current column to its left.",
+		"icon": "align-left",
+		"steps": [
+			{
+				"type": "operation/_xhtml-set-column-align",
+				"data": {
+					"align": "left"
+				}
+			}
+		]
+	},
+	"xhtml-set-col-horizontal-alignment-center": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
+		"label": "t__Align center",
+		"description": "t__Align the content of the current column to its center.",
+		"icon": "align-center",
+		"steps": [
+			{
+				"type": "operation/_xhtml-set-column-align",
+				"data": {
+					"align": "center"
+				}
+			}
+		]
+	},
+	"xhtml-set-col-horizontal-alignment-right": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
+		"label": "t__Align right",
+		"description": "t__Align the content of the current column to its right.",
+		"icon": "align-right",
+		"steps": [
+			{
+				"type": "operation/_xhtml-set-column-align",
+				"data": {
+					"align": "right"
+				}
+			}
+		]
+	},
+	"xhtml-set-col-horizontal-alignment-justify": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml"
+		},
+		"label": "t__Justify",
+		"description": "t__Justify the content of the current col.",
+		"icon": "align-right",
+		"steps": [
+			{
+				"type": "operation/_xhtml-set-column-align",
+				"data": {
+					"align": "justify"
+				}
+			}
+		]
+	}
+}
