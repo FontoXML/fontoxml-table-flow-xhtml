@@ -2,6 +2,7 @@ define([
 	'fontoxml-table-flow/TableDefinition',
 	'fontoxml-table-flow/createCreateCellNodeStrategy',
 	'fontoxml-table-flow/createCreateRowStrategy',
+	'fontoxml-table-flow/createCreateColumnSpecificationNodeStrategy',
 	'fontoxml-table-flow/getSpecificationValueStrategies',
 	'fontoxml-table-flow/normalizeCellNodeStrategies',
 	'fontoxml-table-flow/normalizeContainerNodeStrategies',
@@ -10,6 +11,7 @@ define([
 	TableDefinition,
 	createCreateCellNodeStrategy,
 	createCreateRowStrategy,
+	createCreateColumnSpecificationNodeStrategy,
 	getSpecificationValueStrategies,
 	normalizeCellNodeStrategies,
 	normalizeContainerNodeStrategies,
@@ -27,6 +29,7 @@ define([
 		var useTbody = !!options.useTbody;
 		var useTh = !!options.useTh;
 		var useBorders = options.useBorders !== false;
+		var shouldCreateColumnSpecificationNodes = options.shouldCreateColumnSpecificationNodes !== false;
 
 		// Warn the developer that thead is used as header-defining element. This is required when
 		// using tbody.
@@ -85,6 +88,8 @@ define([
 
 			supportsBorders: useBorders,
 
+			shouldCreateColumnSpecificationNodes: shouldCreateColumnSpecificationNodes,
+
 			// Defining node selectors
 			tablePartsNodeSelector: Object.keys(selectorParts)
 				.filter(function (selector) {
@@ -139,6 +144,7 @@ define([
 			// Creates
 			createCellNodeStrategy: createCreateCellNodeStrategy(namespaceURI, 'td'),
 			createRowStrategy: createCreateRowStrategy(namespaceURI, 'tr'),
+			createColumnSpecificationNodeStrategy: createCreateColumnSpecificationNodeStrategy(namespaceURI, 'col', './*[self::' + thead + ' or self::' + tbody + ']'),
 
 			// Specification
 			getTableSpecificationStrategies: useBorders ? [
