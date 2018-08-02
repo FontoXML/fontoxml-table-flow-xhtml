@@ -152,7 +152,9 @@ define([
 				] : [],
 
 			getColumnSpecificationStrategies: [
-					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnWidth', '"1*"')
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnWidth', '"1*"'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
+					getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign')
 				],
 
 			getCellSpecificationStrategies: [
@@ -173,7 +175,12 @@ define([
 					setAttributeStrategies.createColumnSpanAsAttributeStrategy('colspan'),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
 					setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
-				]
+				],
+
+			setColumnSpecificationNodeAttributeStrategies: [
+				setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
+				setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
+			]
 		};
 
 		TableDefinition.call(this, properties);
