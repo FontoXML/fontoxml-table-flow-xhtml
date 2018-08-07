@@ -8,15 +8,9 @@
 				}
 			},
 			{
-				"type": "transform/setContextNodeIdToFirstMatchingNodeFromContextNode",
-				"data": {
-					"xPathQuery": "let $current := . return $current/ancestor::table[1]/col[position() = fonto:get-column-index($current) + 1]"
-				}
-			},
-			{
 				"type": "operation/set-attributes",
 				"data": {
-					"contextNodeId": "let $current :=  x__$data('contextNode') return $current/ancestor::table[1]/col[position() = fonto:get-column-index($current) + 1]",
+                    "contextNodeId": "x__let $current := $data('contextNode') return $current/ancestor::table[1]/col[position() = fonto:get-column-index($current) + 1]",
 					"attributes": {
 						"align": "{{align}}"
 					},
