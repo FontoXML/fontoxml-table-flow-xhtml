@@ -29,7 +29,7 @@ define([
 		var useTbody = !!options.useTbody;
 		var useTh = !!options.useTh;
 		var useBorders = options.useBorders !== false;
-		var shouldCreateColumnSpecificationNodes = options.shouldCreateColumnSpecificationNodes !== false;
+		var shouldCreateColumnSpecificationNodes = !!options.shouldCreateColumnSpecificationNodes;
 
 		// Warn the developer that thead is used as header-defining element. This is required when
 		// using tbody.
