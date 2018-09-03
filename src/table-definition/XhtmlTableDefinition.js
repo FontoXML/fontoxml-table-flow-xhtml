@@ -51,7 +51,8 @@ define([
 
 		var namespaceSelector = 'Q{' + namespaceURI + '}';
 		var selectorParts = {
-			table: namespaceSelector + 'table' + (options.table && options.table.tableFilterSelector ?
+			table: namespaceSelector + 'table' + (
+				options.table && options.table.tableFilterSelector ?
 					'[' + options.table.tableFilterSelector + ']' :
 					''),
 			headerContainer: namespaceSelector + 'thead',
@@ -125,59 +126,50 @@ define([
 
 			// Normalizations
 			normalizeContainerNodeStrategies: [
-					useThead ?
-						normalizeContainerNodeStrategies.createAddHeaderContainerNodeStrategy(namespaceURI, 'thead') :
-						normalizeContainerNodeStrategies.createRemoveHeaderContainerNodeStrategy(),
-					useTbody ?
-						normalizeContainerNodeStrategies.createAddBodyContainerNodeStrategy(namespaceURI, 'tbody') :
-						normalizeContainerNodeStrategies.createRemoveBodyContainerNodeStrategy(),
-					normalizeContainerNodeStrategies.createRemoveFooterContainerNodeStrategy()
-				],
+				useThead ?
+					normalizeContainerNodeStrategies.createAddHeaderContainerNodeStrategy(namespaceURI, 'thead') :
+					normalizeContainerNodeStrategies.createRemoveHeaderContainerNodeStrategy(),
+				useTbody ?
+					normalizeContainerNodeStrategies.createAddBodyContainerNodeStrategy(namespaceURI, 'tbody') :
+					normalizeContainerNodeStrategies.createRemoveBodyContainerNodeStrategy(),
+				normalizeContainerNodeStrategies.createRemoveFooterContainerNodeStrategy()
+			],
 
 			normalizeCellNodeStrategies: [
-					useTh ?
-						normalizeCellNodeStrategies.createConvertHeaderCellNodeStrategy(namespaceURI, 'th') :
-						normalizeCellNodeStrategies.createConvertHeaderCellNodeStrategy(namespaceURI, 'td'),
-					normalizeCellNodeStrategies.createConvertFormerHeaderCellNodeStrategy(namespaceURI, 'td')
-				],
+				useTh ?
+					normalizeCellNodeStrategies.createConvertHeaderCellNodeStrategy(namespaceURI, 'th') :
+					normalizeCellNodeStrategies.createConvertHeaderCellNodeStrategy(namespaceURI, 'td'),
+				normalizeCellNodeStrategies.createConvertFormerHeaderCellNodeStrategy(namespaceURI, 'td')
+			],
 
 			// Creates
 			createCellNodeStrategy: createCreateCellNodeStrategy(namespaceURI, 'td'),
 			createRowStrategy: createCreateRowStrategy(namespaceURI, 'tr'),
-			createColumnSpecificationNodeStrategy: createCreateColumnSpecificationNodeStrategy(namespaceURI, 'col', './*[self::' + thead + ' or self::' + tbody + ']'),
+			createColumnSpecificationNodeStrategy: shouldCreateColumnSpecificationNodes ?
+				createCreateColumnSpecificationNodeStrategy(namespaceURI, 'col', './*[self::' + thead + ' or self::' + tbody + ' or self::' + tr + ']') :
+				undefined,
 
 			// Specification
 			getTableSpecificationStrategies: useBorders ? [
-					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('borders', './@border = "1"')
-				] : [],
-
-			getColumnSpecificationStrategies: [
-					getSpecificationValueStrategies.createGetValueAsStringStrategy('columnWidth', '"1*"'),
-					getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
-					getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign')
-				],
+				getSpecificationValueStrategies.createGetValueAsBooleanStrategy('borders', './@border = "1"')
+			] : [],
 
 			getCellSpecificationStrategies: [
-					getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
-					getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign')
-				].concat(useBorders ? [
-					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator', './ancestor::' + table + '[1]/@border = "1"'),
-					getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', './ancestor::' + table + '[1]/@border = "1"')
-				] : []),
+				getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
+				getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign')
+			].concat(useBorders ? [
+				getSpecificationValueStrategies.createGetValueAsBooleanStrategy('columnSeparator', './ancestor::' + table + '[1]/@border = "1"'),
+				getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', './ancestor::' + table + '[1]/@border = "1"')
+			] : []),
 
 			// Set attributes
 			setTableNodeAttributeStrategies: useBorders ? [
-					setAttributeStrategies.createBooleanValueAsAttributeStrategy('border', 'borders', null, '1', '0')
-				] : [],
+				setAttributeStrategies.createBooleanValueAsAttributeStrategy('border', 'borders', null, '1', '0')
+			] : [],
 
 			setCellNodeAttributeStrategies: [
-					setAttributeStrategies.createRowSpanAsAttributeStrategy('rowspan'),
-					setAttributeStrategies.createColumnSpanAsAttributeStrategy('colspan'),
-					setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
-					setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
-				],
-
-			setColumnSpecificationNodeAttributeStrategies: [
+				setAttributeStrategies.createRowSpanAsAttributeStrategy('rowspan'),
+				setAttributeStrategies.createColumnSpanAsAttributeStrategy('colspan'),
 				setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
 				setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
 			]
