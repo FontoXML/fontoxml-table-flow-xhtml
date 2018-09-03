@@ -155,6 +155,7 @@ define([
 			] : [],
 
 			getCellSpecificationStrategies: [
+				getSpecificationValueStrategies.createGetValueAsStringStrategy('characterAlignment', './@char'),
 				getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
 				getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign')
 			].concat(useBorders ? [
@@ -170,6 +171,7 @@ define([
 			setCellNodeAttributeStrategies: [
 				setAttributeStrategies.createRowSpanAsAttributeStrategy('rowspan'),
 				setAttributeStrategies.createColumnSpanAsAttributeStrategy('colspan'),
+				setAttributeStrategies.createStringValueAsAttributeStrategy('char', 'characterAlignment'),
 				setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
 				setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
 			]

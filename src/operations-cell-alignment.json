@@ -18,7 +18,8 @@
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
-						"horizontalAlignment": "left"
+						"horizontalAlignment": "left",
+						"characterAlignment": null
 					}
 				}
 			}
@@ -43,7 +44,8 @@
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
-						"horizontalAlignment": "right"
+						"horizontalAlignment": "right",
+						"characterAlignment": null
 					}
 				}
 			}
@@ -68,7 +70,8 @@
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
-						"horizontalAlignment": "center"
+						"horizontalAlignment": "center",
+						"characterAlignment": null
 					}
 				}
 			}
@@ -93,7 +96,42 @@
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
-						"horizontalAlignment": "justify"
+						"horizontalAlignment": "justify",
+						"characterAlignment": null
+					}
+				}
+			}
+		]
+	},
+	"xhtml-set-cell-horizontal-alignment-character": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml",
+			"params": [
+				{
+					"name": "alignmentCharacter",
+					"type": "string",
+					"description": [
+						"The character to align a column on."
+					]
+				}
+			]
+		},
+		"label": "t__Character",
+		"description": "t__Align the content of the current cell on a character.",
+		"steps": [
+			{
+				"type": "transform/setCellNodeIdsToSelectionAncestors",
+				"data": {
+					"nodeName": ["td", "th"]
+				}
+			},
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "char",
+						"characterAlignment": "{{alignmentCharacter}}"
 					}
 				}
 			}
