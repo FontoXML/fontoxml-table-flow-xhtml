@@ -163,6 +163,11 @@ define([
 				getSpecificationValueStrategies.createGetValueAsBooleanStrategy('rowSeparator', './ancestor::' + table + '[1]/@border = "1"')
 			] : []),
 
+			getColumnSpecificationStrategies: shouldCreateColumnSpecificationNodes ? [
+				getSpecificationValueStrategies.createGetValueAsStringStrategy('horizontalAlignment', './@align'),
+				getSpecificationValueStrategies.createGetValueAsStringStrategy('verticalAlignment', './@valign')
+			] : [],
+
 			// Set attributes
 			setTableNodeAttributeStrategies: useBorders ? [
 				setAttributeStrategies.createBooleanValueAsAttributeStrategy('border', 'borders', null, '1', '0')
@@ -174,7 +179,12 @@ define([
 				setAttributeStrategies.createStringValueAsAttributeStrategy('char', 'characterAlignment'),
 				setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
 				setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
-			]
+			],
+
+			setColumnSpecificationNodeAttributeStrategies: shouldCreateColumnSpecificationNodes ? [
+				setAttributeStrategies.createStringValueAsAttributeStrategy('align', 'horizontalAlignment'),
+				setAttributeStrategies.createStringValueAsAttributeStrategy('valign', 'verticalAlignment')
+			] : []
 		};
 
 		TableDefinition.call(this, properties);
