@@ -3104,4 +3104,154 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			transformTable(jsonIn, jsonOut, options);
 		});
 	});
+
+	describe('Keeps previously set @align and @valign attributes intact', () => {
+		it('can add a row to a table having col elements with @align and @valign attributes', () => {
+			const jsonIn = [
+				'table',
+				['col', { align: 'center', valign: 'middle' }],
+				['col', { align: 'center', valign: 'middle' }],
+				['col', { align: 'center', valign: 'middle' }],
+				['col', { align: 'center', valign: 'middle' }],
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const mutateGridModel = (gridModel) => gridModel.insertRow(2, false);
+
+			const jsonOut = [
+				'table', { border: '0' },
+				['col', { align: 'center', valign: 'middle' }],
+				['col', { align: 'center', valign: 'middle' }],
+				['col', { align: 'center', valign: 'middle' }],
+				['col', { align: 'center', valign: 'middle' }],
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: true,
+				useThead: false,
+				useTbody: false,
+				useTh: true
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can add a row to a table having col elements with each having a different configuration of @align and @valign attributes', () => {
+			const jsonIn = [
+				'table',
+				['col', { align: 'center' }],
+				['col', { valign: 'middle' }],
+				['col', { align: 'left', valign: 'top' }],
+				['col'],
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const mutateGridModel = (gridModel) => gridModel.insertRow(2, false);
+
+			const jsonOut = [
+				'table', { border: '0' },
+				['col', { align: 'center' }],
+				['col', { valign: 'middle' }],
+				['col', { align: 'left', valign: 'top' }],
+				['col'],
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: true,
+				useThead: false,
+				useTbody: false,
+				useTh: true
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('does not add @align or @valign attributes on a table starting without col elements', () => {
+			const jsonIn = [
+				'table',
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const mutateGridModel = (gridModel) => gridModel.insertRow(2, false);
+
+			const jsonOut = [
+				'table', { border: '0' },
+				['col'],
+				['col'],
+				['col'],
+				['col'],
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: true,
+				useThead: false,
+				useTbody: false,
+				useTh: true
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('does not add @align or @valign attributes on a table starting with "empty" col elements', () => {
+			const jsonIn = [
+				'table',
+				['col'],
+				['col'],
+				['col'],
+				['col'],
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const mutateGridModel = (gridModel) => gridModel.insertRow(2, false);
+
+			const jsonOut = [
+				'table', { border: '0' },
+				['col'],
+				['col'],
+				['col'],
+				['col'],
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: true,
+				useThead: false,
+				useTbody: false,
+				useTh: true
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+	});
 });
