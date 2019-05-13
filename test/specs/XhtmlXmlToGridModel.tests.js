@@ -533,7 +533,8 @@ describe('XHTML tables: XML to GridModel', () => {
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
 				chai.assert.isOk(gridModel);
 
-				chai.assert.equal(gridModel.getHeight(), 4, 'height');
+				// Normalization happens AFTER the first mutation
+				chai.assert.equal(gridModel.getHeight(), 5, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
 				chai.assert.equal(gridModel.headerRowCount, 0, 'headerRowCount');
 			});
