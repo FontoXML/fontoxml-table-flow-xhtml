@@ -1,11 +1,3 @@
-define([
-
-], function (
-
-) {
-	'use strict';
-
-	return function configureSxModule (sxModule) {
-		sxModule.markAsAddon();
-	};
-});
+export default function configureSxModule(sxModule) {
+	sxModule.markAsAddon();
+}
