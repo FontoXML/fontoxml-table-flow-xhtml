@@ -323,7 +323,20 @@ function XhtmlTableDefinition(options) {
 						'verticalAlignment'
 					)
 			  ]
-			: []
+			: [],
+
+		horizontalAlignmentOperationNames: [
+			'contextual-xhtml-set-cell-horizontal-alignment-left',
+			'contextual-xhtml-set-cell-horizontal-alignment-center',
+			'contextual-xhtml-set-cell-horizontal-alignment-right',
+			'contextual-xhtml-set-cell-horizontal-alignment-justify'
+		],
+
+		verticalAlignmentOperationNames: [
+			'contextual-xhtml-set-cell-vertical-alignment-top',
+			'contextual-xhtml-set-cell-vertical-alignment-bottom',
+			'contextual-xhtml-set-cell-vertical-alignment-center'
+		]
 	};
 
 	TableDefinition.call(this, properties);

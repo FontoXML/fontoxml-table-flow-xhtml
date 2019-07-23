@@ -1,4 +1,31 @@
 {
+	"contextual-xhtml-set-cell-horizontal-alignment-left": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml",
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the alignment"
+				}
+			]
+		},
+		"label": "t__Align left",
+		"description": "t__Align left",
+		"icon": "align-left",
+		"steps": [
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"horizontalAlignment": "left",
+						"characterAlignment": null
+					}
+				}
+			}
+		]
+	},
 	"xhtml-set-cell-horizontal-alignment-left": {
 		"__documentation": {
 			"fontosdk": true,
@@ -15,10 +42,31 @@
 				}
 			},
 			{
+				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-left"
+			}
+		]
+	},
+	"contextual-xhtml-set-cell-horizontal-alignment-right": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml",
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the alignment"
+				}
+			]
+		},
+		"label": "t__Align right",
+		"description": "t__Align right",
+		"icon": "align-right",
+		"steps":  [
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
-						"horizontalAlignment": "left",
+						"horizontalAlignment": "right",
 						"characterAlignment": null
 					}
 				}
@@ -41,10 +89,31 @@
 				}
 			},
 			{
+				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-right"
+			}
+		]
+	},
+	"contextual-xhtml-set-cell-horizontal-alignment-center": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml",
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the alignment"
+				}
+			]
+		},
+		"label": "t__Align center",
+		"description": "t__Align center",
+		"icon": "align-center",
+		"steps": [
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
-						"horizontalAlignment": "right",
+						"horizontalAlignment": "center",
 						"characterAlignment": null
 					}
 				}
@@ -67,10 +136,31 @@
 				}
 			},
 			{
+				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-center"
+			}
+		]
+	},
+	"contextual-xhtml-set-cell-horizontal-alignment-justify": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml",
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the alignment"
+				}
+			]
+		},
+		"label": "t__Justify",
+		"description": "t__Justify",
+		"icon": "align-justify",
+		"steps": [
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
-						"horizontalAlignment": "center",
+						"horizontalAlignment": "justify",
 						"characterAlignment": null
 					}
 				}
@@ -93,13 +183,7 @@
 				}
 			},
 			{
-				"type": "operation/toggle-cell-data",
-				"data": {
-					"cellData": {
-						"horizontalAlignment": "justify",
-						"characterAlignment": null
-					}
-				}
+				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-justify"
 			}
 		]
 	},
@@ -137,6 +221,32 @@
 			}
 		]
 	},
+	"contextual-xhtml-set-cell-vertical-alignment-top": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml",
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the alignment"
+				}
+			]
+		},
+		"label": "t__Align top",
+		"description": "t__Align content to the top of the current cell",
+		"icon":"align-top",
+		"steps": [
+			{
+				"type": "operation/toggle-cell-data",
+				"data": {
+					"cellData": {
+						"verticalAlignment": "top"
+					}
+				}
+			}
+		]
+	},
 	"xhtml-set-cell-vertical-alignment-top": {
 		"__documentation": {
 			"fontosdk": true,
@@ -152,10 +262,31 @@
 				}
 			},
 			{
+				"type": "operation/contextual-xhtml-set-cell-vertical-alignment-top"
+			}
+		]
+	},
+	"contextual-xhtml-set-cell-vertical-alignment-bottom": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml",
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the alignment"
+				}
+			]
+		},
+		"label": "t__Align bottom",
+		"description": "t__Align content to the bottom of the current cell",
+		"icon":"align-bottom",
+		"steps": [
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
-						"verticalAlignment": "top"
+						"verticalAlignment": "bottom"
 					}
 				}
 			}
@@ -168,6 +299,7 @@
 		},
 		"label": "t__Align bottom",
 		"description": "t__Align the content of the current cell to its bottom.",
+		"icon":"align-bottom",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
@@ -176,10 +308,31 @@
 				}
 			},
 			{
+				"type": "operation/contextual-xhtml-set-cell-vertical-alignment-bottom"
+			}
+		]
+	},
+	"contextual-xhtml-set-cell-vertical-alignment-center": {
+		"__documentation": {
+			"fontosdk": true,
+			"category": "add-on/fontoxml-table-flow-xhtml",
+			"params": [
+				{
+					"name": "cellNodeIds",
+					"type": "NodeId[]",
+					"description": "The NodeIds of the cells for which to change the alignment"
+				}
+			]
+		},
+		"label": "t__Align center",
+		"description": "t__Align content to the middle of the current cell",
+		"icon":"align-vertical-center",
+		"steps": [
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
-						"verticalAlignment": "bottom"
+						"verticalAlignment": "middle"
 					}
 				}
 			}
@@ -192,6 +345,7 @@
 		},
 		"label": "t__Align center",
 		"description": "t__Center the content of the current cell.",
+		"icon":"align-vertical-center",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
@@ -200,12 +354,7 @@
 				}
 			},
 			{
-				"type": "operation/toggle-cell-data",
-				"data": {
-					"cellData": {
-						"verticalAlignment": "middle"
-					}
-				}
+				"type": "operation/contextual-xhtml-set-cell-vertical-alignment-center"
 			}
 		]
 	}
