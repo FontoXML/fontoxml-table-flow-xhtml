@@ -175,9 +175,9 @@ function XhtmlTableDefinition(options) {
 
 		// Data
 		getNumberOfColumnsXPathQuery:
-			'(let $cells := (.//' +
+			'(let $cells := head(descendant-or-self::' +
 			tr +
-			')[1]/*[self::' +
+			')/*[self::' +
 			td +
 			' | self::' +
 			th +
