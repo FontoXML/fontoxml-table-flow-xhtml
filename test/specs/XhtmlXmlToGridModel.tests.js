@@ -24,10 +24,9 @@ describe('XHTML tables: XML to GridModel', () => {
 
 	describe('Basics', () => {
 		it('can deserialize a 1x1 table', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['tr', ['td']]
-				], documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(['table', ['tr', ['td']]], documentNode)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -39,13 +38,18 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				], documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']]
+					],
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -57,15 +61,21 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table containing a tbody element', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
-				], documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						[
+							'tbody',
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						]
+					],
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -77,17 +87,24 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table containing two tbody elements', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						[
+							'tbody',
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						[
+							'tbody',
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						]
 					],
-					['tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -99,13 +116,25 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table containing processing instructions and comments', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['tr', ['td'], ['td'], ['?someProcessingInstruction', 'someContent'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['!', 'some comment'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				], documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						[
+							'tr',
+							['td'],
+							['td'],
+							['?someProcessingInstruction', 'someContent'],
+							['td'],
+							['td']
+						],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['!', 'some comment'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']]
+					],
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -119,13 +148,18 @@ describe('XHTML tables: XML to GridModel', () => {
 
 	describe('Headers and footers', () => {
 		it('can deserialize a 4x4 table with 1 header row (th-based)', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['tr', ['th'], ['th'], ['th'], ['th']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				], documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['tr', ['th'], ['th'], ['th'], ['th']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']]
+					],
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -137,13 +171,18 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with 2 header rows (th-based)', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['tr', ['th'], ['th'], ['th'], ['th']],
-					['tr', ['th'], ['th'], ['th'], ['th']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				], documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['tr', ['th'], ['th'], ['th'], ['th']],
+						['tr', ['th'], ['th'], ['th'], ['th']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']]
+					],
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -155,15 +194,18 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with 1 header row (thead-based)', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['thead',
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']]
 					],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -175,15 +217,21 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with 2 header rows (thead-based)', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['thead',
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						[
+							'thead',
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']]
 					],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -195,15 +243,18 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with 1 header row (th and thead-based)', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['thead',
-						['tr', ['th'], ['th'], ['th'], ['th']]
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']]
 					],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -215,15 +266,21 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with 2 header rows (th and thead-based)', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['thead',
-						['tr', ['th'], ['th'], ['th'], ['th']],
-						['tr', ['th'], ['th'], ['th'], ['th']]
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						[
+							'thead',
+							['tr', ['th'], ['th'], ['th'], ['th']],
+							['tr', ['th'], ['th'], ['th'], ['th']]
+						],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']]
 					],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -235,17 +292,21 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with 1 header row (th and thead-based) with tbody', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['thead',
-						['tr', ['th'], ['th'], ['th'], ['th']]
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
+						[
+							'tbody',
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						]
 					],
-					['tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -257,17 +318,24 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with 2 header rows (th and thead-based) with tbody', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['thead',
-						['tr', ['th'], ['th'], ['th'], ['th']],
-						['tr', ['th'], ['th'], ['th'], ['th']]
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						[
+							'thead',
+							['tr', ['th'], ['th'], ['th'], ['th']],
+							['tr', ['th'], ['th'], ['th'], ['th']]
+						],
+						[
+							'tbody',
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						]
 					],
-					['tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -279,13 +347,18 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with 1 header row (th-based) and a header column', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['tr', ['th'], ['th'], ['th'], ['th']],
-					['tr', ['th'], ['td'], ['td'], ['td']],
-					['tr', ['th'], ['td'], ['td'], ['td']],
-					['tr', ['th'], ['td'], ['td'], ['td']]
-				], documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['tr', ['th'], ['th'], ['th'], ['th']],
+						['tr', ['th'], ['td'], ['td'], ['td']],
+						['tr', ['th'], ['td'], ['td'], ['td']],
+						['tr', ['th'], ['td'], ['td'], ['td']]
+					],
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -297,13 +370,18 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with 1 header row (th-based) and 1 footer row (th-based)', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['tr', ['th'], ['th'], ['th'], ['th']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['th'], ['th'], ['th'], ['th']]
-				], documentNode));
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['tr', ['th'], ['th'], ['th'], ['th']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['th'], ['th'], ['th'], ['th']]
+					],
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -315,19 +393,21 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with two tbody elements and 1 header row (thead-based)', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['thead',
-						['tr', ['td'], ['td'], ['td'], ['td']]
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
+						['tbody', ['tr', ['td'], ['td'], ['td'], ['td']]],
+						[
+							'tbody',
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						]
 					],
-					['tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					],
-					['tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -339,19 +419,21 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with a tbody element, 1 header row (thead-based) and 1 footer row (tfoot-based)', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['thead',
-						['tr', ['td'], ['td'], ['td'], ['td']]
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
+						[
+							'tbody',
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]]
 					],
-					['tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					],
-					['tfoot',
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -363,19 +445,26 @@ describe('XHTML tables: XML to GridModel', () => {
 		});
 
 		it('can deserialize a 4x4 table with a tbody element and 2 header rows (th- & thead-based) with comments and processing instructions', () => {
-			coreDocument.dom.mutate(() => jsonMLMapper.parse(
-				['table',
-					['thead',
-						['?someProcessingInstruction', 'someContent'],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['?someProcessingInstruction', 'someContent']
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						[
+							'thead',
+							['?someProcessingInstruction', 'someContent'],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['?someProcessingInstruction', 'someContent']
+						],
+						[
+							'tbody',
+							['tr', ['td'], ['td'], ['!', 'some comment'], ['td'], ['td']],
+							['tr', ['!', 'some comment'], ['td'], ['td'], ['td'], ['td']]
+						]
 					],
-					['tbody',
-						['tr', ['td'], ['td'], ['!', 'some comment'], ['td'], ['td']],
-						['tr', ['!', 'some comment'], ['td'], ['td'], ['td'], ['td']]
-					]
-				], documentNode));
+					documentNode
+				)
+			);
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -390,13 +479,18 @@ describe('XHTML tables: XML to GridModel', () => {
 	describe('Spanning cells', () => {
 		describe('Column spanning cells', () => {
 			it('can deserialize a 4x4 table with a column spanning cell on the first row', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['tr', ['td', { 'colspan': '2' }], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					], documentNode));
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['td', { colspan: '2' }], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -412,13 +506,18 @@ describe('XHTML tables: XML to GridModel', () => {
 			});
 
 			it('can deserialize a 4x4 table containing a column spanning cell on the first header row', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['tr', ['th', { 'colspan': '2' }], ['th'], ['th']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					], documentNode));
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['th', { colspan: '2' }], ['th'], ['th']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -434,15 +533,21 @@ describe('XHTML tables: XML to GridModel', () => {
 			});
 
 			it('can deserialize a 4x4 table with a column spanning cell on the first row (tbody based)', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['tbody',
-							['tr', ['td', { 'colspan': '2' }], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
-					], documentNode));
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							[
+								'tbody',
+								['tr', ['td', { colspan: '2' }], ['td'], ['td']],
+								['tr', ['td'], ['td'], ['td'], ['td']],
+								['tr', ['td'], ['td'], ['td'], ['td']],
+								['tr', ['td'], ['td'], ['td'], ['td']]
+							]
+						],
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -458,17 +563,21 @@ describe('XHTML tables: XML to GridModel', () => {
 			});
 
 			it('can deserialize a 4x4 table with a column spanning cell on the first header row (thead based)', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['thead',
-							['tr', ['th', { 'colspan': '2' }], ['th'], ['th']]
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['thead', ['tr', ['th', { colspan: '2' }], ['th'], ['th']]],
+							[
+								'tbody',
+								['tr', ['td'], ['td'], ['td'], ['td']],
+								['tr', ['td'], ['td'], ['td'], ['td']],
+								['tr', ['td'], ['td'], ['td'], ['td']]
+							]
 						],
-						['tbody',
-							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
-					], documentNode));
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -484,28 +593,42 @@ describe('XHTML tables: XML to GridModel', () => {
 			});
 
 			it('throws when building a gridModel from a table containing incorrect colspans', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['tr', ['td', { 'colspan': '2' }], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					], documentNode));
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['td', { colspan: '2' }], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
-				chai.assert.throws(tableDefinition.buildTableGridModel.bind(undefined, tableElement, blueprint));
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					'error'
+				);
 			});
 		});
 
 		describe('Row spanning cells', () => {
 			it('can deserialize a 4x4 table with a row spanning cell on the first row', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['tr', ['td', { 'rowspan': '2' }], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					], documentNode));
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['td', { rowspan: '2' }], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -521,13 +644,24 @@ describe('XHTML tables: XML to GridModel', () => {
 			});
 
 			it('can deserialize a 4x4 table with multiple row spanning cells on the first row', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['tr', ['td', { 'rowspan': '2' }], ['td', { 'rowspan': '2' }], ['td', { 'rowspan': '2' }], ['td', { 'rowspan': '2' }]],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					], documentNode));
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							[
+								'tr',
+								['td', { rowspan: '2' }],
+								['td', { rowspan: '2' }],
+								['td', { rowspan: '2' }],
+								['td', { rowspan: '2' }]
+							],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -540,28 +674,42 @@ describe('XHTML tables: XML to GridModel', () => {
 			});
 
 			it('throws when building a gridModel from a table containing incorrect rowspans', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['tr', ['td', { 'rowspan': '3' }], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					], documentNode));
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['td', { rowspan: '3' }], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
-				chai.assert.throws(tableDefinition.buildTableGridModel.bind(undefined, tableElement, blueprint));
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					'error'
+				);
 			});
 		});
 
 		describe('Row and column spanning cells', () => {
 			it('can deserialize a 4x4 table with a rowspan and a colspan in the same cell', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['tr', ['td', { 'colspan': '2', 'rowspan': '2' }], ['td'], ['td']],
-						['tr', ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					], documentNode));
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['td', { colspan: '2', rowspan: '2' }], ['td'], ['td']],
+							['tr', ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
@@ -582,16 +730,25 @@ describe('XHTML tables: XML to GridModel', () => {
 			});
 
 			it('throws when building a gridModel from a table containing incorrect rowspans and colspans', () => {
-				coreDocument.dom.mutate(() => jsonMLMapper.parse(
-					['table',
-						['tr', ['td', { 'colspan': '3', 'rowspan': '3' }], ['td'], ['td']],
-						['tr', ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					], documentNode));
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['td', { colspan: '3', rowspan: '3' }], ['td'], ['td']],
+							['tr', ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
 
 				const tableElement = documentNode.firstChild;
-				chai.assert.throws(tableDefinition.buildTableGridModel.bind(undefined, tableElement, blueprint));
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					'error'
+				);
 			});
 		});
 	});
