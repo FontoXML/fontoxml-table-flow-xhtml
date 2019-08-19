@@ -87,6 +87,8 @@ function XhtmlTableDefinition(options) {
 
 		supportsBorders: useBorders,
 
+		supportsCellAlignment: true,
+
 		shouldCreateColumnSpecificationNodes: shouldCreateColumnSpecificationNodes,
 
 		// Defining node selectors
