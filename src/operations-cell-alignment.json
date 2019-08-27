@@ -12,7 +12,7 @@
 			]
 		},
 		"label": "t__Align left",
-		"description": "t__Align left",
+		"description": "t__Align content of the current cells to the left",
 		"icon": "align-left",
 		"steps": [
 			{
@@ -32,7 +32,7 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align left",
-		"description": "t__Align the content of the current cell to its left.",
+		"description": "t__Align content of the current cells to the left",
 		"icon": "align-left",
 		"steps": [
 			{
@@ -59,7 +59,7 @@
 			]
 		},
 		"label": "t__Align right",
-		"description": "t__Align right",
+		"description": "t__Align  content of the current cells to the right",
 		"icon": "align-right",
 		"steps":  [
 			{
@@ -79,7 +79,7 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align right",
-		"description": "t__Align the content of the current cell to its right.",
+		"description": "t__Align  content of the current cells to the right",
 		"icon": "align-right",
 		"steps":  [
 			{
@@ -106,7 +106,7 @@
 			]
 		},
 		"label": "t__Align center",
-		"description": "t__Align center",
+		"description": "t__Align content of the current cells to the center",
 		"icon": "align-center",
 		"steps": [
 			{
@@ -126,7 +126,7 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align center",
-		"description": "t__Center the content of the current cell.",
+		"description": "t__Align content of the current cells to the center",
 		"icon": "align-center",
 		"steps": [
 			{
@@ -153,7 +153,7 @@
 			]
 		},
 		"label": "t__Justify",
-		"description": "t__Justify",
+		"description": "t__Justify the text in the current cells",
 		"icon": "align-justify",
 		"steps": [
 			{
@@ -173,7 +173,7 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Justify",
-		"description": "t__Justify the content of the current cell.",
+		"description": "t__Justify the text in the current cells",
 		"icon": "align-justify",
 		"steps": [
 			{
@@ -202,7 +202,7 @@
 			]
 		},
 		"label": "t__Character",
-		"description": "t__Align the content of the current cell on a character.",
+		"description": "t__Align the content of the current cells on a character.",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
@@ -234,7 +234,7 @@
 			]
 		},
 		"label": "t__Align top",
-		"description": "t__Align content to the top of the current cell",
+		"description": "t__Align content of the current cells to the top",
 		"icon":"align-top",
 		"steps": [
 			{
@@ -253,7 +253,7 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align top",
-		"description": "t__Align the content of the current cell to its top.",
+		"description": "t__Align content of the current cells to the top",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
@@ -279,7 +279,7 @@
 			]
 		},
 		"label": "t__Align bottom",
-		"description": "t__Align content to the bottom of the current cell",
+		"description": "t__Align content of the current cells to the bottom",
 		"icon":"align-bottom",
 		"steps": [
 			{
@@ -298,7 +298,7 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align bottom",
-		"description": "t__Align the content of the current cell to its bottom.",
+		"description": "t__Align content of the current cells to the bottom",
 		"icon":"align-bottom",
 		"steps": [
 			{
@@ -325,7 +325,7 @@
 			]
 		},
 		"label": "t__Align center",
-		"description": "t__Align content to the middle of the current cell",
+		"description": "t__Align content of the current cells to the middle",
 		"icon":"align-vertical-center",
 		"steps": [
 			{
@@ -344,7 +344,7 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align center",
-		"description": "t__Center the content of the current cell.",
+		"description": "t__Align content of the current cells to the middle",
 		"icon":"align-vertical-center",
 		"steps": [
 			{
