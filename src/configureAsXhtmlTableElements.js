@@ -8,22 +8,25 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition.js';
  * Example usage for the table widgets:
  *
  *```
- * 	configureAsXhtmlTableElements(sxModule, {
- * 		table: {
- *			localName: 'table'
+ *	configureAsXhtmlTableElements(sxModule, {
+ *		table: {
+ *			namespaceURI: 'http://docbook.org/ns/docbook',
+ *			tableFilterSelector: 'self::table and not(tgroup)'
  *		},
- *		entry: {
- *			defaultTextContainer: 'p'
- *		},
- *		columnBefore: [createIconWidget('clock-o', {
- *			clickOperation: 'lcTime-value-edit',
- *			tooltipContent: 'Click here to edit the duration'
- *		})],
+ *		td: {
+ *			defaultTextContainer: 'simpara'
+ *		}
+ *		columnBefore: [
+ *			createIconWidget('clock-o', {
+ *				clickOperation: 'lcTime-value-edit',
+ *				tooltipContent: 'Click here to edit the duration'
+ *			})
+ *		],
  *		rowBefore: [
- *				createIconWidget('dot-circle-o', {
- *					clickOperation: 'do-nothing'
- *				})
- *			],
+ *			createIconWidget('dot-circle-o', {
+ *				clickOperation: 'do-nothing'
+ *			})
+ *		],
  *		showInsertionWidget: true,
  *		showHighlightingWidget: true
  *	});
