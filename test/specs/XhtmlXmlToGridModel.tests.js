@@ -1,12 +1,9 @@
-import blueprints from 'fontoxml-blueprints';
-import core from 'fontoxml-core';
+import Blueprint from 'fontoxml-blueprints/Blueprint';
+import CoreDocument from 'fontoxml-core/Document';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
 import * as slimdom from 'slimdom';
 
 import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/table-definition/XhtmlTableDefinition';
-
-const Blueprint = blueprints.Blueprint;
-const CoreDocument = core.Document;
 
 describe('XHTML tables: XML to GridModel', () => {
 	let documentNode;

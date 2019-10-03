@@ -1,24 +1,21 @@
-import blueprints from 'fontoxml-blueprints';
-import core from 'fontoxml-core';
+import Blueprint from 'fontoxml-blueprints/Blueprint';
+import CoreDocument from 'fontoxml-core/Document';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
 import * as slimdom from 'slimdom';
 
 import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/table-definition/XhtmlTableDefinition';
 
-const Blueprint = blueprints.Blueprint;
-const CoreDocument = core.Document;
-
 const stubFormat = {
-		synthesizer: {
-			completeStructure: () => true
-		},
-		metadata: {
-			get: (_option, _node) => false
-		},
-		validator: {
-			canContain: () => true
-		}
-	};
+	synthesizer: {
+		completeStructure: () => true
+	},
+	metadata: {
+		get: (_option, _node) => false
+	},
+	validator: {
+		canContain: () => true
+	}
+};
 
 describe('XHTML tables: Grid model to XML', () => {
 	let blueprint;
@@ -46,116 +43,127 @@ describe('XHTML tables: Grid model to XML', () => {
 	describe('Basics', () => {
 		it('can serialize a 1x1 table', () => {
 			const tableGridModel = createTable(1, 1, true, documentNode);
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ 'border': '1' },
-					['tr', ['td']]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				['tr', ['td']]
+			]);
 		});
 
 		it('can serialize a 4x4 table', () => {
 			const tableGridModel = createTable(4, 4, false, documentNode);
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ 'border': '1' },
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			]);
 		});
 
 		it('can serialize a 4x4 table with tbody', () => {
 			const tableGridModel = createTable(4, 4, false, documentNode);
 			const tableDefinition = new XhtmlTableDefinition({ useTbody: true });
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ 'border': '1' },
-					['tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				[
+					'tbody',
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']]
+				]
+			]);
 		});
 	});
 
 	describe('Headers', () => {
 		it('can serialize a 4x4 table with 1 header row', () => {
 			const tableGridModel = createTable(4, 4, true, documentNode);
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ 'border': '1' },
-					['tr', ['th'], ['th'], ['th'], ['th']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 header row (th based)', () => {
 			const tableGridModel = createTable(4, 4, true, documentNode);
 			const tableDefinition = new XhtmlTableDefinition({ useTh: true });
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ 'border': '1' },
-					['tr', ['th'], ['th'], ['th'], ['th']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 header row (thead based)', () => {
 			const tableGridModel = createTable(4, 4, true, documentNode);
 			const tableDefinition = new XhtmlTableDefinition({ useThead: true });
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ 'border': '1' },
-					['thead',
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 header row (th and thead based)', () => {
 			const tableGridModel = createTable(4, 4, true, documentNode);
 			const tableDefinition = new XhtmlTableDefinition({ useThead: true, useTh: true });
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ 'border': '1' },
-					['thead',
-						['tr', ['th'], ['th'], ['th'], ['th']]
-					],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			]);
 		});
 	});
 
@@ -168,17 +176,19 @@ describe('XHTML tables: Grid model to XML', () => {
 			tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
 			tableGridModel.setCellAtCoordinates(spanningCell, 1, 2);
 
-			chai.assert.isTrue(tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat));
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ border: '1' },
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td', { 'colspan': '2' }], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td', { colspan: '2' }], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 row spanning cell', () => {
@@ -189,18 +199,23 @@ describe('XHTML tables: Grid model to XML', () => {
 			tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
 			tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
 
-			const success = tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
+			const success = tableDefinition.applyToDom(
+				tableGridModel,
+				tableNode,
+				blueprint,
+				stubFormat
+			);
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ border: '1' },
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td', { 'rowspan': '2' }], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td', { rowspan: '2' }], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 column and row spanning cell', () => {
@@ -215,18 +230,23 @@ describe('XHTML tables: Grid model to XML', () => {
 			tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
 			tableGridModel.setCellAtCoordinates(spanningCell, 2, 2);
 
-			const success = tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
+			const success = tableDefinition.applyToDom(
+				tableGridModel,
+				tableNode,
+				blueprint,
+				stubFormat
+			);
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
-			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild),
-				['table',
-					{ border: '1' },
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td', { 'colspan': '2', 'rowspan': '2' }], ['td']],
-					['tr', ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]);
+			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
+				'table',
+				{ border: '1' },
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td', { colspan: '2', rowspan: '2' }], ['td']],
+				['tr', ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			]);
 		});
 	});
 
@@ -239,7 +259,12 @@ describe('XHTML tables: Grid model to XML', () => {
 
 			const positionId = blueprint.registerPosition(cellElement, 0, false);
 
-			const success = tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
+			const success = tableDefinition.applyToDom(
+				tableGridModel,
+				tableNode,
+				blueprint,
+				stubFormat
+			);
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
@@ -257,7 +282,12 @@ describe('XHTML tables: Grid model to XML', () => {
 
 			const positionId = blueprint.registerPosition(cellElement, 0, false);
 
-			const success = tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
+			const success = tableDefinition.applyToDom(
+				tableGridModel,
+				tableNode,
+				blueprint,
+				stubFormat
+			);
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
@@ -276,7 +306,12 @@ describe('XHTML tables: Grid model to XML', () => {
 			const startPositionId = blueprint.registerPosition(cellElement, 0, false);
 			const endPositionId = blueprint.registerPosition(cellElement, 1, false);
 
-			const success = tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat);
+			const success = tableDefinition.applyToDom(
+				tableGridModel,
+				tableNode,
+				blueprint,
+				stubFormat
+			);
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
