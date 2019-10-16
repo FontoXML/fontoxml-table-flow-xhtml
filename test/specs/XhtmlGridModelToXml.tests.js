@@ -1,6 +1,7 @@
 import Blueprint from 'fontoxml-blueprints/Blueprint';
 import CoreDocument from 'fontoxml-core/Document';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
+import indicesManager from 'fontoxml-indices/indicesManager';
 import * as slimdom from 'slimdom';
 
 import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/table-definition/XhtmlTableDefinition';
@@ -48,6 +49,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -62,6 +64,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -80,6 +83,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -102,6 +106,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -120,6 +125,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -138,6 +144,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -156,6 +163,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -181,6 +189,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -208,6 +217,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -239,6 +249,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), [
 				'table',
 				{ border: '1' },
@@ -268,6 +279,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			const position = blueprint.getPosition(positionId);
 			chai.assert.deepEqual(position.container, tableNode.firstChild.firstChild);
 			chai.assert.equal(position.offset, 0);
@@ -291,6 +303,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			const position = blueprint.getPosition(positionId);
 			chai.assert.deepEqual(position.container, tableNode.firstChild.firstChild);
 			chai.assert.equal(position.offset, 0);
@@ -315,6 +328,7 @@ describe('XHTML tables: Grid model to XML', () => {
 			chai.assert.isTrue(success);
 
 			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
 			const startPosition = blueprint.getPosition(startPositionId);
 			const endPosition = blueprint.getPosition(endPositionId);
 			chai.assert.deepEqual(startPosition.container, tableNode.firstChild.firstChild);
