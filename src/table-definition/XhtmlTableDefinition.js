@@ -7,6 +7,15 @@ import normalizeCellNodeStrategies from 'fontoxml-table-flow/src/normalizeCellNo
 import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies.js';
 import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies.js';
 
+function parseWidth(width) {
+	const widthPart = /^(\d+(?:\.\d+)?)%$/.exec(width);
+	if (widthPart === null) {
+		return undefined;
+	}
+	var float = parseFloat(widthPart[1]);
+	return isNaN(float) ? undefined : float;
+}
+
 /**
  * Configures the table definition for XHTML tables.
  *
@@ -17,7 +26,7 @@ function XhtmlTableDefinition(options) {
 	var useTbody = !!options.useTbody;
 	var useTh = !!options.useTh;
 	var useBorders = options.useBorders !== false;
-	var shouldCreateColumnSpecificationNodes = !!options.shouldCreateColumnSpecificationNodes;
+	var shouldCreateColumnSpecificationNodes = true;
 
 	// Warn the developer that thead is used as header-defining element. This is required when
 	// using tbody.
@@ -269,19 +278,6 @@ function XhtmlTableDefinition(options) {
 				: []
 		),
 
-		getColumnSpecificationStrategies: shouldCreateColumnSpecificationNodes
-			? [
-					getSpecificationValueStrategies.createGetValueAsStringStrategy(
-						'horizontalAlignment',
-						'./@align'
-					),
-					getSpecificationValueStrategies.createGetValueAsStringStrategy(
-						'verticalAlignment',
-						'./@valign'
-					)
-			  ]
-			: [],
-
 		// Set attributes
 		setTableNodeAttributeStrategies: useBorders
 			? [
@@ -312,31 +308,106 @@ function XhtmlTableDefinition(options) {
 			)
 		],
 
-		setColumnSpecificationNodeAttributeStrategies: shouldCreateColumnSpecificationNodes
-			? [
-					setAttributeStrategies.createStringValueAsAttributeStrategy(
-						'align',
-						'horizontalAlignment'
-					),
-					setAttributeStrategies.createStringValueAsAttributeStrategy(
-						'valign',
-						'verticalAlignment'
-					)
-			  ]
-			: [],
-
-		horizontalAlignmentOperationNames: [
-			'contextual-xhtml-set-cell-horizontal-alignment-left',
-			'contextual-xhtml-set-cell-horizontal-alignment-center',
-			'contextual-xhtml-set-cell-horizontal-alignment-right',
-			'contextual-xhtml-set-cell-horizontal-alignment-justify'
+		getColumnSpecificationStrategies: [
+			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				'horizontalAlignment',
+				'./@align'
+			),
+			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				'verticalAlignment',
+				'./@valign'
+			),
+			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				'columnWidth',
+				'./@width'
+			)
 		],
 
-		verticalAlignmentOperationNames: [
-			'contextual-xhtml-set-cell-vertical-alignment-top',
-			'contextual-xhtml-set-cell-vertical-alignment-bottom',
-			'contextual-xhtml-set-cell-vertical-alignment-center'
-		]
+		setColumnSpecificationNodeAttributeStrategies: [
+			setAttributeStrategies.createStringValueAsAttributeStrategy('width', 'columnWidth')
+		],
+
+		// Widths
+		widthToHtmlWidthStrategy: function(width, widths) {
+			var proportion = parseWidth(width) || 1;
+			var totalProportion = widths.reduce(function(total, proportion) {
+				return total + parseWidth(proportion) || 1;
+			}, 0);
+
+			return (100 * proportion) / totalProportion + '%';
+		},
+		addWidthsStrategy: function(width1, width2) {
+			var parsedWidth1 = parseWidth(width1);
+			var proportion1 = parseFloat(parsedWidth1) || 0;
+			var fixed1 = parseFloat(undefined) || 0;
+
+			var parsedWidth2 = parseWidth(width2);
+			var proportion2 = parseFloat(parsedWidth2) || 0;
+			var fixed2 = parseFloat(undefined) || 0;
+
+			var proportion = proportion1 + proportion2;
+			var fixed = fixed1 + fixed2;
+
+			return proportion !== 0 ? proportion + '*' : '' + fixed !== 0 ? fixed + 'px' : '';
+		},
+		divideByTwoStrategy: function(width) {
+			var parsedWidth = parseWidth(width);
+
+			var proportion = parseFloat(parsedWidth);
+			var fixed = parseFloat(undefined);
+
+			return proportion ? proportion / 2 + '*' : '' + fixed ? fixed / 2 + 'px' : '';
+		},
+		widthsToFractionsStrategy: function(widths) {
+			var parsedWidths = widths.map(function(width) {
+				if (width === '*') {
+					return 1;
+				}
+
+				// Parsing withs for the column width popover does not use the parseWidth
+				// function bacause widths containing fixed widths are considered invalid
+				// values for the popover.
+				var match = /^([0-9]+(?:\.[0-9]+)?)\*$/.exec(width);
+
+				if (!match) {
+					match = /^([0-9]+(?:\.[0-9]+)?)%$/.exec(width);
+				}
+
+				if (!match) {
+					return null;
+				}
+
+				var value = parseFloat(match[1]);
+				return Number.isNaN(value) ? null : value;
+			});
+
+			if (parsedWidths.indexOf(null) !== -1) {
+				return parsedWidths.map(function() {
+					return 1 / parsedWidths.length;
+				});
+			}
+
+			var totalWidth = parsedWidths.reduce(function(total, width) {
+				return total + width;
+			}, 0);
+
+			return parsedWidths.map(function(width) {
+				return width / totalWidth;
+			});
+		},
+		normalizeColumnWidthsStrategy: function(columnWidths) {
+			if (columnWidths.some(w => !w.endsWith('%'))) {
+				return columnWidths;
+			}
+			const ratios = columnWidths.map(percentage => parseFloat(percentage));
+			const total = ratios.reduce((total, columnWidth) => total + columnWidth, 0);
+			return ratios.map(ratio => (ratio / total).toFixed(4) * 100 + '%');
+		},
+		fractionsToWidthsStrategy: function(fractions) {
+			return fractions.map(function(fraction) {
+				return parseFloat(fraction * 100).toFixed(2) + '%';
+			});
+		}
 	};
 
 	TableDefinition.call(this, properties);
