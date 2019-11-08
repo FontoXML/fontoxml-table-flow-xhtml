@@ -26,7 +26,17 @@ function XhtmlTableDefinition(options) {
 	var useTbody = !!options.useTbody;
 	var useTh = !!options.useTh;
 	var useBorders = options.useBorders !== false;
-	var shouldCreateColumnSpecificationNodes = true;
+	var shouldCreateColumnSpecificationNodes = !!options.shouldCreateColumnSpecificationNodes;
+	// TODO REMOVE
+	shouldCreateColumnSpecificationNodes = true;
+	const columnWidthType = options.columnWidthType || 'percentual'; // ' percentual' | 'relative'
+
+	// Warn the developer that columnWidthType is specified without shouldCreateColumnSpecificationNodes to be true.
+	if (columnWidthType && !shouldCreateColumnSpecificationNodes) {
+		throw new Error(
+			'XHTML table: using columnWidthType requires shouldCreateColumnSpecificationNodes to be true.'
+		);
+	}
 
 	// Warn the developer that thead is used as header-defining element. This is required when
 	// using tbody.
@@ -339,24 +349,24 @@ function XhtmlTableDefinition(options) {
 		addWidthsStrategy: function(width1, width2) {
 			var parsedWidth1 = parseWidth(width1);
 			var proportion1 = parseFloat(parsedWidth1) || 0;
-			var fixed1 = parseFloat(undefined) || 0;
 
 			var parsedWidth2 = parseWidth(width2);
 			var proportion2 = parseFloat(parsedWidth2) || 0;
-			var fixed2 = parseFloat(undefined) || 0;
 
 			var proportion = proportion1 + proportion2;
-			var fixed = fixed1 + fixed2;
 
-			return proportion !== 0 ? proportion + '*' : '' + fixed !== 0 ? fixed + 'px' : '';
+			return proportion !== 0
+				? proportion + (columnWidthType === 'percentual' ? '%' : '*')
+				: '';
 		},
 		divideByTwoStrategy: function(width) {
 			var parsedWidth = parseWidth(width);
 
 			var proportion = parseFloat(parsedWidth);
-			var fixed = parseFloat(undefined);
 
-			return proportion ? proportion / 2 + '*' : '' + fixed ? fixed / 2 + 'px' : '';
+			return proportion !== 0
+				? proportion / 2 + (columnWidthType === 'percentual' ? '%' : '*')
+				: '';
 		},
 		widthsToFractionsStrategy: function(widths) {
 			var parsedWidths = widths.map(function(width) {
@@ -364,7 +374,7 @@ function XhtmlTableDefinition(options) {
 					return 1;
 				}
 
-				// Parsing withs for the column width popover does not use the parseWidth
+				// Parsing widths for the column width popover does not use the parseWidth
 				// function bacause widths containing fixed widths are considered invalid
 				// values for the popover.
 				var match = /^([0-9]+(?:\.[0-9]+)?)\*$/.exec(width);
@@ -396,7 +406,7 @@ function XhtmlTableDefinition(options) {
 			});
 		},
 		normalizeColumnWidthsStrategy: function(columnWidths) {
-			if (columnWidths.some(w => !w.endsWith('%'))) {
+			if (columnWidthType === 'relative' || columnWidths.some(w => !w.endsWith('%'))) {
 				return columnWidths;
 			}
 			const ratios = columnWidths.map(percentage => parseFloat(percentage));
@@ -404,9 +414,12 @@ function XhtmlTableDefinition(options) {
 			return ratios.map(ratio => (ratio / total).toFixed(4) * 100 + '%');
 		},
 		fractionsToWidthsStrategy: function(fractions) {
-			return fractions.map(function(fraction) {
-				return parseFloat(fraction * 100).toFixed(2) + '%';
-			});
+			if (columnWidthType === 'percentual') {
+				return fractions.map(function(fraction) {
+					return parseFloat(fraction * 100).toFixed(2) + '%';
+				});
+			}
+			return fractions.map(fraction => fraction + '*');
 		}
 	};
 
