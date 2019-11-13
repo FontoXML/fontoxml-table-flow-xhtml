@@ -8,11 +8,13 @@ import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeC
 import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies.js';
 
 function parseWidth(width) {
-	const widthPart = /^(\d+(?:\.\d+)?)%$/.exec(width);
-	if (widthPart === null) {
+	const widthPartPerc = /^(\d+(?:\.\d+)?)%$/.exec(width);
+	const widthPartRel = /^(\d+(?:\.\d+)?)\*$/.exec(width);
+	if (widthPartPerc === null && widthPartRel === null) {
 		return undefined;
 	}
-	var float = parseFloat(widthPart[1]);
+	const widthPart = widthPartPerc ? widthPartPerc[1] : widthPartRel[1];
+	var float = parseFloat(widthPart);
 	return isNaN(float) ? undefined : float;
 }
 
@@ -27,9 +29,7 @@ function XhtmlTableDefinition(options) {
 	var useTh = !!options.useTh;
 	var useBorders = options.useBorders !== false;
 	var shouldCreateColumnSpecificationNodes = !!options.shouldCreateColumnSpecificationNodes;
-	// TODO REMOVE
-	shouldCreateColumnSpecificationNodes = true;
-	const columnWidthType = options.columnWidthType || 'percentual'; // ' percentual' | 'relative'
+	const columnWidthType = options.columnWidthType; // ' percentual' | 'relative'
 
 	// Warn the developer that columnWidthType is specified without shouldCreateColumnSpecificationNodes to be true.
 	if (columnWidthType && !shouldCreateColumnSpecificationNodes) {
@@ -406,8 +406,12 @@ function XhtmlTableDefinition(options) {
 			});
 		},
 		normalizeColumnWidthsStrategy: function(columnWidths) {
-			if (columnWidthType === 'relative' || columnWidths.some(w => !w.endsWith('%'))) {
-				return columnWidths;
+			if (!columnWidthType) {
+				return columnWidths.map(_ => '');
+			}
+			if (columnWidthType === 'relative') {
+				const relativeWidths = columnWidths.map(relative => parseFloat(relative) + '*');
+				return relativeWidths;
 			}
 			const ratios = columnWidths.map(percentage => parseFloat(percentage));
 			const total = ratios.reduce((total, columnWidth) => total + columnWidth, 0);
@@ -419,7 +423,7 @@ function XhtmlTableDefinition(options) {
 					return parseFloat(fraction * 100).toFixed(2) + '%';
 				});
 			}
-			return fractions.map(fraction => fraction + '*');
+			return fractions.map(fraction => fraction * 100 + '*');
 		}
 	};
 

@@ -30,14 +30,5 @@
 				"type": "operation/table-insert"
 			}
 		]
-	},
-	"xhtml-open-table-column-sizing-popover": {
-		"label": "t__Adjust column size",
-		"steps": {
-			"type": "operation/open-table-column-sizing-popover",
-			"data": {
-				"popoverAnchorNodeId": "{{contextNodeId}}"
-			}
-		}
 	}
 }
