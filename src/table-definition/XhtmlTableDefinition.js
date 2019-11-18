@@ -103,6 +103,9 @@ function XhtmlTableDefinition(options) {
 			)
 			.join(' or '),
 
+		// Header row node selector
+		headerRowNodeSelector: `self::${tr}[parent::${thead} or not(child::${td})]`,
+
 		// Finds
 		findHeaderRowNodesXPathQuery:
 			'if (./' +
@@ -113,50 +116,13 @@ function XhtmlTableDefinition(options) {
 			tr +
 			' else (./' +
 			tr +
-			'[./' +
-			td +
-			'])[1]/preceding-sibling::' +
-			tr +
-			'[./' +
-			th +
-			' => count() = ./*[self::' +
-			td +
-			' or self::' +
-			th +
-			'] => count()] | ()',
-		findBodyRowNodesXPathQuery:
-			'if (./' +
-			tbody +
-			') then ./' +
-			tbody +
-			'/' +
-			tr +
-			' else ./' +
-			tr +
 			'[not(./' +
-			th +
-			' => count() = ./*[self::' +
 			td +
-			' or self::' +
-			th +
-			'] => count())]',
+			')])',
+		findBodyRowNodesXPathQuery:
+			'if (./' + tbody + ') then ./' + tbody + '/' + tr + ' else ./' + tr + '[./' + td + ']',
 		findFooterRowNodesXPathQuery:
-			'if (./' +
-			tfoot +
-			') then ./' +
-			tfoot +
-			'/' +
-			tr +
-			' else ./' +
-			tr +
-			'[./' +
-			td +
-			' => count() = ./*[self::' +
-			td +
-			' or self::' +
-			th +
-			'] => count()][last()]/following-sibling::' +
-			tr,
+			'if (./' + tfoot + ') then ./' + tfoot + '/' + tr + ' else ()',
 
 		findHeaderContainerNodesXPathQuery: './' + thead,
 		findBodyContainerNodesXPathQuery: './' + tbody,

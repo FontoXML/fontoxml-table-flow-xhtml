@@ -366,7 +366,7 @@ describe('XHTML tables: XML to GridModel', () => {
 			chai.assert.equal(gridModel.headerRowCount, 1);
 		});
 
-		it('can deserialize a 4x4 table with 1 header row (th-based) and 1 footer row (th-based)', () => {
+		it('can deserialize a 4x4 table with 2 header row (th-based) at the top and the bottom of the table', () => {
 			coreDocument.dom.mutate(() =>
 				jsonMLMapper.parse(
 					[
@@ -386,7 +386,30 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
-			chai.assert.equal(gridModel.headerRowCount, 1);
+			chai.assert.equal(gridModel.headerRowCount, 2);
+		});
+
+		it('can deserialize a 4x4 table with 2 header row (th-based) at the top and the middle of the table', () => {
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(
+					[
+						'table',
+						['tr', ['th'], ['th'], ['th'], ['th']],
+						['tr', ['td'], ['td'], ['td'], ['td']],
+						['tr', ['th'], ['th'], ['th'], ['th']],
+						['tr', ['td'], ['td'], ['td'], ['td']]
+					],
+					documentNode
+				)
+			);
+
+			const tableElement = documentNode.firstChild;
+			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			chai.assert.isOk(gridModel);
+
+			chai.assert.equal(gridModel.getHeight(), 4);
+			chai.assert.equal(gridModel.getWidth(), 4);
+			chai.assert.equal(gridModel.headerRowCount, 2);
 		});
 
 		it('can deserialize a 4x4 table with two tbody elements and 1 header row (thead-based)', () => {
