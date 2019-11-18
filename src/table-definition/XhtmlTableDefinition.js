@@ -8,14 +8,12 @@ import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeC
 import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies.js';
 
 function parseWidth(width) {
-	const widthPartPerc = /^(\d+(?:\.\d+)?)%$/.exec(width);
-	const widthPartRel = /^(\d+(?:\.\d+)?)\*$/.exec(width);
-	if (widthPartPerc === null && widthPartRel === null) {
+	const widthPart = /^(\d+(?:\.\d+)?)[%*]$/.exec(width);
+	if (widthPart === null) {
 		return undefined;
 	}
-	const widthPart = widthPartPerc ? widthPartPerc[1] : widthPartRel[1];
-	var float = parseFloat(widthPart);
-	return isNaN(float) ? undefined : float;
+	const float = parseFloat(widthPart[1]);
+	return Number.isNaN(float) ? undefined : float;
 }
 
 /**
@@ -29,10 +27,10 @@ function XhtmlTableDefinition(options) {
 	var useTh = !!options.useTh;
 	var useBorders = options.useBorders !== false;
 	var shouldCreateColumnSpecificationNodes = !!options.shouldCreateColumnSpecificationNodes;
-	const columnWidthType = options.columnWidthType; // ' percentual' | 'relative'
+	var columnWidthType = options.columnWidthType || 'none'; // ' percentual' | 'relative' | 'none'
 
-	// Warn the developer that columnWidthType is specified without shouldCreateColumnSpecificationNodes to be true.
-	if (columnWidthType && !shouldCreateColumnSpecificationNodes) {
+	// Warn the developer that columnWidthType is specified without shouldCreateColumnSpecificationNodes set to true.
+	if (columnWidthType !== 'none' && !shouldCreateColumnSpecificationNodes) {
 		throw new Error(
 			'XHTML table: using columnWidthType requires shouldCreateColumnSpecificationNodes to be true.'
 		);
@@ -268,10 +266,6 @@ function XhtmlTableDefinition(options) {
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'horizontalAlignment',
 				'./@align'
-			),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
-				'verticalAlignment',
-				'./@valign'
 			)
 		].concat(
 			useBorders
@@ -326,19 +320,18 @@ function XhtmlTableDefinition(options) {
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'verticalAlignment',
 				'./@valign'
-			),
-			getSpecificationValueStrategies.createGetValueAsStringStrategy(
-				'columnWidth',
-				'./@width'
 			)
 		],
-
 		setColumnSpecificationNodeAttributeStrategies: [
 			setAttributeStrategies.createStringValueAsAttributeStrategy('width', 'columnWidth')
 		],
 
 		// Widths
 		widthToHtmlWidthStrategy: function(width, widths) {
+			if (columnWidthType === 'none') {
+				return '';
+			}
+
 			var proportion = parseWidth(width) || 1;
 			var totalProportion = widths.reduce(function(total, proportion) {
 				return total + parseWidth(proportion) || 1;
@@ -347,11 +340,15 @@ function XhtmlTableDefinition(options) {
 			return (100 * proportion) / totalProportion + '%';
 		},
 		addWidthsStrategy: function(width1, width2) {
+			if (columnWidthType === 'none') {
+				return '';
+			}
+
 			var parsedWidth1 = parseWidth(width1);
-			var proportion1 = parseFloat(parsedWidth1) || 0;
+			var proportion1 = parsedWidth1 || 0;
 
 			var parsedWidth2 = parseWidth(width2);
-			var proportion2 = parseFloat(parsedWidth2) || 0;
+			var proportion2 = parsedWidth2 || 0;
 
 			var proportion = proportion1 + proportion2;
 
@@ -360,6 +357,9 @@ function XhtmlTableDefinition(options) {
 				: '';
 		},
 		divideByTwoStrategy: function(width) {
+			if (columnWidthType === 'none') {
+				return '';
+			}
 			var parsedWidth = parseWidth(width);
 
 			var proportion = parseFloat(parsedWidth);
@@ -370,19 +370,7 @@ function XhtmlTableDefinition(options) {
 		},
 		widthsToFractionsStrategy: function(widths) {
 			var parsedWidths = widths.map(function(width) {
-				if (width === '*') {
-					return 1;
-				}
-
-				// Parsing widths for the column width popover does not use the parseWidth
-				// function bacause widths containing fixed widths are considered invalid
-				// values for the popover.
-				var match = /^([0-9]+(?:\.[0-9]+)?)\*$/.exec(width);
-
-				if (!match) {
-					match = /^([0-9]+(?:\.[0-9]+)?)%$/.exec(width);
-				}
-
+				var match = parseWidth(width);
 				if (!match) {
 					return null;
 				}
@@ -391,7 +379,7 @@ function XhtmlTableDefinition(options) {
 				return Number.isNaN(value) ? null : value;
 			});
 
-			if (parsedWidths.indexOf(null) !== -1) {
+			if (parsedWidths.includes(null)) {
 				return parsedWidths.map(function() {
 					return 1 / parsedWidths.length;
 				});
@@ -406,6 +394,9 @@ function XhtmlTableDefinition(options) {
 			});
 		},
 		normalizeColumnWidthsStrategy: function(columnWidths) {
+			if (columnWidthType === 'none') {
+				return '';
+			}
 			if (!columnWidthType) {
 				return columnWidths.map(_ => '');
 			}
@@ -418,14 +409,26 @@ function XhtmlTableDefinition(options) {
 			return ratios.map(ratio => (ratio / total).toFixed(4) * 100 + '%');
 		},
 		fractionsToWidthsStrategy: function(fractions) {
+			if (columnWidthType === 'none') {
+				return '';
+			}
 			if (columnWidthType === 'percentual') {
 				return fractions.map(function(fraction) {
-					return parseFloat(fraction * 100).toFixed(2) + '%';
+					return (fraction * 100).toFixed(2) + '%';
 				});
 			}
 			return fractions.map(fraction => fraction * 100 + '*');
 		}
 	};
+
+	if (columnWidthType !== 'none' && shouldCreateColumnSpecificationNodes) {
+		properties.getColumnSpecificationStrategies.add(
+			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				'columnWidth',
+				'./@width'
+			)
+		);
+	}
 
 	TableDefinition.call(this, properties);
 }
