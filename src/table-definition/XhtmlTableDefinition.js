@@ -10,10 +10,10 @@ import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategi
 function parseWidth(width) {
 	const widthPart = /^(\d+(?:\.\d+)?)[%*]$/.exec(width);
 	if (widthPart === null) {
-		return undefined;
+		return null;
 	}
 	const float = parseFloat(widthPart[1]);
-	return Number.isNaN(float) ? undefined : float;
+	return Number.isNaN(float) ? null : float;
 }
 
 /**
@@ -266,6 +266,10 @@ function XhtmlTableDefinition(options) {
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'horizontalAlignment',
 				'./@align'
+			),
+			getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				'verticalAlignment',
+				'./@valign'
 			)
 		].concat(
 			useBorders
@@ -312,6 +316,19 @@ function XhtmlTableDefinition(options) {
 			)
 		],
 
+		horizontalAlignmentOperationNames: [
+			'contextual-xhtml-set-cell-horizontal-alignment-left',
+			'contextual-xhtml-set-cell-horizontal-alignment-center',
+			'contextual-xhtml-set-cell-horizontal-alignment-right',
+			'contextual-xhtml-set-cell-horizontal-alignment-justify'
+		],
+
+		verticalAlignmentOperationNames: [
+			'contextual-xhtml-set-cell-vertical-alignment-top',
+			'contextual-xhtml-set-cell-vertical-alignment-bottom',
+			'contextual-xhtml-set-cell-vertical-alignment-center'
+		],
+
 		getColumnSpecificationStrategies: [
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'horizontalAlignment',
@@ -333,9 +350,10 @@ function XhtmlTableDefinition(options) {
 			}
 
 			var proportion = parseWidth(width) || 1;
-			var totalProportion = widths.reduce(function(total, proportion) {
-				return total + parseWidth(proportion) || 1;
-			}, 0);
+			var totalProportion = widths.reduce(
+				(total, proportion) => total + parseWidth(proportion) || 1,
+				0
+			);
 
 			return (100 * proportion) / totalProportion + '%';
 		},
@@ -362,36 +380,27 @@ function XhtmlTableDefinition(options) {
 			}
 			var parsedWidth = parseWidth(width);
 
-			var proportion = parseFloat(parsedWidth);
+			if (!parsedWidth) {
+				return '';
+			}
+
+			var proportion = parsedWidth;
 
 			return proportion !== 0
 				? proportion / 2 + (columnWidthType === 'percentual' ? '%' : '*')
 				: '';
 		},
 		widthsToFractionsStrategy: function(widths) {
-			var parsedWidths = widths.map(function(width) {
-				var match = parseWidth(width);
-				if (!match) {
-					return null;
-				}
-
-				var value = parseFloat(match[1]);
-				return Number.isNaN(value) ? null : value;
-			});
+			var parsedWidths = widths.map(parseWidth);
 
 			if (parsedWidths.includes(null)) {
-				return parsedWidths.map(function() {
-					return 1 / parsedWidths.length;
-				});
+				const newWidth = 1 / parsedWidths.length;
+				return parsedWidths.map(() => newWidth);
 			}
 
-			var totalWidth = parsedWidths.reduce(function(total, width) {
-				return total + width;
-			}, 0);
+			var totalWidth = parsedWidths.reduce((total, width) => total + width, 0);
 
-			return parsedWidths.map(function(width) {
-				return width / totalWidth;
-			});
+			return parsedWidths.map(width => width / totalWidth);
 		},
 		normalizeColumnWidthsStrategy: function(columnWidths) {
 			if (columnWidthType === 'none') {
@@ -413,16 +422,14 @@ function XhtmlTableDefinition(options) {
 				return '';
 			}
 			if (columnWidthType === 'percentual') {
-				return fractions.map(function(fraction) {
-					return (fraction * 100).toFixed(2) + '%';
-				});
+				return fractions.map(fraction => (fraction * 100).toFixed(2) + '%');
 			}
 			return fractions.map(fraction => fraction * 100 + '*');
 		}
 	};
 
-	if (columnWidthType !== 'none' && shouldCreateColumnSpecificationNodes) {
-		properties.getColumnSpecificationStrategies.add(
+	if (columnWidthType !== 'none') {
+		properties.getColumnSpecificationStrategies.push(
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'columnWidth',
 				'./@width'
