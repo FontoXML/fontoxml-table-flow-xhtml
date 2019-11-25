@@ -424,7 +424,7 @@ function XhtmlTableDefinition(options) {
 			if (columnWidthType === 'percentual') {
 				return fractions.map(fraction => (fraction * 100).toFixed(2) + '%');
 			}
-			return fractions.map(fraction => fraction * 100 + '*');
+			return fractions.map(fraction => (fraction * 100).toFixed(2) + '*');
 		}
 	};
 
