@@ -2,21 +2,13 @@ import Blueprint from 'fontoxml-blueprints/Blueprint';
 import CoreDocument from 'fontoxml-core/Document';
 import jsonMLMapper from 'fontoxml-dom-utils/jsonMLMapper';
 import indicesManager from 'fontoxml-indices/indicesManager';
-import evaluateXPathToBoolean from 'fontoxml-selectors/evaluateXPathToBoolean';
 import * as slimdom from 'slimdom';
 
 import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/table-definition/XhtmlTableDefinition';
 
 const stubFormat = {
 	synthesizer: {
-		completeStructure: (node, blueprint) => {
-			// Column nodes should be the first nodes, after a non-col, we expect no more cols.
-			return evaluateXPathToBoolean(
-				'every $node in ./* satisfies if (name($node) != "col") then $node/following-sibling::col => empty() else true()',
-				node,
-				blueprint
-			);
-		}
+		completeStructure: () => true
 	},
 	metadata: {
 		get: (_option, _node) => false
@@ -57,13 +49,13 @@ describe('XHTML tables: Column Width', () => {
 		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), jsonOut);
 	}
 
-	it('can handle a 4x4 table based, adding 1 column before index 0 with relative column type', () => {
+	it('can handle a 4x4 table based, adding 1 column before index 0 with percentual column type', () => {
 		const jsonIn = [
 			'table',
-			['col'],
-			['col'],
-			['col'],
-			['col'],
+			['col', { width: '20%' }],
+			['col', { width: '20%' }],
+			['col', { width: '20%' }],
+			['col', { width: '20%' }],
 			[
 				'tbody',
 				['tr', ['td'], ['td'], ['td'], ['td']],
@@ -106,10 +98,10 @@ describe('XHTML tables: Column Width', () => {
 	it('can handle a 4x4 table based, adding 1 column before index 0 with relative column type', () => {
 		const jsonIn = [
 			'table',
-			['col'],
-			['col'],
-			['col'],
-			['col'],
+			['col', { width: '1*' }],
+			['col', { width: '1*' }],
+			['col', { width: '1*' }],
+			['col', { width: '1*' }],
 			[
 				'tbody',
 				['tr', ['td'], ['td'], ['td'], ['td']],

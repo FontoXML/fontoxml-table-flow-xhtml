@@ -305,9 +305,7 @@ function XhtmlTableDefinition(options) {
 				'./@valign'
 			)
 		],
-		setColumnSpecificationNodeAttributeStrategies: [
-			setAttributeStrategies.createStringValueAsAttributeStrategy('width', 'columnWidth')
-		],
+		setColumnSpecificationNodeAttributeStrategies: [],
 
 		// Widths
 		widthToHtmlWidthStrategy: function(width, widths) {
@@ -400,6 +398,9 @@ function XhtmlTableDefinition(options) {
 				'columnWidth',
 				'./@width'
 			)
+		);
+		properties.setColumnSpecificationNodeAttributeStrategies.push(
+			setAttributeStrategies.createStringValueAsAttributeStrategy('width', 'columnWidth')
 		);
 	}
 
