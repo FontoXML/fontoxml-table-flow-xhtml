@@ -4,14 +4,13 @@ category: add-on/fontoxml-table-flow-xhtml
 
 # XHTML table support
 
-Provide support for XHTML compatible tables.
+This add-on adds support for XHTML tables to a Fonto editor.
 
-This packages exposes a single {@link configureAsXhtmlTableElements} function for configuring XHTML table elements.
+This add-on exposes one function called {@link configureAsXhtmlTableElements}. This function configures all XHTML table elements. This eliminates the need for configuring any of the XHTML table elements separately.
 
-Use the configureAsXhtmlTableElements like this:
+The `configureAsXhtmlTableElements` function should be used in a configureSxModule file, like this:
 
 ```
-
 configureAsXhtmlTableElements(sxModule, {
 	// Priority of the selectors used to select the table elements (optional)
 	priority: 2,
@@ -48,7 +47,7 @@ configureAsXhtmlTableElements(sxModule, {
 		defaultTextContainer: 'p'
 	},
 
-	// Use createIconWidget to add column icons before rows or columns. Any widget can be added but only icon widget is supported.
+	// Widget area before columns. Any widget can be used, but only the {@link iconWidget} is supported here. Optional, defaults to an empty array.
 	columnBefore: [
 		createIconWidget('clock-o', {
 			clickOperation: 'lcTime-value-edit',
@@ -56,16 +55,17 @@ configureAsXhtmlTableElements(sxModule, {
 		})
 	],
 
+	// Widget are before rows. Any widget can be used, but only the {@link iconWidget} is supported here. Optional, defaults to an empty array.
 	rowBefore: [
 		createIconWidget('dot-circle-o', {
 			clickOperation: 'do-nothing'
 		})
 	],
 
-	// To add insertion buttons which insert a column or a row at a specific place, default false.
+	// This will show buttons that insert a new column or row. Optional, defaults to false.
 	showInsertionWidget: true,
 
-	// To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
+	// This will show areas that can be hovered over to hightlight a column or row and that can be clicked to show a operations popover. Optional, defaults to false.
 	showHighlightingWidget: true
 });
 
@@ -82,17 +82,13 @@ following parts are supported.
 |------------|---------------------------------|
 | table      | border                          |
 | caption    |                                 |
-| (colgroup) |                                 |
-| (col)      |                                 |
+| colgroup*  |                                 |
+| col*       |                                 |
 | thead      |                                 |
-| (tfoot)    |                                 |
+| tfoot*     |                                 |
 | tbody      |                                 |
 | tr         |                                 |
 | th         | rowspan, colspan, align, valign |
 | td         | rowspan, colspan, align, valign |
 
-## Implementation notes
-
-- Fonto prefers to not use the `<tfoot>` element and instead create a `<tr>` as child of `<table>` or `<tbody>`.
-
-- Fonto does not use `<col>` or `<colgroup>`, but will respect those elements if they already exist.
+\* **Note** that this add-on supports tables that contain `col`, `colgroup`, and `tfoot` elements. However, these elements are _ignored_ by this add-on and these elements _will not_ be inserted into new tables.
