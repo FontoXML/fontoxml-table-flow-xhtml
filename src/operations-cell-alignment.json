@@ -254,6 +254,7 @@
 		},
 		"label": "t__Align top",
 		"description": "t__Align content of the current cells to the top",
+		"icon":"align-top",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
