@@ -27,7 +27,7 @@ configureAsXhtmlTableElements(sxModule, {
 	useTbody: true,
 
 	// False if the borders attribute should not be used
-	useBorder: true,
+	useBorders: true,
 
 	// True if the table should include <col> elements by default
 	shouldCreateColumnSpecificationNodes: false,
