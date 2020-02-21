@@ -1,6 +1,6 @@
-import readOnlyBlueprint from 'fontoxml-blueprints/readOnlyBlueprint';
+import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint.js';
 import * as slimdom from 'slimdom';
-import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/table-definition/XhtmlTableDefinition';
+import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition.js';
 
 describe('XhtmlTableDefinition', () => {
 	let documentNode;
