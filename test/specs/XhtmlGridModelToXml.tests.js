@@ -96,6 +96,48 @@ describe('XHTML tables: Grid model to XML', () => {
 				]
 			]);
 		});
+
+		it('can delete a row of a table without row containers', () => {
+			documentNode = new slimdom.Document();
+			coreDocument = new CoreDocument(documentNode);
+			blueprint = new Blueprint(coreDocument.dom);
+			const jsonIn = [
+				'table',
+				{ border: '1' },
+				['tr', ['th'], ['th'], ['th']],
+				['tr', ['th'], ['td'], ['td']],
+				['tr', ['th'], ['td'], ['td']]
+			];
+
+			coreDocument.dom.mutate(() => jsonMLMapper.parse(jsonIn, documentNode));
+			tableNode = documentNode.firstChild;
+			tableDefinition = new XhtmlTableDefinition({ useTh: true });
+
+			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), jsonIn);
+
+			const tableGridModel = tableDefinition.buildTableGridModel(tableNode, blueprint);
+
+			tableGridModel.deleteRow(0);
+
+			const serializedTable2 = [
+				'table',
+				{ border: '1' },
+				['tr', ['th'], ['td'], ['td']],
+				['tr', ['th'], ['td'], ['td']]
+			];
+
+			// to be sure that deleteRow function did not apply changes to the dom.
+			chai.assert.notDeepEqual(jsonMLMapper.serialize(tableNode), serializedTable2);
+
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(tableGridModel, tableNode, blueprint, stubFormat)
+			);
+
+			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
+
+			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), serializedTable2);
+		});
 	});
 
 	describe('Headers', () => {
