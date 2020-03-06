@@ -36,7 +36,7 @@ describe('XHTML tables: Column Width', () => {
 		const tableDefinition = new XhtmlTableDefinition(options);
 		const tableNode = documentNode.firstChild;
 		const gridModel = tableDefinition.buildTableGridModel(tableNode, blueprint);
-		chai.assert.isOk(gridModel);
+		chai.assert.isUndefined(gridModel.error);
 
 		mutateGridModel(gridModel);
 

@@ -27,7 +27,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 1);
 			chai.assert.equal(gridModel.getWidth(), 1);
@@ -50,7 +50,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -76,7 +76,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -105,7 +105,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -135,7 +135,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -160,7 +160,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -183,7 +183,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -206,7 +206,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -232,7 +232,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -255,7 +255,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -281,7 +281,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -307,7 +307,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -336,7 +336,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -359,7 +359,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -382,7 +382,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -405,7 +405,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -431,7 +431,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -457,7 +457,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -488,7 +488,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			const tableElement = documentNode.firstChild;
 			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isOk(gridModel);
+			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
@@ -514,7 +514,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-				chai.assert.isOk(gridModel);
+				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
 				chai.assert.equal(gridModel.getWidth(), 4);
@@ -541,7 +541,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-				chai.assert.isOk(gridModel);
+				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
 				chai.assert.equal(gridModel.getWidth(), 4);
@@ -571,7 +571,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-				chai.assert.isOk(gridModel);
+				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
 				chai.assert.equal(gridModel.getWidth(), 4);
@@ -601,7 +601,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-				chai.assert.isOk(gridModel);
+				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
@@ -652,7 +652,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-				chai.assert.isOk(gridModel);
+				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
@@ -685,7 +685,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-				chai.assert.isOk(gridModel);
+				chai.assert.isUndefined(gridModel.error);
 
 				// Normalization happens AFTER the first mutation
 				chai.assert.equal(gridModel.getHeight(), 5, 'height');
@@ -733,7 +733,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const tableElement = documentNode.firstChild;
 				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-				chai.assert.isOk(gridModel);
+				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
