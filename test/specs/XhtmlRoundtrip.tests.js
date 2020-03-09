@@ -9,14 +9,18 @@ import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition
 
 import mergeCells from 'fontoxml-table-flow/src/TableGridModel/mutations/merging/mergeCells.js';
 import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell.js';
+import splitNonSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitNonSpanningCell.js';
 
 const mergeCellWithCellToTheRight = mergeCells.mergeCellWithCellToTheRight;
 const mergeCellWithCellToTheLeft = mergeCells.mergeCellWithCellToTheLeft;
 const mergeCellWithCellBelow = mergeCells.mergeCellWithCellBelow;
 const mergeCellWithCellAbove = mergeCells.mergeCellWithCellAbove;
 
-const splitCellIntoRows = splitSpanningCell.splitCellIntoRows;
-const splitCellIntoColumns = splitSpanningCell.splitCellIntoColumns;
+const splitSpanningCellIntoRows = splitSpanningCell.splitCellIntoRows;
+const splitSpanningCellIntoColumns = splitSpanningCell.splitCellIntoColumns;
+
+const splitNonSpanningCellIntoRows = splitNonSpanningCell.splitNonSpanningCellIntoRows;
+const splitNonSpanningCellIntoColumns = splitNonSpanningCell.splitNonSpanningCellIntoColumns;
 
 const stubFormat = {
 	synthesizer: {
@@ -2687,7 +2691,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			];
 
 			const mutateGridModel = gridModel =>
-				splitCellIntoRows(gridModel, gridModel.getCellAtCoordinates(1, 1));
+				splitSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(1, 1));
 
 			const jsonOut = [
 				'table',
@@ -2697,6 +2701,104 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']]
+				]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useThead: true,
+				useTbody: true,
+				useTh: false
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can handle a 3x3 table, splitting a cell at the end of the thead', () => {
+			const jsonIn = [
+				'table',
+				['thead', ['tr', ['td'], ['td'], ['td']]],
+				['tbody', ['tr', ['td'], ['td'], ['td']], ['tr', ['td'], ['td'], ['td']]]
+			];
+
+			const mutateGridModel = gridModel =>
+				splitNonSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(0, 1));
+
+			const jsonOut = [
+				'table',
+				{ border: '0' },
+				[
+					'thead',
+					['tr', ['td', { rowspan: '2' }], ['td'], ['td', { rowspan: '2' }]],
+					['tr', ['td']]
+				],
+
+				['tbody', ['tr', ['td'], ['td'], ['td']], ['tr', ['td'], ['td'], ['td']]]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useThead: true,
+				useTbody: true,
+				useTh: false
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can handle a 3x3 table, splitting a cell at the start of the body', () => {
+			const jsonIn = [
+				'table',
+				['thead', ['tr', ['td'], ['td'], ['td']]],
+				['tbody', ['tr', ['td'], ['td'], ['td']], ['tr', ['td'], ['td'], ['td']]]
+			];
+
+			const mutateGridModel = gridModel =>
+				splitNonSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(1, 1));
+
+			const jsonOut = [
+				'table',
+				{ border: '0' },
+				['thead', ['tr', ['td'], ['td'], ['td']]],
+
+				[
+					'tbody',
+					['tr', ['td', { rowspan: '2' }], ['td'], ['td', { rowspan: '2' }]],
+					['tr', ['td']],
+					['tr', ['td'], ['td'], ['td']]
+				]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useThead: true,
+				useTbody: true,
+				useTh: false
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can handle a 3x3 table, splitting a cell at the end of the body', () => {
+			const jsonIn = [
+				'table',
+				['thead', ['tr', ['td'], ['td'], ['td']]],
+				['tbody', ['tr', ['td'], ['td'], ['td']], ['tr', ['td'], ['td'], ['td']]]
+			];
+
+			const mutateGridModel = gridModel =>
+				splitNonSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(2, 1));
+
+			const jsonOut = [
+				'table',
+				{ border: '0' },
+				['thead', ['tr', ['td'], ['td'], ['td']]],
+
+				[
+					'tbody',
+					['tr', ['td'], ['td'], ['td']],
+					['tr', ['td', { rowspan: '2' }], ['td'], ['td', { rowspan: '2' }]],
+					['tr', ['td']]
 				]
 			];
 
@@ -2722,7 +2824,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			];
 
 			const mutateGridModel = gridModel =>
-				splitCellIntoColumns(gridModel, gridModel.getCellAtCoordinates(1, 1));
+				splitSpanningCellIntoColumns(gridModel, gridModel.getCellAtCoordinates(1, 1));
 
 			const jsonOut = [
 				'table',
