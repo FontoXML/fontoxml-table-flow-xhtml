@@ -1,15 +1,14 @@
 import Blueprint from 'fontoxml-blueprints/src/Blueprint.js';
 import CoreDocument from 'fontoxml-core/src/Document.js';
+import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager.js';
 import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
 import indicesManager from 'fontoxml-indices/src/indicesManager.js';
 import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean.js';
-import * as slimdom from 'slimdom';
-
 import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition.js';
-
 import mergeCells from 'fontoxml-table-flow/src/TableGridModel/mutations/merging/mergeCells.js';
-import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell.js';
 import splitNonSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitNonSpanningCell.js';
+import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell.js';
+import * as slimdom from 'slimdom';
 
 const mergeCellWithCellToTheRight = mergeCells.mergeCellWithCellToTheRight;
 const mergeCellWithCellToTheLeft = mergeCells.mergeCellWithCellToTheLeft;
@@ -20,7 +19,6 @@ const splitSpanningCellIntoRows = splitSpanningCell.splitCellIntoRows;
 const splitSpanningCellIntoColumns = splitSpanningCell.splitCellIntoColumns;
 
 const splitNonSpanningCellIntoRows = splitNonSpanningCell.splitNonSpanningCellIntoRows;
-const splitNonSpanningCellIntoColumns = splitNonSpanningCell.splitNonSpanningCellIntoColumns;
 
 const stubFormat = {
 	synthesizer: {
@@ -393,6 +391,58 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
+			});
+
+			it('can handle a 4x4 table using prefixes, changing nothing', () => {
+				namespaceManager.clear();
+				namespaceManager.addNamespace('xhtml', 'http://www.w3.org/1999/xhtml');
+
+				const jsonIn = [
+					'xhtml:table',
+					[
+						'xhtml:thead',
+						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
+					],
+					[
+						'xhtml:tbody',
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
+					]
+				];
+
+				let gridModel;
+				const callback = gm => {
+					gridModel = gm;
+				};
+
+				const jsonOut = [
+					'xhtml:table',
+					{ border: '0' },
+					[
+						'xhtml:thead',
+						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
+					],
+					[
+						'xhtml:tbody',
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
+					]
+				];
+
+				const options = {
+					table: {
+						namespaceURI: 'http://www.w3.org/1999/xhtml'
+					},
+					shouldCreateColumnSpecificationNodes: false,
+					useTh: true,
+					useTbody: true,
+					useThead: true
+				};
+
+				transformTable(jsonIn, jsonOut, options, callback);
+				chai.assert.isNotNull(gridModel.getCellAtCoordinates(0, 0).element.parentNode);
 			});
 
 			it('can handle a 4x4 table with 1 header row, increasing the header row count by 1', () => {
