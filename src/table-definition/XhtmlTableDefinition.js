@@ -158,13 +158,12 @@ function XhtmlTableDefinition(options) {
 
 		// Data
 		getNumberOfColumnsXPathQuery:
-			'(let $cells := head(descendant-or-self::' +
-			tr +
-			')/*[self::' +
-			td +
-			' | self::' +
-			th +
-			'] return for $node in $cells return let $colspan := $node/@colspan => number() return if ($colspan) then $colspan else 1) => sum()',
+			`let $firstRow :=
+				if (./${thead}/${tr}) then head(./${thead}/${tr})
+				else if (./${tbody}/${tr}) then head(./${tbody}/${tr})
+				else head(./${tr}),
+			$cells := $firstRow/*[self::${td} | self::${th}]
+			return (for $node in $cells return let $colspan := $node/@colspan => number() return if ($colspan) then $colspan else 1) => sum()`,
 		getRowSpanForCellNodeXPathQuery:
 			'let $rowspan := ./@rowspan return if ($rowspan) then $rowspan => number() else 1',
 		getColumnSpanForCellNodeXPathQuery:
