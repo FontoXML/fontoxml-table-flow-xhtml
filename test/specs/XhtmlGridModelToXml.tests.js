@@ -14,7 +14,8 @@ const stubFormat = {
 		get: (_option, _node) => false
 	},
 	validator: {
-		canContain: () => true
+		canContain: () => true,
+		validateDown: () => []
 	}
 };
 
