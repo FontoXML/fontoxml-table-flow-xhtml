@@ -663,7 +663,7 @@ describe('XHTML tables: XML to GridModel', () => {
 				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
 			});
 
-			it.skip('can deserialize a 4x4 table with multiple row spanning cells on the first row', () => {
+			it('can deserialize a 4x4 table with multiple row spanning cells on the first row', () => {
 				coreDocument.dom.mutate(() =>
 					jsonMLMapper.parse(
 						[
