@@ -3266,4 +3266,102 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
 		});
 	});
+
+	describe('borders', () => {
+		it('can turn borders on', () => {
+			const jsonIn = [
+				'table',
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const jsonOut = [
+				'table',
+				{ border: '1' },
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useBorders: true,
+				useThead: false,
+				useTbody: false,
+				useTh: true
+			};
+
+			transformTable(jsonIn, jsonOut, options, gridModel => {
+				gridModel.tableSpecification.borders = true;
+				gridModel.giveCellsBorders();
+			});
+		});
+
+		it('can turn borders off', () => {
+			const jsonIn = [
+				'table',
+				{ border: '1' },
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const jsonOut = [
+				'table',
+				{ border: '0' },
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useBorders: true,
+				useThead: false,
+				useTbody: false,
+				useTh: true
+			};
+
+			transformTable(jsonIn, jsonOut, options, gridModel => {
+				gridModel.tableSpecification.borders = false;
+				gridModel.makeCellsBorderless();
+			});
+		});
+
+		it('can leave borders off (as default)', () => {
+			const jsonIn = [
+				'table',
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const jsonOut = [
+				'table',
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useBorders: true,
+				useThead: false,
+				useTbody: false,
+				useTh: true
+			};
+
+			transformTable(jsonIn, jsonOut, options, gridModel => {
+				gridModel.tableSpecification.borders = false;
+				gridModel.makeCellsBorderless();
+			});
+		});
+	});
 });
