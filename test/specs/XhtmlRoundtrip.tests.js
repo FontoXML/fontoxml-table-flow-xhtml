@@ -75,7 +75,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 		it('can handle a 1x1 table, changing nothing', () => {
 			const jsonIn = ['table', ['tr', ['td']]];
 
-			const jsonOut = ['table', { border: '0' }, ['tr', ['td']]];
+			const jsonOut = ['table', ['tr', ['td']]];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
@@ -96,7 +96,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
@@ -127,7 +126,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -157,7 +155,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -187,7 +184,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -217,7 +213,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -249,7 +244,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -279,7 +273,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -312,7 +305,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -345,7 +337,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -377,7 +368,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -419,7 +409,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'xhtml:table',
-					{ border: '0' },
 					[
 						'xhtml:thead',
 						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
@@ -459,7 +448,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'thead',
 						['tr', ['th'], ['th'], ['th'], ['th']],
@@ -492,7 +480,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -525,7 +512,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -560,7 +546,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -596,7 +581,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -635,7 +619,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -674,7 +657,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -712,7 +694,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 					[
 						'tbody',
@@ -748,7 +729,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'thead',
 						['tr', ['th'], ['th'], ['th'], ['th']],
@@ -787,7 +767,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -826,7 +805,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 					[
 						'tbody',
@@ -864,7 +842,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -900,7 +877,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -939,7 +915,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -975,7 +950,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -1014,7 +988,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1051,7 +1024,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1088,7 +1060,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1128,7 +1099,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'thead',
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1171,7 +1141,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'thead',
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1214,7 +1183,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1249,7 +1217,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1284,7 +1251,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1318,7 +1284,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1347,7 +1312,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1376,7 +1340,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1407,7 +1370,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1436,7 +1398,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1465,7 +1426,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1496,7 +1456,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1528,7 +1487,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1560,7 +1518,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']]
@@ -1594,7 +1551,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
@@ -1632,7 +1588,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -1670,7 +1625,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -1710,7 +1664,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						[
 							'tbody',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1746,7 +1699,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						[
 							'tbody',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1782,7 +1734,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						[
 							'tbody',
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1824,7 +1775,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						['col'],
 						['col'],
 						['col'],
@@ -1869,7 +1819,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						['col'],
 						['col'],
 						['col'],
@@ -1914,7 +1863,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						['col'],
 						['col'],
 						['col'],
@@ -1956,7 +1904,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -1986,7 +1933,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -2016,7 +1962,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
@@ -2052,7 +1997,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						['col'],
 						['col'],
 						['col'],
@@ -2091,7 +2035,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						['col'],
 						['col'],
 						['col'],
@@ -2130,7 +2073,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					const jsonOut = [
 						'table',
-						{ border: '0' },
 						['col'],
 						['col'],
 						['col'],
@@ -2171,7 +2113,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -2207,7 +2148,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -2243,7 +2183,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -2283,7 +2222,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td']],
@@ -2319,7 +2257,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td']],
@@ -2355,7 +2292,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td']],
@@ -2390,7 +2326,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
@@ -2420,7 +2355,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
@@ -2450,7 +2384,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
@@ -2485,7 +2418,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -2521,7 +2453,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -2557,7 +2488,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'table',
-					{ border: '0' },
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td'], ['td']]],
 					[
 						'tbody',
@@ -2596,7 +2526,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td', { rowspan: '2' }], ['td']],
@@ -2635,7 +2564,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
@@ -2670,7 +2598,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
@@ -2709,7 +2636,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
@@ -2746,7 +2672,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
@@ -2777,7 +2702,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'thead',
 					['tr', ['td', { rowspan: '2' }], ['td'], ['td', { rowspan: '2' }]],
@@ -2809,7 +2733,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['thead', ['tr', ['td'], ['td'], ['td']]],
 
 				[
@@ -2842,7 +2765,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['thead', ['tr', ['td'], ['td'], ['td']]],
 
 				[
@@ -2879,7 +2801,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
@@ -2914,7 +2835,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
@@ -2942,7 +2862,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -2973,7 +2892,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
@@ -3001,7 +2919,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
@@ -3061,7 +2978,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
@@ -3089,7 +3005,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 				[
 					'tbody',
@@ -3120,7 +3035,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 				[
 					'tbody',
@@ -3157,7 +3071,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
@@ -3222,7 +3135,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['col', { align: 'center', valign: 'middle' }],
 				['col', { align: 'center', valign: 'middle' }],
 				['col', { align: 'center', valign: 'middle' }],
@@ -3261,7 +3173,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['col', { align: 'center' }],
 				['col', { valign: 'middle' }],
 				['col', { align: 'left', valign: 'top' }],
@@ -3296,7 +3207,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['col'],
 				['col'],
 				['col'],
@@ -3335,7 +3245,6 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const jsonOut = [
 				'table',
-				{ border: '0' },
 				['col'],
 				['col'],
 				['col'],

@@ -69,7 +69,6 @@ describe('XHTML tables: Column Width', () => {
 
 		const jsonOut = [
 			'table',
-			{ border: '0' },
 			['col', { width: '20%' }],
 			['col', { width: '20%' }],
 			['col', { width: '20%' }],
@@ -115,7 +114,6 @@ describe('XHTML tables: Column Width', () => {
 
 		const jsonOut = [
 			'table',
-			{ border: '0' },
 			['col', { width: '1*' }],
 			['col', { width: '1*' }],
 			['col', { width: '1*' }],
