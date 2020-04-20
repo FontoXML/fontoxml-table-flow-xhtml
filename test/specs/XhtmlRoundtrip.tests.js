@@ -435,6 +435,65 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				chai.assert.isNotNull(gridModel.getCellAtCoordinates(0, 0).element.parentNode);
 			});
 
+			it('can handle a 4x4 table using prefixes, changing nodenames', () => {
+				namespaceManager.clear();
+				namespaceManager.addNamespace('xhtml', 'http://www.w3.org/1999/xhtml');
+
+				const jsonIn = [
+					'xhtml:table',
+					[
+						'xhtml:thead',
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
+					],
+					[
+						'xhtml:tbody',
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
+					]
+				];
+
+				let gridModel;
+				const callback = gm => {
+					gridModel = gm;
+				};
+
+				const jsonOut = [
+					'xhtml:table',
+					[
+						'xhtml:thead',
+						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
+					],
+					[
+						'xhtml:tbody',
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
+						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
+					]
+				];
+
+				const options = {
+					table: {
+						namespaceURI: 'http://www.w3.org/1999/xhtml'
+					},
+					shouldCreateColumnSpecificationNodes: false,
+					// The following setting causes all element names to change around
+					useTh: true,
+					useTbody: true,
+					useThead: true
+				};
+
+				transformTable(jsonIn, jsonOut, options, callback);
+				for (let width = 0; width < 3; ++width) {
+					for (let height = 0; height < 4; ++height) {
+						chai.assert.isNotNull(
+							gridModel.getCellAtCoordinates(height, width).element.parentNode,
+							`Cell at (${height};${width}) is still in the document`
+						);
+					}
+				}
+			});
+
 			it('can handle a 4x4 table with 1 header row, increasing the header row count by 1', () => {
 				const jsonIn = [
 					'table',
