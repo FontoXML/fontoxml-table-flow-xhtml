@@ -12,7 +12,7 @@
 			]
 		},
 		"label": "t__Align left",
-		"description": "t__Align content of the current cells to the left",
+		"description": "t__Align to the left",
 		"icon": "align-left",
 		"steps": [
 			{
@@ -32,13 +32,16 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align left",
-		"description": "t__Align content of the current cells to the left",
+		"description": "t__Align to the left",
 		"icon": "align-left",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": ["td", "th"]
+					"nodeName": [
+						"td",
+						"th"
+					]
 				}
 			},
 			{
@@ -59,9 +62,9 @@
 			]
 		},
 		"label": "t__Align right",
-		"description": "t__Align  content of the current cells to the right",
+		"description": "t__Align  to the right",
 		"icon": "align-right",
-		"steps":  [
+		"steps": [
 			{
 				"type": "operation/toggle-cell-data",
 				"data": {
@@ -79,13 +82,16 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align right",
-		"description": "t__Align  content of the current cells to the right",
+		"description": "t__Align  to the right",
 		"icon": "align-right",
-		"steps":  [
+		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": ["td", "th"]
+					"nodeName": [
+						"td",
+						"th"
+					]
 				}
 			},
 			{
@@ -106,7 +112,7 @@
 			]
 		},
 		"label": "t__Align center",
-		"description": "t__Align content of the current cells to the center",
+		"description": "t__Align to the center",
 		"icon": "align-center",
 		"steps": [
 			{
@@ -126,13 +132,16 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align center",
-		"description": "t__Align content of the current cells to the center",
+		"description": "t__Align to the center",
 		"icon": "align-center",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": ["td", "th"]
+					"nodeName": [
+						"td",
+						"th"
+					]
 				}
 			},
 			{
@@ -179,7 +188,10 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": ["td", "th"]
+					"nodeName": [
+						"td",
+						"th"
+					]
 				}
 			},
 			{
@@ -202,12 +214,15 @@
 			]
 		},
 		"label": "t__Character",
-		"description": "t__Align the content of the current cells on a character.",
+		"description": "t__Align the on a character.",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": ["td", "th"]
+					"nodeName": [
+						"td",
+						"th"
+					]
 				}
 			},
 			{
@@ -234,8 +249,8 @@
 			]
 		},
 		"label": "t__Align top",
-		"description": "t__Align content of the current cells to the top",
-		"icon":"align-top",
+		"description": "t__Align to the top",
+		"icon": "align-top",
 		"steps": [
 			{
 				"type": "operation/toggle-cell-data",
@@ -253,13 +268,16 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align top",
-		"description": "t__Align content of the current cells to the top",
-		"icon":"align-top",
+		"description": "t__Align to the top",
+		"icon": "align-top",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": ["td", "th"]
+					"nodeName": [
+						"td",
+						"th"
+					]
 				}
 			},
 			{
@@ -280,8 +298,8 @@
 			]
 		},
 		"label": "t__Align bottom",
-		"description": "t__Align content of the current cells to the bottom",
-		"icon":"align-bottom",
+		"description": "t__Align to the bottom",
+		"icon": "align-bottom",
 		"steps": [
 			{
 				"type": "operation/toggle-cell-data",
@@ -299,13 +317,16 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align bottom",
-		"description": "t__Align content of the current cells to the bottom",
-		"icon":"align-bottom",
+		"description": "t__Align to the bottom",
+		"icon": "align-bottom",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": ["td", "th"]
+					"nodeName": [
+						"td",
+						"th"
+					]
 				}
 			},
 			{
@@ -326,8 +347,8 @@
 			]
 		},
 		"label": "t__Align center",
-		"description": "t__Align content of the current cells to the middle",
-		"icon":"align-vertical-center",
+		"description": "t__Align to the middle",
+		"icon": "align-vertical-center",
 		"steps": [
 			{
 				"type": "operation/toggle-cell-data",
@@ -345,13 +366,16 @@
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align center",
-		"description": "t__Align content of the current cells to the middle",
-		"icon":"align-vertical-center",
+		"description": "t__Align to the middle",
+		"icon": "align-vertical-center",
 		"steps": [
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": ["td", "th"]
+					"nodeName": [
+						"td",
+						"th"
+					]
 				}
 			},
 			{
