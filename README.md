@@ -73,6 +73,19 @@ configureAsXhtmlTableElements(sxModule, {
 
 To configure the markup labels and contextual operations, use the {@link configureProperties} function.
 
+The cell element menu button widgets are added based on the existence of contextual operations on cell level. Make sure that only cell-specific operations are added to the cell widget, so that users are only given options relevant to them.
+Example on how you can add this element menu on the widget:
+
+```
+configureProperties(sxModule, 'self::td', {
+	contextualOperations: [
+		{ name: 'contextual-set-total-cell', hideIn: ['context-menu'] }
+	]
+});
+```
+
+
+
 ## Specification
 
 Fonto supports a subset of the [XHTML 1.0 2nd edition](https://www.w3.org/TR/xhtml1/dtds.html) table specification. The
