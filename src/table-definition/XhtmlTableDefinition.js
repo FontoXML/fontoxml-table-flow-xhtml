@@ -22,12 +22,12 @@ function parseWidth(width) {
  * @param {XhtmlTableOptions} options
  */
 function XhtmlTableDefinition(options) {
-	var useThead = !!options.useThead;
-	var useTbody = !!options.useTbody;
-	var useTh = !!options.useTh;
-	var useBorders = options.useBorders !== false;
-	var shouldCreateColumnSpecificationNodes = !!options.shouldCreateColumnSpecificationNodes;
-	var columnWidthType = options.columnWidthType || 'none'; // ' percentual' | 'relative' | 'none'
+	const useThead = !!options.useThead;
+	const useTbody = !!options.useTbody;
+	let useTh = !!options.useTh;
+	const useBorders = options.useBorders !== false;
+	const shouldCreateColumnSpecificationNodes = !!options.shouldCreateColumnSpecificationNodes;
+	const columnWidthType = options.columnWidthType || 'none'; // ' percentual' | 'relative' | 'none'
 
 	// Warn the developer that columnWidthType is specified without shouldCreateColumnSpecificationNodes set to true.
 	if (columnWidthType !== 'none' && !shouldCreateColumnSpecificationNodes) {
@@ -52,11 +52,11 @@ function XhtmlTableDefinition(options) {
 		useTh = true;
 	}
 
-	var namespaceURI =
+	const namespaceURI =
 		options.table && options.table.namespaceURI ? options.table.namespaceURI : '';
 
-	var namespaceSelector = 'Q{' + namespaceURI + '}';
-	var selectorParts = {
+	const namespaceSelector = 'Q{' + namespaceURI + '}';
+	const selectorParts = {
 		table:
 			namespaceSelector +
 			'table' +
@@ -75,17 +75,17 @@ function XhtmlTableDefinition(options) {
 	};
 
 	// Alias selector parts
-	var table = selectorParts.table;
-	var thead = selectorParts.headerContainer;
-	var tbody = selectorParts.bodyContainer;
-	var tfoot = selectorParts.footerContainer;
-	var tr = selectorParts.row;
-	var td = selectorParts.cell;
-	var th = selectorParts.headerCell;
-	var col = selectorParts.columnSpecification;
-	var colGroup = selectorParts.columnSpecificationGroup;
+	const table = selectorParts.table;
+	const thead = selectorParts.headerContainer;
+	const tbody = selectorParts.bodyContainer;
+	const tfoot = selectorParts.footerContainer;
+	const tr = selectorParts.row;
+	const td = selectorParts.cell;
+	const th = selectorParts.headerCell;
+	const col = selectorParts.columnSpecification;
+	const colGroup = selectorParts.columnSpecificationGroup;
 
-	var tableNodesSelector =
+	const tableNodesSelector =
 		'self::' +
 		col +
 		' or self::' +
@@ -99,7 +99,7 @@ function XhtmlTableDefinition(options) {
 		' or self::' +
 		tfoot;
 
-	var properties = {
+	const properties = {
 		selectorParts: selectorParts,
 
 		supportsBorders: useBorders,
@@ -147,7 +147,7 @@ function XhtmlTableDefinition(options) {
 
 		findColumnSpecificationNodesXPathQuery: './' + col,
 
-		findCellNodesXPathQuery: './' + td + ' | ./' + th,
+		findCellNodesXPathQuery: `child::*[self::${td} or self::${th}]`,
 
 		findNonTableNodesPrecedingRowsXPathQuery:
 			'./*[(' +
@@ -157,8 +157,7 @@ function XhtmlTableDefinition(options) {
 			']]',
 
 		// Data
-		getNumberOfColumnsXPathQuery:
-			`let $firstRow :=
+		getNumberOfColumnsXPathQuery: `let $firstRow :=
 				if (./${thead}/${tr}) then head(./${thead}/${tr})
 				else if (./${tbody}/${tr}) then head(./${tbody}/${tr})
 				else head(./${tr}),
@@ -312,8 +311,8 @@ function XhtmlTableDefinition(options) {
 				return '';
 			}
 
-			var proportion = parseWidth(width) || 1;
-			var totalProportion = widths.reduce(
+			const proportion = parseWidth(width) || 1;
+			const totalProportion = widths.reduce(
 				(total, proportion) => total + parseWidth(proportion) || 1,
 				0
 			);
@@ -325,13 +324,13 @@ function XhtmlTableDefinition(options) {
 				return '';
 			}
 
-			var parsedWidth1 = parseWidth(width1);
-			var proportion1 = parsedWidth1 || 0;
+			const parsedWidth1 = parseWidth(width1);
+			const proportion1 = parsedWidth1 || 0;
 
-			var parsedWidth2 = parseWidth(width2);
-			var proportion2 = parsedWidth2 || 0;
+			const parsedWidth2 = parseWidth(width2);
+			const proportion2 = parsedWidth2 || 0;
 
-			var proportion = proportion1 + proportion2;
+			const proportion = proportion1 + proportion2;
 
 			return proportion !== 0
 				? proportion + (columnWidthType === 'percentual' ? '%' : '*')
@@ -341,27 +340,27 @@ function XhtmlTableDefinition(options) {
 			if (columnWidthType === 'none') {
 				return '';
 			}
-			var parsedWidth = parseWidth(width);
+			const parsedWidth = parseWidth(width);
 
 			if (!parsedWidth) {
 				return '';
 			}
 
-			var proportion = parsedWidth;
+			const proportion = parsedWidth;
 
 			return proportion !== 0
 				? proportion / 2 + (columnWidthType === 'percentual' ? '%' : '*')
 				: '';
 		},
 		widthsToFractionsStrategy: function(widths) {
-			var parsedWidths = widths.map(parseWidth);
+			const parsedWidths = widths.map(parseWidth);
 
 			if (parsedWidths.includes(null)) {
 				const newWidth = 1 / parsedWidths.length;
 				return parsedWidths.map(() => newWidth);
 			}
 
-			var totalWidth = parsedWidths.reduce((total, width) => total + width, 0);
+			const totalWidth = parsedWidths.reduce((total, width) => total + width, 0);
 
 			return parsedWidths.map(width => width / totalWidth);
 		},
