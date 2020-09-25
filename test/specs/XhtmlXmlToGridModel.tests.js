@@ -694,7 +694,134 @@ describe('XHTML tables: XML to GridModel', () => {
 				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
 			});
 
-			it('can deserialize a 4x4 table with multiple row spanning cells on the first row', () => {
+			it('can deserialize a 4x4 table with a row spanning cell with a following empty row', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							[
+								'tr',
+								['td', { rowspan: '2' }],
+								['td', { rowspan: '2' }],
+								['td', { rowspan: '2' }],
+								['td', { rowspan: '2' }]
+							],
+							['tr'],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				chai.assert.isUndefined(gridModel.error);
+
+				chai.assert.equal(gridModel.getHeight(), 4, 'height');
+				chai.assert.equal(gridModel.getWidth(), 4, 'width');
+				chai.assert.equal(gridModel.headerRowCount, 0, 'headerRowCount');
+
+				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
+				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 0);
+				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+			});
+
+			// virtual row flag should allow Xhtml table grid to create virutal rows at the end of the table
+			it('can deserialize a table with last row having row spanning cells', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['th'], ['th'], ['th'], ['th']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							[
+								'tr',
+								['td', { rowspan: '3' }],
+								['td', { rowspan: '3' }],
+								['td', { rowspan: '3' }],
+								['td', { rowspan: '3' }]
+							]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+
+				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				chai.assert.isUndefined(gridModel.error);
+
+				chai.assert.equal(gridModel.getHeight(), 5, 'height');
+				chai.assert.equal(gridModel.getWidth(), 4, 'width');
+				chai.assert.equal(gridModel.headerRowCount, 1, 'headerRowCount');
+
+				const firstSpanningCell = gridModel.getCellAtCoordinates(2, 0);
+				const secondSpanningCell = gridModel.getCellAtCoordinates(3, 0);
+				const thirdSpanningCell = gridModel.getCellAtCoordinates(4, 0);
+
+				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(firstSpanningCell.element, thirdSpanningCell.element);
+			});
+
+			it('can deserialize a table with a single row spanning cell with one less entry in the next rows to accomdate the row spanning cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['th'], ['th'], ['th'], ['th']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td', { rowspan: '3' }], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td']]
+						],
+
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+
+				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				chai.assert.isUndefined(gridModel.error);
+
+				chai.assert.equal(gridModel.getHeight(), 5, 'height');
+				chai.assert.equal(gridModel.getWidth(), 4, 'width');
+				chai.assert.equal(gridModel.headerRowCount, 1, 'headerRowCount');
+
+				const firstSpanningCell = gridModel.getCellAtCoordinates(2, 0);
+				const secondSpanningCell = gridModel.getCellAtCoordinates(3, 0);
+				const thirdSpanningCell = gridModel.getCellAtCoordinates(4, 0);
+
+				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(firstSpanningCell.element, thirdSpanningCell.element);
+			});
+
+			it('throws error with a table with a single row spanning cell with one less entry in the next rows to accomdate the row spanning cell and an empty last virtual row', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['th'], ['th'], ['th'], ['th']],
+							['tr', ['td'], ['td'], ['td'], ['td']],
+							['tr', ['td', { rowspan: '4' }], ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td']],
+							['tr', ['td'], ['td'], ['td']]
+						],
+
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					'error'
+				);
+			});
+
+			it('throws error with a 4x4 table with not enough empty rows to accomdate row spans', () => {
 				coreDocument.dom.mutate(() =>
 					jsonMLMapper.parse(
 						[
@@ -715,16 +842,35 @@ describe('XHTML tables: XML to GridModel', () => {
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-				chai.assert.isUndefined(gridModel.error);
 
-				// Normalization happens AFTER the first mutation
-				chai.assert.equal(gridModel.getHeight(), 5, 'height');
-				chai.assert.equal(gridModel.getWidth(), 4, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 0, 'headerRowCount');
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					'error'
+				);
 			});
 
-			it('throws when building a gridModel from a table containing incorrect rowspans', () => {
+			it('throws error with a table with an empty row that is not covered by row spanning cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['th'], ['th'], ['th'], ['th']],
+							['tr'],
+							['tr', ['td'], ['td'], ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					'error'
+				);
+			});
+
+			it('throws error with a table containing incorrect rowspans', () => {
 				coreDocument.dom.mutate(() =>
 					jsonMLMapper.parse(
 						[

@@ -106,6 +106,8 @@ function XhtmlTableDefinition(options) {
 
 		supportsCellAlignment: true,
 
+		supportsRowSpanningCellsAtBottom: true,
+
 		shouldCreateColumnSpecificationNodes: shouldCreateColumnSpecificationNodes,
 
 		// Defining node selectors
