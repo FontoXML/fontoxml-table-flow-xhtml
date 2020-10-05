@@ -366,7 +366,7 @@ describe('XHTML tables: XML to GridModel', () => {
 			chai.assert.equal(gridModel.headerRowCount, 1);
 		});
 
-		it('can deserialize a 4x4 table with 2 header row (th-based) at the top and the bottom of the table', () => {
+		it('can deserialize a 4x4 table with 1 header row (th-based) at the top and treat a row whose all cells are th but which is after a body row', () => {
 			coreDocument.dom.mutate(() =>
 				jsonMLMapper.parse(
 					[
@@ -386,30 +386,7 @@ describe('XHTML tables: XML to GridModel', () => {
 
 			chai.assert.equal(gridModel.getHeight(), 4);
 			chai.assert.equal(gridModel.getWidth(), 4);
-			chai.assert.equal(gridModel.headerRowCount, 2);
-		});
-
-		it('can deserialize a 4x4 table with 2 header row (th-based) at the top and the middle of the table', () => {
-			coreDocument.dom.mutate(() =>
-				jsonMLMapper.parse(
-					[
-						'table',
-						['tr', ['th'], ['th'], ['th'], ['th']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['th'], ['th'], ['th'], ['th']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					],
-					documentNode
-				)
-			);
-
-			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-			chai.assert.isUndefined(gridModel.error);
-
-			chai.assert.equal(gridModel.getHeight(), 4);
-			chai.assert.equal(gridModel.getWidth(), 4);
-			chai.assert.equal(gridModel.headerRowCount, 2);
+			chai.assert.equal(gridModel.headerRowCount, 1);
 		});
 
 		it('can deserialize a 4x4 table with two tbody elements and 1 header row (thead-based)', () => {
@@ -632,6 +609,60 @@ describe('XHTML tables: XML to GridModel', () => {
 					tableDefinition.buildTableGridModel(tableElement, blueprint),
 					'error'
 				);
+			});
+
+			it('can deserialize a table with a row spanning cell (td) into a row without td cell', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['th'], ['th'], ['td', { rowspan: '2' }]],
+							['tr', ['th'], ['th']]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				chai.assert.isUndefined(gridModel.error);
+
+				chai.assert.equal(gridModel.getHeight(), 2, 'height');
+				chai.assert.equal(gridModel.getWidth(), 3, 'width');
+				chai.assert.equal(gridModel.headerRowCount, 0, 'headerRowCount');
+
+				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 2);
+				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 2);
+				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+			});
+
+			it('can deserialize a table with a row spanning cell (th) into empty rows', () => {
+				coreDocument.dom.mutate(() =>
+					jsonMLMapper.parse(
+						[
+							'table',
+							['tr', ['th', { rowspan: '3' }], ['th', { rowspan: '3' }]],
+							['tr'],
+							['tr'],
+							['tr', ['td'], ['td']]
+						],
+						documentNode
+					)
+				);
+
+				const tableElement = documentNode.firstChild;
+				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				chai.assert.isUndefined(gridModel.error);
+
+				chai.assert.equal(gridModel.getHeight(), 4, 'height');
+				chai.assert.equal(gridModel.getWidth(), 2, 'width');
+				chai.assert.equal(gridModel.headerRowCount, 3, 'headerRowCount');
+
+				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
+				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 0);
+				const thirdSpanningCell = gridModel.getCellAtCoordinates(2, 0);
+				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(secondSpanningCell.element, thirdSpanningCell.element);
 			});
 		});
 

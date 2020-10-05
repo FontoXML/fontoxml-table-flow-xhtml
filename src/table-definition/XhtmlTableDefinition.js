@@ -124,20 +124,15 @@ function XhtmlTableDefinition(options) {
 		headerRowNodeSelector: `self::${tr}[parent::${thead} or not(child::${td})]`,
 
 		// Finds
-		findHeaderRowNodesXPathQuery:
-			'if (./' +
-			thead +
-			') then ./' +
-			thead +
-			'/' +
-			tr +
-			' else (./' +
-			tr +
-			'[not(./' +
-			td +
-			')])',
-		findBodyRowNodesXPathQuery:
-			'if (./' + tbody + ') then ./' + tbody + '/' + tr + ' else ./' + tr + '[./' + td + ']',
+		findHeaderRowNodesXPathQuery: `
+		if (./${thead})
+			then ./${thead}/${tr}
+			else ./${tr}[${td}][1]/preceding-sibling::${tr}`,
+		findBodyRowNodesXPathQuery: `
+		if (./${tbody})
+			then ./${tbody}/${tr}
+			else let $firstBodyRow := ./${tr}[${td}][1]
+				return ($firstBodyRow, $firstBodyRow/following-sibling::${tr})`,
 		findFooterRowNodesXPathQuery:
 			'if (./' + tfoot + ') then ./' + tfoot + '/' + tr + ' else ()',
 
