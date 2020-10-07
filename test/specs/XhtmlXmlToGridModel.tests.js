@@ -663,7 +663,7 @@ describe('XHTML tables: XML to GridModel', () => {
 				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
 			});
 
-			it('can deserialize a 4x4 table with multiple row spanning cells on the first row', () => {
+			it('throws when a 4x4 table has multiple row spanning cells on the first row into the next non-empty row', () => {
 				coreDocument.dom.mutate(() =>
 					jsonMLMapper.parse(
 						[
@@ -684,13 +684,11 @@ describe('XHTML tables: XML to GridModel', () => {
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
-				chai.assert.isUndefined(gridModel.error);
 
-				// Normalization happens AFTER the first mutation
-				chai.assert.equal(gridModel.getHeight(), 5, 'height');
-				chai.assert.equal(gridModel.getWidth(), 4, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 0, 'headerRowCount');
+				chai.assert.property(
+					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					'error'
+				);
 			});
 
 			it('throws when building a gridModel from a table containing incorrect rowspans', () => {
