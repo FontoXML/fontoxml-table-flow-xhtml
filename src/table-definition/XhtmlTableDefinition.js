@@ -275,19 +275,6 @@ function XhtmlTableDefinition(options) {
 			)
 		],
 
-		horizontalAlignmentOperationNames: [
-			'contextual-xhtml-set-cell-horizontal-alignment-left',
-			'contextual-xhtml-set-cell-horizontal-alignment-center',
-			'contextual-xhtml-set-cell-horizontal-alignment-right',
-			'contextual-xhtml-set-cell-horizontal-alignment-justify'
-		],
-
-		verticalAlignmentOperationNames: [
-			'contextual-xhtml-set-cell-vertical-alignment-top',
-			'contextual-xhtml-set-cell-vertical-alignment-bottom',
-			'contextual-xhtml-set-cell-vertical-alignment-center'
-		],
-
 		getColumnSpecificationStrategies: [
 			getSpecificationValueStrategies.createGetValueAsStringStrategy(
 				'horizontalAlignment',
@@ -382,7 +369,45 @@ function XhtmlTableDefinition(options) {
 				return fractions.map(fraction => (fraction * 100).toFixed(2) + '%');
 			}
 			return fractions.map(fraction => (fraction * 100).toFixed(2) + '*');
-		}
+		},
+
+		// Widget menu operations
+		columnWidgetMenuOperations: options.columnWidgetMenuOperations || [
+			{
+				contents: [
+					{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+					{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+					{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+					{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+				]
+			},
+			{
+				contents: [
+					{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+					{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+					{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+				]
+			},
+			{ contents: [{ name: 'column-delete-at-index' }] }
+		],
+		rowWidgetMenuOperations: options.rowWidgetMenuOperations || [
+			{
+				contents: [
+					{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+					{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+					{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+					{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+				]
+			},
+			{
+				contents: [
+					{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+					{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+					{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+				]
+			},
+			{ contents: [{ name: 'contextual-row-delete' }] }
+		]
 	};
 
 	if (columnWidthType !== 'none') {

@@ -31,7 +31,43 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition.js';
  *			})
  *		],
  *		showInsertionWidget: true,
- *		showHighlightingWidget: true
+ *		showHighlightingWidget: true,
+ *		columnWidgetMenuOperations: [
+ *			{
+ *				contents: [
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+ *				]
+ *			},
+ *			{
+ *				contents: [
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+ *				]
+ *			},
+ *			{ contents: [{ name: 'column-delete-at-index' }] }
+ *		],
+ *		rowWidgetMenuOperations: [
+ *			{
+ *				contents: [
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
+ *					{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+ *				]
+ *			},
+ *			{
+ *				contents: [
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
+ *					{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+ *				]
+ *			},
+ *			{ contents: [{ name: 'contextual-row-delete' }] }
+ *		]
  *	});
  *```
  *
@@ -59,6 +95,8 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition.js';
  * @param  {boolean}         [options.showHighlightingWidget]      To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
  * @param  {Widget[]|null}   [options.columnBefore]                To add column icon widgets by using {@link createIconWidget}. Column widgets are linked to the col elements. Tables that do not have these elements will not show columnBefore widgets. Any widget can be added but only icon widget is supported.
  * @param  {Widget[]|null}   [options.rowBefore]                   To add row icon widgets by using {@link createIconWidget}. Row widgets are linked to the row elements of the table. Any widget can be added but only icon widget is supported.
+ * @param  {Object[]|null}   [options.columnWidgetMenuOperations]  To configure table widget menu for columns. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
+ * @param  {Object[]|null}   [options.rowWidgetMenuOperations]     To configure table widget menu for rows. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
  * @param  {boolean}         [options.useTh]                       Set to true if th should be used
  * @param  {boolean}         [options.useThead]                    Set to true if thead should be used
  * @param  {boolean}         [options.useTbody]                    Set to true if tbody should be used
@@ -83,12 +121,12 @@ export default function configureAsXhtmlTableElements(sxModule, options) {
 		defaultTextContainer:
 			options.th && options.th.defaultTextContainer ? options.th.defaultTextContainer : null
 	};
-	var tableDefinition = new XhtmlTableDefinition(options);
+	const tableDefinition = new XhtmlTableDefinition(options);
 	configureAsTableElements(sxModule, options, tableDefinition);
-	var priority = options.priority;
+	const priority = options.priority;
 
 	// Title (caption)
-	var captionSelector = 'self::' + tableDefinition.selectorParts.caption;
+	const captionSelector = 'self::' + tableDefinition.selectorParts.caption;
 	configureAsBlock(sxModule, captionSelector, undefined, {
 		priority: priority
 	});
