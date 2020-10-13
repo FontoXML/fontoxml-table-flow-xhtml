@@ -127,9 +127,7 @@ function XhtmlTableDefinition(options) {
 
 		// Finds
 		findHeaderRowNodesXPathQuery: `
-		if (./${thead})
-			then ./${thead}/${tr}
-			else ./${tr}[${td}][1]/preceding-sibling::${tr}`,
+		./${thead}/${tr}, ./${tr}[${td}][1]/preceding-sibling::${tr}`,
 		findBodyRowNodesXPathQuery: `
 		if (./${tbody})
 			then ./${tbody}/${tr}
