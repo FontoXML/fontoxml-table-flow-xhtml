@@ -110,6 +110,7 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition.js';
  * @param  {Object}          [options.th]                          Configuration options for the th element
  * @param  {string}          [options.th.defaultTextContainer]     The default text container for the th element
  * @param  {boolean}         [options.useDefaultContextMenu=true]  Whether or not to use a preconfigured context menu for elements within the table
+ * @param  {XPathQuery}      [options.cellStylingTranslationQuery] The {@link XPathQuery} to evaluate for the styling.
  */
 export default function configureAsXhtmlTableElements(sxModule, options) {
 	options = options || {};

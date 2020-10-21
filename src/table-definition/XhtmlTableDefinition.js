@@ -16,6 +16,9 @@ function parseWidth(width) {
 	return Number.isNaN(float) ? null : float;
 }
 
+// Chrome and Firefox display border attribute in table as "ridge" style.
+const TABLE_BORDER_STYLES = { border1: 'ridge', border0: 'none' };
+
 /**
  * Configures the table definition for XHTML tables.
  *
@@ -108,6 +111,8 @@ function XhtmlTableDefinition(options) {
 
 		supportsRowSpanningCellsAtBottom: true,
 
+		supportsSurroundingBorder: false,
+
 		shouldCreateColumnSpecificationNodes: shouldCreateColumnSpecificationNodes,
 
 		// Defining node selectors
@@ -162,6 +167,7 @@ function XhtmlTableDefinition(options) {
 			'let $rowspan := ./@rowspan return if ($rowspan) then $rowspan => number() else 1',
 		getColumnSpanForCellNodeXPathQuery:
 			'let $colspan := ./@colspan return if ($colspan) then $colspan => number() else 1',
+		getCellStylesXPathQuery: options.cellStylingTranslationQuery || 'map {}',
 
 		// Normalizations
 		normalizeContainerNodeStrategies: [
@@ -230,20 +236,100 @@ function XhtmlTableDefinition(options) {
 				'verticalAlignment',
 				'./@valign'
 			)
-		].concat(
-			useBorders
-				? [
-						getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
-							'columnSeparator',
-							'./ancestor::' + table + '[1]/@border = "1"'
-						),
-						getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
-							'rowSeparator',
-							'./ancestor::' + table + '[1]/@border = "1"'
-						)
-				  ]
-				: []
-		),
+		]
+			.concat(
+				useBorders
+					? options.cellStylingTranslationQuery
+						? [
+								getSpecificationValueStrategies.createGetValueAsStringStrategy(
+									'borderTopWidth',
+									`if ($cellStyles?borderTop?width)
+										then $cellStyles?borderTop?width
+										else "1px"`
+								),
+								getSpecificationValueStrategies.createGetValueAsStringStrategy(
+									'borderTopStyle',
+									`if ($cellStyles?borderTop?style)
+										then $cellStyles?borderTop?style
+										else if (./ancestor::${table}[1]/@border = "1")
+											then "${TABLE_BORDER_STYLES.border1}"
+											else "${TABLE_BORDER_STYLES.border0}"`
+								),
+								getSpecificationValueStrategies.createGetValueAsStringStrategy(
+									'borderBottomWidth',
+									`if ($cellStyles?borderBottom?width)
+										then $cellStyles?borderBottom?width
+										else "1px"`
+								),
+								getSpecificationValueStrategies.createGetValueAsStringStrategy(
+									'borderBottomStyle',
+									`if ($cellStyles?borderBottom?style)
+									then $cellStyles?borderBottom?style
+									else if (./ancestor::${table}[1]/@border = "1")
+										then "${TABLE_BORDER_STYLES.border1}"
+										else "${TABLE_BORDER_STYLES.border0}"`
+								),
+								getSpecificationValueStrategies.createGetValueAsStringStrategy(
+									'borderLeftWidth',
+									`if ($cellStyles?borderLeft?width)
+										then $cellStyles?borderLeft?width
+										else "1px"`
+								),
+								getSpecificationValueStrategies.createGetValueAsStringStrategy(
+									'borderLeftStyle',
+									`if ($cellStyles?borderLeft?style)
+									then $cellStyles?borderLeft?style
+									else if (./ancestor::${table}[1]/@border = "1")
+										then "${TABLE_BORDER_STYLES.border1}"
+										else "${TABLE_BORDER_STYLES.border0}"`
+								),
+								getSpecificationValueStrategies.createGetValueAsStringStrategy(
+									'borderRightWidth',
+									`if ($cellStyles?borderRight?width)
+										then $cellStyles?borderRight?width
+										else "1px"`
+								),
+								getSpecificationValueStrategies.createGetValueAsStringStrategy(
+									'borderRightStyle',
+									`if ($cellStyles?borderRight?style)
+									then $cellStyles?borderRight?style
+									else if (./ancestor::${table}[1]/@border = "1")
+										then "${TABLE_BORDER_STYLES.border1}"
+										else "${TABLE_BORDER_STYLES.border0}"`
+								)
+						  ]
+						: [
+								getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+									'borderTop',
+									`./ancestor::${table}/@border = "1"`
+								),
+								getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+									'borderBottom',
+									`./ancestor::${table}/@border = "1"`
+								),
+								getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+									'borderLeft',
+									`./ancestor::${table}/@border = "1"`
+								),
+								getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+									'borderRight',
+									`./ancestor::${table}/@border = "1"`
+								)
+						  ]
+					: []
+			)
+			.concat(
+				options.cellStylingTranslationQuery
+					? [
+							getSpecificationValueStrategies.createGetValueAsStringStrategy(
+								'backgroundColor',
+								`if (map:contains($cellStyles, "backgroundColor"))
+									then $cellStyles("backgroundColor")
+									else ""`
+							)
+					  ]
+					: []
+			),
 
 		// Set attributes
 		setTableNodeAttributeStrategies: useBorders
