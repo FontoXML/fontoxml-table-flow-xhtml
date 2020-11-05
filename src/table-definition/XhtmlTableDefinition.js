@@ -375,17 +375,17 @@ function XhtmlTableDefinition(options) {
 		columnWidgetMenuOperations: options.columnWidgetMenuOperations || [
 			{
 				contents: [
-					{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
-					{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
-					{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
-					{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+					{ name: 'contextual-xhtml-set-cell-horizontal-alignment-left' },
+					{ name: 'contextual-xhtml-set-cell-horizontal-alignment-center' },
+					{ name: 'contextual-xhtml-set-cell-horizontal-alignment-right' },
+					{ name: 'contextual-xhtml-set-cell-horizontal-alignment-justify' }
 				]
 			},
 			{
 				contents: [
-					{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
-					{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
-					{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+					{ name: 'contextual-xhtml-set-cell-vertical-alignment-top' },
+					{ name: 'contextual-xhtml-set-cell-vertical-alignment-center' },
+					{ name: 'contextual-xhtml-set-cell-vertical-alignment-bottom' }
 				]
 			},
 			{ contents: [{ name: 'column-delete-at-index' }] }
@@ -393,17 +393,17 @@ function XhtmlTableDefinition(options) {
 		rowWidgetMenuOperations: options.rowWidgetMenuOperations || [
 			{
 				contents: [
-					{ name: 'contextual-cals-set-cell-horizontal-alignment-left' },
-					{ name: 'contextual-cals-set-cell-horizontal-alignment-center' },
-					{ name: 'contextual-cals-set-cell-horizontal-alignment-right' },
-					{ name: 'contextual-cals-set-cell-horizontal-alignment-justify' }
+					{ name: 'contextual-xhtml-set-cell-horizontal-alignment-left' },
+					{ name: 'contextual-xhtml-set-cell-horizontal-alignment-center' },
+					{ name: 'contextual-xhtml-set-cell-horizontal-alignment-right' },
+					{ name: 'contextual-xhtml-set-cell-horizontal-alignment-justify' }
 				]
 			},
 			{
 				contents: [
-					{ name: 'contextual-cals-set-cell-vertical-alignment-top' },
-					{ name: 'contextual-cals-set-cell-vertical-alignment-center' },
-					{ name: 'contextual-cals-set-cell-vertical-alignment-bottom' }
+					{ name: 'contextual-xhtml-set-cell-vertical-alignment-top' },
+					{ name: 'contextual-xhtml-set-cell-vertical-alignment-center' },
+					{ name: 'contextual-xhtml-set-cell-vertical-alignment-bottom' }
 				]
 			},
 			{ contents: [{ name: 'contextual-row-delete' }] }
