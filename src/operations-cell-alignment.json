@@ -45,6 +45,9 @@
 				}
 			},
 			{
+				"type": "transform/setCellNodeIdsToHighlightedCells"
+			},
+			{
 				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-left"
 			}
 		]
@@ -93,6 +96,9 @@
 						"th"
 					]
 				}
+			},
+			{
+				"type": "transform/setCellNodeIdsToHighlightedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-right"
@@ -145,6 +151,9 @@
 				}
 			},
 			{
+				"type": "transform/setCellNodeIdsToHighlightedCells"
+			},
+			{
 				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-center"
 			}
 		]
@@ -193,6 +202,9 @@
 						"th"
 					]
 				}
+			},
+			{
+				"type": "transform/setCellNodeIdsToHighlightedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-justify"
@@ -281,6 +293,9 @@
 				}
 			},
 			{
+				"type": "transform/setCellNodeIdsToHighlightedCells"
+			},
+			{
 				"type": "operation/contextual-xhtml-set-cell-vertical-alignment-top"
 			}
 		]
@@ -330,6 +345,9 @@
 				}
 			},
 			{
+				"type": "transform/setCellNodeIdsToHighlightedCells"
+			},
+			{
 				"type": "operation/contextual-xhtml-set-cell-vertical-alignment-bottom"
 			}
 		]
@@ -377,6 +395,9 @@
 						"th"
 					]
 				}
+			},
+			{
+				"type": "transform/setCellNodeIdsToHighlightedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-vertical-alignment-center"
