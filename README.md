@@ -67,6 +67,17 @@ configureAsXhtmlTableElements(sxModule, {
 
 	// This will show areas that can be hovered over to hightlight a column or row and that can be clicked to show a operations popover. Optional, defaults to false.
 	showHighlightingWidget: true
+
+	// This XPath expression determines whether or not a table has the ability to be collapsed. Optional, defaults to 'false()'.
+	// $rowCount and $columnCount helper variables can also optionally be used in the XPath expression to make it easier to configure
+	// when the table should collapse i.e. '$rowCount > 5' which will allow tables with rows more than 5 to be able to be collapsed/uncollapsed 
+	isCollapsibleQuery: 'false()'
+    
+	// This XPath expression determines whether a table that has the ability to be collapsed should start off as collapsed on initial load. Optional, defaults to 'true()'.
+	// $rowCount and $columnCount helper variables can also optionally be used in the XPath expression to make it easier to configure
+	// when the table should start off as collapsed i.e. '$rowCount > 10' means that tables that have more than 10 rows will initially start off as collapsed
+	// Note: This query is only evaluated on tables which have the ability to be collapsed using isCollapsibleQuery 
+	isInitiallyCollapsedQuery: 'true()'
 });
 
 ```
