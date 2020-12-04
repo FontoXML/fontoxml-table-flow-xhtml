@@ -1222,6 +1222,91 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
 		});
+
+		it('inserts row under the last header row with td cells', () => {
+			const jsonIn = [
+				'table',
+				['thead', ['tr', ['td'], ['td'], ['td']]],
+				['tr', ['td'], ['td'], ['td', '1x2']],
+				['tr', ['td'], ['td'], ['td']]
+			];
+
+			const jsonOut = [
+				'table',
+				['thead', ['tr', ['td'], ['td'], ['td']]],
+				['tr', ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td', '1x2']],
+				['tr', ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useThead: true,
+				useTbody: false,
+				useTh: false
+			};
+
+			const mutateGridModel = gridModel => gridModel.insertRow(1, true);
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('inserts header row under the last header row with th cells', () => {
+			const jsonIn = [
+				'table',
+				['thead', ['tr', ['th'], ['th'], ['th']]],
+				['tr', ['td'], ['td'], ['td', '1x2']],
+				['tr', ['td'], ['td'], ['td']]
+			];
+
+			const jsonOut = [
+				'table',
+				['thead', ['tr', ['th'], ['th'], ['th']], ['tr', ['th'], ['th'], ['th']]],
+				['tr', ['td'], ['td'], ['td', '1x2']],
+				['tr', ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useThead: true,
+				useTbody: false,
+				useTh: true
+			};
+
+			const mutateGridModel = gridModel => gridModel.insertRow(1, true);
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('inserts header row under the header row with th cells and normalize thead', () => {
+			const jsonIn = [
+				'table',
+				['thead', ['tr', ['th'], ['th'], ['th', '0x2']]],
+				['tr', ['th'], ['th'], ['th', '1x2']],
+				['tr', ['td'], ['td'], ['td', '2x2']],
+				['tr', ['td'], ['td'], ['td']]
+			];
+
+			const jsonOut = [
+				'table',
+				['tr', ['th'], ['th'], ['th', '0x2']],
+				['tr', ['th'], ['th'], ['th']],
+				['tr', ['th'], ['th'], ['th', '1x2']],
+				['tr', ['td'], ['td'], ['td', '2x2']],
+				['tr', ['td'], ['td'], ['td']]
+			];
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useThead: false,
+				useTbody: false,
+				useTh: true
+			};
+
+			const mutateGridModel = gridModel => gridModel.insertRow(1, true);
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
 	});
 
 	describe('Delete row', () => {
@@ -2873,6 +2958,29 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				useThead: true,
 				useTbody: true,
 				useTh: false
+			};
+
+			transformTable(jsonIn, jsonOut, options, mutateGridModel);
+		});
+
+		it('can split the cell in only header row into rows', () => {
+			const jsonIn = ['table', ['tr', ['th'], ['th', '0x1']], ['tr', ['td'], ['td']]];
+
+			const jsonOut = [
+				'table',
+				['tr', ['th', { rowspan: '2' }], ['th', '0x1']],
+				['tr', ['th']],
+				['tr', ['td'], ['td']]
+			];
+
+			const mutateGridModel = gridModel =>
+				splitNonSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(0, 1));
+
+			const options = {
+				shouldCreateColumnSpecificationNodes: false,
+				useThead: false,
+				useTbody: false,
+				useTh: true
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
