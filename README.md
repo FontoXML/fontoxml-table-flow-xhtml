@@ -47,7 +47,7 @@ configureAsXhtmlTableElements(sxModule, {
 		defaultTextContainer: 'p'
 	},
 
-	// Widget area before columns. Any widget can be used, but only the {@link iconWidget} is supported here. Optional, defaults to an empty array.
+	// This widgets are before columns.All widgets are supported. Optional, defaults to an empty array.
 	columnBefore: [
 		createIconWidget('clock-o', {
 			clickOperation: 'lcTime-value-edit',
@@ -55,7 +55,7 @@ configureAsXhtmlTableElements(sxModule, {
 		})
 	],
 
-	// Widget are before rows. Any widget can be used, but only the {@link iconWidget} is supported here. Optional, defaults to an empty array.
+	// This widget is before each row. Any widget can be used, but only the {@link iconWidget} is supported here. Optional, defaults to an empty array.
 	rowBefore: [
 		createIconWidget('dot-circle-o', {
 			clickOperation: 'do-nothing'
@@ -70,13 +70,13 @@ configureAsXhtmlTableElements(sxModule, {
 
 	// This XPath expression determines whether or not a table has the ability to be collapsed. Optional, defaults to 'false()'.
 	// $rowCount and $columnCount helper variables can also optionally be used in the XPath expression to make it easier to configure
-	// when the table should collapse i.e. '$rowCount > 5' which will allow tables with rows more than 5 to be able to be collapsed/uncollapsed 
+	// when the table should collapse i.e. '$rowCount > 5' which will allow tables with rows more than 5 to be able to be collapsed/uncollapsed
 	isCollapsibleQuery: 'false()'
-    
+
 	// This XPath expression determines whether a table that has the ability to be collapsed should start off as collapsed on initial load. Optional, defaults to 'true()'.
 	// $rowCount and $columnCount helper variables can also optionally be used in the XPath expression to make it easier to configure
 	// when the table should start off as collapsed i.e. '$rowCount > 10' means that tables that have more than 10 rows will initially start off as collapsed
-	// Note: This query is only evaluated on tables which have the ability to be collapsed using isCollapsibleQuery 
+	// Note: This query is only evaluated on tables which have the ability to be collapsed using isCollapsibleQuery
 	isInitiallyCollapsedQuery: 'true()'
 });
 
