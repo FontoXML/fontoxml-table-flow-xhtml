@@ -180,7 +180,7 @@ export default function configureAsXhtmlTableElements(sxModule, options) {
  * table insertion operation.
  * - When you have cellStylingTranslationQuery, there is no use of the buttons to change borders
  * in the default table context menu and the
- * {@link fonto-documentation/docs/editor/api/componentTableToolbar.xml} and we hide them
+ * {@link fonto-documentation/docs/editor/api/component/TableToolbar.xml} and we hide them
  * by default.
  *
  * ## Example
