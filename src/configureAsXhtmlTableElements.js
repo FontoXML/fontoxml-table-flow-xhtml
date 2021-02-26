@@ -99,12 +99,12 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition.js';
  * @param  {number}          [options.priority]                          Selector priority for all elements configured by this function
  * @param  {boolean}         [options.showInsertionWidget]               To add insertion buttons which insert a column or a row to a specific place, default false.
  * @param  {boolean}         [options.showHighlightingWidget]            To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
- * @param  {Widget[]|null}   [options.columnBefore]                      To add one or multiple
+ * @param  {WidgetSubAreaByName|Widget[]|null}  [options.columnBefore]   To add one or multiple
  * widgets before each column. Column widgets are linked to the col elements or the cells in the
  * first row in cases `shouldCreateColumnSpecificationNodes` is set to `false`. Tables that do
  * not have these elements will not show `columnBefore` widgets.
  * {@link fonto-documentation/docs/editor/api/index.xml#id-9d2b1ad5-bbc1-6c44-d491-16dc213c53f2 | All widgets} are supported.
- * @param  {Widget[]|null}   [options.rowBefore]                         To add a single icon widget
+ * @param  {WidgetSubAreaByName|Widget[]|null}  [options.rowBefore]      To add a single icon widget
  * before each row by using {@link createIconWidget}. Row widgets are linked to the row elements of
  * the table. Any widget can be added but only icon widget is supported.
  * @param  {Object[]|null}   [options.columnWidgetMenuOperations]        To configure table widget menu for columns. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
