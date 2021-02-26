@@ -390,6 +390,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonIn = [
 					'xhtml:table',
+					{ 'xmlns:xhtml': 'http://www.w3.org/1999/xhtml' },
 					[
 						'xhtml:thead',
 						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
@@ -409,6 +410,8 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'xhtml:table',
+					{ 'xmlns:xhtml': 'http://www.w3.org/1999/xhtml' },
+
 					[
 						'xhtml:thead',
 						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
@@ -441,6 +444,8 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonIn = [
 					'xhtml:table',
+					{ 'xmlns:xhtml': 'http://www.w3.org/1999/xhtml' },
+
 					[
 						'xhtml:thead',
 						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
@@ -460,6 +465,8 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				const jsonOut = [
 					'xhtml:table',
+					{ 'xmlns:xhtml': 'http://www.w3.org/1999/xhtml' },
+
 					[
 						'xhtml:thead',
 						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
