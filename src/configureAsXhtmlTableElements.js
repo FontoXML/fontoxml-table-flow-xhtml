@@ -207,7 +207,7 @@ export default function configureAsXhtmlTableElements(sxModule, options) {
  * 	$cellNode as node(),
  * 	$tableEdges as map(xs:string, xs:boolean)
  * ) as map(*) {
- * 	let $hasTableBorder := number($cellNode/ancestor::table/@border) = 1
+ * 	let $hasTableBorder := number($cellNode/ancestor::table[1]/@border) = 1
  * 	let $styles := app:parseStyleAttribute(string($cellNode/@style))
  * 	return map {
  * 		"borderTop": app:evaluateBorderStyle(
