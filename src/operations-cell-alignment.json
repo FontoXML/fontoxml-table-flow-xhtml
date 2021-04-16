@@ -16,6 +16,9 @@
 		"icon": "align-left",
 		"steps": [
 			{
+				"type": "transform/checkXhtmlTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -38,10 +41,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": [
-						"td",
-						"th"
-					]
+					"nodeName": ["td", "th"]
 				}
 			},
 			{
@@ -69,6 +69,9 @@
 		"icon": "align-right",
 		"steps": [
 			{
+				"type": "transform/checkXhtmlTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -91,10 +94,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": [
-						"td",
-						"th"
-					]
+					"nodeName": ["td", "th"]
 				}
 			},
 			{
@@ -122,6 +122,9 @@
 		"icon": "align-center",
 		"steps": [
 			{
+				"type": "transform/checkXhtmlTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -144,10 +147,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": [
-						"td",
-						"th"
-					]
+					"nodeName": ["td", "th"]
 				}
 			},
 			{
@@ -175,6 +175,9 @@
 		"icon": "align-justify",
 		"steps": [
 			{
+				"type": "transform/checkXhtmlTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -197,10 +200,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": [
-						"td",
-						"th"
-					]
+					"nodeName": ["td", "th"]
 				}
 			},
 			{
@@ -219,9 +219,7 @@
 				{
 					"name": "alignmentCharacter",
 					"type": "string",
-					"description": [
-						"The character to align a column on."
-					]
+					"description": ["The character to align a column on."]
 				}
 			]
 		},
@@ -231,11 +229,11 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": [
-						"td",
-						"th"
-					]
+					"nodeName": ["td", "th"]
 				}
+			},
+			{
+				"type": "transform/checkXhtmlTableCell"
 			},
 			{
 				"type": "operation/toggle-cell-data",
@@ -265,6 +263,9 @@
 		"icon": "align-top",
 		"steps": [
 			{
+				"type": "transform/checkXhtmlTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -286,10 +287,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": [
-						"td",
-						"th"
-					]
+					"nodeName": ["td", "th"]
 				}
 			},
 			{
@@ -317,6 +315,9 @@
 		"icon": "align-bottom",
 		"steps": [
 			{
+				"type": "transform/checkXhtmlTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -338,10 +339,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": [
-						"td",
-						"th"
-					]
+					"nodeName": ["td", "th"]
 				}
 			},
 			{
@@ -369,6 +367,9 @@
 		"icon": "align-vertical-center",
 		"steps": [
 			{
+				"type": "transform/checkXhtmlTableCell"
+			},
+			{
 				"type": "operation/toggle-cell-data",
 				"data": {
 					"cellData": {
@@ -390,10 +391,7 @@
 			{
 				"type": "transform/setCellNodeIdsToSelectionAncestors",
 				"data": {
-					"nodeName": [
-						"td",
-						"th"
-					]
+					"nodeName": ["td", "th"]
 				}
 			},
 			{

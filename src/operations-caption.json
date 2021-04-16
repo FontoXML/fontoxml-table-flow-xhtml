@@ -16,12 +16,12 @@
 		"description": "t__Add a caption to this table.",
 		"steps": [
 			{
+				"type": "transform/checkXhtmlTable"
+			},
+			{
 				"type": "operation/horizontal-insert",
 				"data": {
-					"childNodeStructure": [
-						"caption",
-						[{ "bindTo": "selection", "empty": true }]
-					],
+					"childNodeStructure": ["caption", [{ "bindTo": "selection", "empty": true }]],
 					"contextNodeId": "{{contextNodeId}}"
 				}
 			}
