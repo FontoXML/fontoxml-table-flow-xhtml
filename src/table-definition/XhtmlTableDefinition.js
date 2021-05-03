@@ -112,14 +112,8 @@ function XhtmlTableDefinition(options) {
 
 		// Defining node selectors
 		tablePartsNodeSelector: Object.keys(selectorParts)
-			.filter(function(selector) {
-				return selector !== 'caption';
-			})
-			.map(
-				function(key) {
-					return 'self::' + selectorParts[key];
-				}.bind(this)
-			)
+			.filter(selector => selector !== 'caption')
+			.map(key => 'self::' + selectorParts[key])
 			.join(' or '),
 
 		// Header row node selector
