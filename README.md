@@ -1,5 +1,6 @@
 ---
 category: add-on/fontoxml-table-flow-xhtml
+fontosdk: true
 ---
 
 # XHTML table support
