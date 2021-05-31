@@ -18,10 +18,11 @@ function parseWidth(width) {
 
 /**
  * Configures the table definition for XHTML tables.
- *
- * @param {XhtmlTableOptions} options
  */
 class XhtmlTableDefinition extends TableDefinition {
+	/**
+	 * @param {XhtmlTableOptions} options
+	 */
 	constructor(options) {
 		const useThead = !!options.useThead;
 		const useTbody = !!options.useTbody;
