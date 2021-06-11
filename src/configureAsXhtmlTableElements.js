@@ -94,35 +94,58 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition.js';
  *
  * @category add-on/fontoxml-table-flow-xhtml
  *
- * @param  {Object}          sxModule
- * @param  {Object}          [options]
- * @param  {number}          [options.priority]                          Selector priority for all elements configured by this function
- * @param  {boolean}         [options.showInsertionWidget]               To add insertion buttons which insert a column or a row to a specific place, default false.
- * @param  {boolean}         [options.showHighlightingWidget]            To add highlighting bars which highlight columns and rows, and provide operations popover, default false.
- * @param  {WidgetSubAreaByName|Widget[]|null}  [options.columnBefore]   Used to add one or multiple
- * widgets before each column. The context node for these widgets will either be the col element, or if `shouldCreateColumnSpecificationNodes` is set to `false`, the cell element of the first row.
- * Tables that do not have these elements will not show `columnBefore` widgets. {@link fonto-documentation/docs/editor/api/index.xml#id-9d2b1ad5-bbc1-6c44-d491-16dc213c53f2 All widgets} are supported.
- * @param  {WidgetSubAreaByName|Widget[]|null}  [options.rowBefore]      Used to add a single icon widget
- * before each row using {@link createIconWidget}. Row widgets are linked to the row elements of
- * the table. Any widget can be added but only icon widget is supported.
- * @param  {Object[]|null}   [options.columnWidgetMenuOperations]        To configure table widget menu for columns. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
- * @param  {Object[]|null}   [options.rowWidgetMenuOperations]           To configure table widget menu for rows. It accepts an array of {@link ContextualOperation}s, but only supports "name" and "contents" properties. It is allowed to have only one layer of menu.
- * @param  {boolean}         [options.useTh]                             Set to true if th should be used
- * @param  {boolean}         [options.useThead]                          Set to true if thead should be used
- * @param  {boolean}         [options.useTbody]                          Set to true if tbody should be used
- * @param  {boolean}         [options.useBorders=true]                   Set to false if the borders attribute should not be used
- * @param  {boolean}         [options.shouldCreateColumnSpecificationNodes=false] Set to true if the table should include <col> elements by default
- * @param  {Object}          [options.table]                             Options for the table element
- * @param  {XPathTest}       [options.table.tableFilterSelector]         An optional additional selector for the table which will be used to refine whether a table element should be considered as an xhtml table
- * @param  {string}          [options.table.namespaceURI='']             The namespace URI for this table
- * @param  {Object}          [options.td]                                Configuration options for the td element
- * @param  {string}          [options.td.defaultTextContainer]           The default text container for the td element
- * @param  {Object}          [options.th]                                Configuration options for the th element
- * @param  {string}          [options.th.defaultTextContainer]           The default text container for the th element
- * @param  {boolean}         [options.useDefaultContextMenu=true]        Whether or not to use a preconfigured context menu for elements within the table
- * @param  {cellStylingTranslationQuery} [options.cellStylingTranslationQuery] An {@link XPathQuery} that should return the styling for the cell. For more details see {@link cellStylingTranslationQuery}.
- * @param  {XPathQuery}      [options.isCollapsibleQuery=false()]        The {@link XPathQuery} to determine whether or not a table has the ability to be collapsible. Optional, defaults to 'false()'. $rowCount and $columnCount helper variables can optionally be used in this XPath expression which evaluate to the total rows and total columns in a table.
- * @param  {XPathQuery}      [options.isInitiallyCollapsedQuery=true()]  The {@link XPathQuery} to determine whether or not a table should initially start off as collapsed. Tables must first have the ability to be collapsible with isCollapsibleQuery. Optional, defaults to 'true()'. $rowCount and $columnCount helper variables can optionally be used in this XPath expression which evaluate to the total rows and total columns in a table.
+ * @param  {Object}                             sxModule
+ * @param  {Object}                             [options]
+ * @param  {number}                             [options.priority]                                    Selector priority for all elements configured by this function.
+ * @param  {AllowExpansionInContentView}        [options.allowExpansionInContentView]                 Defines the availability of expansion of a table.
+ * @param  {boolean}                            [options.showInsertionWidget]                         To add insertion buttons which insert a column or a row
+ *                                                                                                    to a specific place, default false.
+ * @param  {boolean}                            [options.showHighlightingWidget]                      To add highlighting bars which highlight columns and rows,
+ *                                                                                                    and provide operations popover, default false.
+ * @param  {WidgetSubAreaByName|Widget[]|null}  [options.columnBefore]                                Used to add one or multiple widgets before each column.
+ *                                                                                                    The context node for these widgets will either be the col element,
+ *                                                                                                    or if `shouldCreateColumnSpecificationNodes` is set to `false`,
+ *                                                                                                    the cell element of the first row. Tables that do not have these
+ *                                                                                                    elements will not show `columnBefore` widgets.
+ *                                                                                                    {@link fonto-documentation/docs/editor/api/index.xml#id-9d2b1ad5-bbc1-6c44-d491-16dc213c53f2 All widgets}
+ *                                                                                                    are supported.
+ * @param  {WidgetSubAreaByName|Widget[]|null}  [options.rowBefore]                                   Used to add a single icon widget before each row using
+ *                                                                                                    {@link createIconWidget}. Row widgets are linked to the row elements
+ *                                                                                                    of the table. Any widget can be added but only icon widget is supported.
+ * @param  {Object[]|null}                      [options.columnWidgetMenuOperations]                  To configure table widget menu for columns. It accepts an array of
+ *                                                                                                    {@link ContextualOperation}s, but only supports "name" and "contents"
+ *                                                                                                    properties. It is allowed to have only one layer of menu.
+ * @param  {Object[]|null}                      [options.rowWidgetMenuOperations]                     To configure table widget menu for rows. It accepts an array of
+ *                                                                                                    {@link ContextualOperation}s, but only supports "name" and "contents"
+ *                                                                                                    properties. It is allowed to have only one layer of menu.
+ * @param  {boolean}                            [options.useTh]                                       Set to true if th should be used.
+ * @param  {boolean}                            [options.useThead]                                    Set to true if thead should be used.
+ * @param  {boolean}                            [options.useTbody]                                    Set to true if tbody should be used.
+ * @param  {boolean}                            [options.useBorders=true]                             Set to false if the borders attribute should not be used.
+ * @param  {boolean}                            [options.shouldCreateColumnSpecificationNodes=false]  Set to true if the table should include <col> elements by default.
+ * @param  {Object}                             [options.table]                                       Options for the table element.
+ * @param  {XPathTest}                          [options.table.tableFilterSelector]                   An optional additional selector for the table which will be used
+ *                                                                                                    to refine whether a table element should be considered as an xhtml table.
+ * @param  {string}                             [options.table.namespaceURI='']                       The namespace URI for this table.
+ * @param  {Object}                             [options.td]                                          Configuration options for the td element.
+ * @param  {string}                             [options.td.defaultTextContainer]                     The default text container for the td element.
+ * @param  {Object}                             [options.th]                                          Configuration options for the th element.
+ * @param  {string}                             [options.th.defaultTextContainer]                     The default text container for the th element.
+ * @param  {boolean}                            [options.useDefaultContextMenu=true]                  Whether or not to use a preconfigured context menu for
+ *                                                                                                    elements within the table.
+ * @param  {cellStylingTranslationQuery}        [options.cellStylingTranslationQuery]                 An {@link XPathQuery} that should return the styling for the cell.
+ *                                                                                                    For more details see {@link cellStylingTranslationQuery}.
+ * @param  {XPathQuery}                         [options.isCollapsibleQuery=false()]                  The {@link XPathQuery} to determine whether or not a table has the
+ *                                                                                                    ability to be collapsible. Optional, defaults to 'false()'.
+ *                                                                                                    $rowCount and $columnCount helper variables can optionally be used
+ *                                                                                                    in this XPath expression which evaluate to the total rows and total
+ *                                                                                                    columns in a table.
+ * @param  {XPathQuery}                         [options.isInitiallyCollapsedQuery=true()]            The {@link XPathQuery} to determine whether or not a table should
+ *                                                                                                    initially start off as collapsed. Tables must first have the ability
+ *                                                                                                    to be collapsible with isCollapsibleQuery. Optional, defaults to
+ *                                                                                                    'true()'. $rowCount and $columnCount helper variables can optionally
+ *                                                                                                    be used in this XPath expression which evaluate to the total
+ *                                                                                                    rows and total columns in a table.
  */
 export default function configureAsXhtmlTableElements(sxModule, options) {
 	options = options || {};
