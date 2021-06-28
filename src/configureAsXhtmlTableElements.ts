@@ -6,6 +6,7 @@ import type {
 } from 'fontoxml-families/src/types';
 import type { XPathQuery, XPathTest } from 'fontoxml-selectors/src/types';
 import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
+
 import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
 
 /**
@@ -160,10 +161,10 @@ export default function configureAsXhtmlTableElements(
 		allowExpansionInContentView?: AllowExpansionInContentView;
 		showInsertionWidget?: boolean;
 		showHighlightingWidget?: boolean;
-		columnBefore?: WidgetSubAreaByName | Array<Widget> | null;
-		rowBefore?: WidgetSubAreaByName | Array<Widget> | null;
-		columnWidgetMenuOperations?: Array<Object> | null;
-		rowWidgetMenuOperations?: Array<Object> | null;
+		columnBefore?: Widget[] | WidgetSubAreaByName | null;
+		rowBefore?: Widget[] | WidgetSubAreaByName | null;
+		columnWidgetMenuOperations?: Object[] | null;
+		rowWidgetMenuOperations?: Object[] | null;
 		useTh?: boolean;
 		useThead?: boolean;
 		useTbody?: boolean;
@@ -186,13 +187,13 @@ export default function configureAsXhtmlTableElements(
 	}
 ): void {
 	options = options || {};
-	options['cell'] = {
+	options.cell = {
 		defaultTextContainer:
 			options.td && options.td.defaultTextContainer
 				? options.td.defaultTextContainer
 				: null,
 	};
-	options['headerCell'] = {
+	options.headerCell = {
 		defaultTextContainer:
 			options.th && options.th.defaultTextContainer
 				? options.th.defaultTextContainer
@@ -203,9 +204,9 @@ export default function configureAsXhtmlTableElements(
 	const priority = options.priority;
 
 	// Title (caption)
-	const captionSelector = 'self::' + tableDefinition.selectorParts.caption;
+	const captionSelector = `self::${tableDefinition.selectorParts.caption}`;
 	configureAsBlock(sxModule, captionSelector, undefined, {
-		priority: priority,
+		priority,
 	});
 
 	configureAsTableElements(sxModule, options, tableDefinition);

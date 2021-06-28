@@ -1,11 +1,11 @@
-import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
-import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
 import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
+import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
 import getSpecificationValueStrategies from 'fontoxml-table-flow/src/getSpecificationValueStrategies';
 import normalizeCellNodeStrategies from 'fontoxml-table-flow/src/normalizeCellNodeStrategies';
 import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies';
 import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
+import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
 import type { XhtmlTableOptions } from 'fontoxml-typescript-migration-debt/src/types';
 
 function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
@@ -75,27 +75,22 @@ class XhtmlTableDefinition extends TableDefinition {
 				? options.table.namespaceURI
 				: '';
 
-		const namespaceSelector = 'Q{' + namespaceURI + '}';
+		const namespaceSelector = `Q{${namespaceURI}}`;
 		const selectorParts = {
-			table:
-				namespaceSelector +
-				'table' +
-				(options.table && options.table.tableFilterSelector
-					? '[' + options.table.tableFilterSelector + ']'
-					: ''),
-			headerContainer: namespaceSelector + 'thead',
-			bodyContainer: namespaceSelector + 'tbody',
-			footerContainer: namespaceSelector + 'tfoot',
-			row: namespaceSelector + 'tr',
-			cell: namespaceSelector + 'td',
-			headerCell: namespaceSelector + 'th',
-			columnSpecificationGroup: namespaceSelector + 'colgroup',
-			columnSpecification: namespaceSelector + 'col',
-			caption:
-				namespaceSelector +
-				'caption[parent::' +
-				namespaceSelector +
-				'table]',
+			table: `${namespaceSelector}table${
+				options.table && options.table.tableFilterSelector
+					? `[${options.table.tableFilterSelector}]`
+					: ''
+			}`,
+			headerContainer: `${namespaceSelector}thead`,
+			bodyContainer: `${namespaceSelector}tbody`,
+			footerContainer: `${namespaceSelector}tfoot`,
+			row: `${namespaceSelector}tr`,
+			cell: `${namespaceSelector}td`,
+			headerCell: `${namespaceSelector}th`,
+			columnSpecificationGroup: `${namespaceSelector}colgroup`,
+			columnSpecification: `${namespaceSelector}col`,
+			caption: `${namespaceSelector}caption[parent::${namespaceSelector}table]`,
 		};
 
 		// Alias selector parts
@@ -109,22 +104,10 @@ class XhtmlTableDefinition extends TableDefinition {
 		const col = selectorParts.columnSpecification;
 		const colGroup = selectorParts.columnSpecificationGroup;
 
-		const tableNodesSelector =
-			'self::' +
-			col +
-			' or self::' +
-			colGroup +
-			' or self::' +
-			tr +
-			' or self::' +
-			thead +
-			' or self::' +
-			tbody +
-			' or self::' +
-			tfoot;
+		const tableNodesSelector = `self::${col} or self::${colGroup} or self::${tr} or self::${thead} or self::${tbody} or self::${tfoot}`;
 
 		const properties = {
-			selectorParts: selectorParts,
+			selectorParts,
 
 			supportsBorders: useBorders,
 
@@ -132,13 +115,12 @@ class XhtmlTableDefinition extends TableDefinition {
 
 			supportsRowSpanningCellsAtBottom: true,
 
-			shouldCreateColumnSpecificationNodes:
-				shouldCreateColumnSpecificationNodes,
+			shouldCreateColumnSpecificationNodes,
 
 			// Defining node selectors
 			tablePartsNodeSelector: Object.keys(selectorParts)
 				.filter((selector) => selector !== 'caption')
-				.map((key) => 'self::' + selectorParts[key])
+				.map((key) => `self::${selectorParts[key]}`)
 				.join(' or '),
 
 			// Header row node selector
@@ -152,23 +134,17 @@ class XhtmlTableDefinition extends TableDefinition {
                 then ./${tbody}/${tr}
                 else let $firstBodyRow := ./${tr}[${td}][1]
                     return ($firstBodyRow, $firstBodyRow/following-sibling::${tr})`,
-			findFooterRowNodesXPathQuery:
-				'if (./' + tfoot + ') then ./' + tfoot + '/' + tr + ' else ()',
+			findFooterRowNodesXPathQuery: `if (./${tfoot}) then ./${tfoot}/${tr} else ()`,
 
-			findHeaderContainerNodesXPathQuery: './' + thead,
-			findBodyContainerNodesXPathQuery: './' + tbody,
-			findFooterContainerNodesXPathQuery: './' + tfoot,
+			findHeaderContainerNodesXPathQuery: `./${thead}`,
+			findBodyContainerNodesXPathQuery: `./${tbody}`,
+			findFooterContainerNodesXPathQuery: `./${tfoot}`,
 
-			findColumnSpecificationNodesXPathQuery: './' + col,
+			findColumnSpecificationNodesXPathQuery: `./${col}`,
 
 			findCellNodesXPathQuery: `child::*[self::${td} or self::${th}]`,
 
-			findNonTableNodesPrecedingRowsXPathQuery:
-				'./*[(' +
-				tableNodesSelector +
-				') => not() and following-sibling::*[' +
-				tableNodesSelector +
-				']]',
+			findNonTableNodesPrecedingRowsXPathQuery: `./*[(${tableNodesSelector}) => not() and following-sibling::*[${tableNodesSelector}]]`,
 
 			// Data
 			getNumberOfColumnsXPathQuery: `let $firstRow :=
@@ -228,13 +204,7 @@ class XhtmlTableDefinition extends TableDefinition {
 					? createCreateColumnSpecificationNodeStrategy(
 							namespaceURI,
 							'col',
-							'./*[self::' +
-								thead +
-								' or self::' +
-								tbody +
-								' or self::' +
-								tr +
-								']'
+							`./*[self::${thead} or self::${tbody} or self::${tr}]`
 					  )
 					: undefined,
 
@@ -266,11 +236,11 @@ class XhtmlTableDefinition extends TableDefinition {
 					? [
 							getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 								'columnSeparator',
-								'./ancestor::' + table + '[1]/@border = "1"'
+								`./ancestor::${table}[1]/@border = "1"`
 							),
 							getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 								'rowSeparator',
-								'./ancestor::' + table + '[1]/@border = "1"'
+								`./ancestor::${table}[1]/@border = "1"`
 							),
 					  ]
 					: []
@@ -323,7 +293,7 @@ class XhtmlTableDefinition extends TableDefinition {
 			setColumnSpecificationNodeAttributeStrategies: [],
 
 			// Widths
-			widthToHtmlWidthStrategy: function (width, widths) {
+			widthToHtmlWidthStrategy(width, widths) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -334,9 +304,9 @@ class XhtmlTableDefinition extends TableDefinition {
 					0
 				);
 
-				return (100 * proportion) / totalProportion + '%';
+				return `${(100 * proportion) / totalProportion}%`;
 			},
-			addWidthsStrategy: function (width1, width2) {
+			addWidthsStrategy(width1, width2) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -354,7 +324,7 @@ class XhtmlTableDefinition extends TableDefinition {
 							(columnWidthType === 'percentual' ? '%' : '*')
 					: '';
 			},
-			divideByTwoStrategy: function (width) {
+			divideByTwoStrategy(width) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -371,7 +341,7 @@ class XhtmlTableDefinition extends TableDefinition {
 							(columnWidthType === 'percentual' ? '%' : '*')
 					: '';
 			},
-			widthsToFractionsStrategy: function (widths) {
+			widthsToFractionsStrategy(widths) {
 				const parsedWidths = widths.map(parseWidth);
 
 				if (parsedWidths.includes(null)) {
@@ -386,7 +356,7 @@ class XhtmlTableDefinition extends TableDefinition {
 
 				return parsedWidths.map((width) => width / totalWidth);
 			},
-			normalizeColumnWidthsStrategy: function (columnWidths) {
+			normalizeColumnWidthsStrategy(columnWidths) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -395,7 +365,7 @@ class XhtmlTableDefinition extends TableDefinition {
 				}
 				if (columnWidthType === 'relative') {
 					const relativeWidths = columnWidths.map(
-						(relative) => parseFloat(relative) + '*'
+						(relative) => `${parseFloat(relative)}*`
 					);
 					return relativeWidths;
 				}
@@ -407,20 +377,20 @@ class XhtmlTableDefinition extends TableDefinition {
 					0
 				);
 				return ratios.map(
-					(ratio) => (ratio / total).toFixed(4) * 100 + '%'
+					(ratio) => `${(ratio / total).toFixed(4) * 100}%`
 				);
 			},
-			fractionsToWidthsStrategy: function (fractions) {
+			fractionsToWidthsStrategy(fractions) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
 				if (columnWidthType === 'percentual') {
 					return fractions.map(
-						(fraction) => (fraction * 100).toFixed(2) + '%'
+						(fraction) => `${(fraction * 100).toFixed(2)}%`
 					);
 				}
 				return fractions.map(
-					(fraction) => (fraction * 100).toFixed(2) + '*'
+					(fraction) => `${(fraction * 100).toFixed(2)}*`
 				);
 			},
 

@@ -1,14 +1,15 @@
+import * as slimdom from 'slimdom';
+
 import Blueprint from 'fontoxml-blueprints/src/Blueprint';
 import CoreDocument from 'fontoxml-core/src/Document';
 import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
 import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
 import indicesManager from 'fontoxml-indices/src/indicesManager';
 import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
-import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition';
 import mergeCells from 'fontoxml-table-flow/src/TableGridModel/mutations/merging/mergeCells';
 import splitNonSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitNonSpanningCell';
 import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell';
-import * as slimdom from 'slimdom';
+import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition';
 
 const mergeCellWithCellToTheRight = mergeCells.mergeCellWithCellToTheRight;
 const mergeCellWithCellToTheLeft = mergeCells.mergeCellWithCellToTheLeft;
@@ -3003,11 +3004,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (gridModel) => {
 				splitSpanningCellIntoRows(
 					gridModel,
 					gridModel.getCellAtCoordinates(1, 1)
 				);
+			};
 
 			const jsonOut = [
 				'table',
@@ -3040,11 +3042,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (gridModel) => {
 				splitNonSpanningCellIntoRows(
 					gridModel,
 					gridModel.getCellAtCoordinates(0, 1)
 				);
+			};
 
 			const jsonOut = [
 				'table',
@@ -3087,11 +3090,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (gridModel) => {
 				splitNonSpanningCellIntoRows(
 					gridModel,
 					gridModel.getCellAtCoordinates(1, 1)
 				);
+			};
 
 			const jsonOut = [
 				'table',
@@ -3131,11 +3135,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (gridModel) => {
 				splitNonSpanningCellIntoRows(
 					gridModel,
 					gridModel.getCellAtCoordinates(2, 1)
 				);
+			};
 
 			const jsonOut = [
 				'table',
@@ -3175,11 +3180,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (gridModel) => {
 				splitSpanningCellIntoColumns(
 					gridModel,
 					gridModel.getCellAtCoordinates(1, 1)
 				);
+			};
 
 			const jsonOut = [
 				'table',
@@ -3215,11 +3221,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td']],
 			];
 
-			const mutateGridModel = (gridModel) =>
+			const mutateGridModel = (gridModel) => {
 				splitNonSpanningCellIntoRows(
 					gridModel,
 					gridModel.getCellAtCoordinates(0, 1)
 				);
+			};
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
