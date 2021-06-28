@@ -96,21 +96,19 @@ configureProperties(sxModule, 'self::td', {
 });
 ```
 
-
-
 ## Specification
 
 Fonto supports a subset of the [XHTML 1.0 2nd edition](https://www.w3.org/TR/xhtml1/dtds.html) table specification. The
 following parts are supported.
 
 | Element    | Attributes                      |
-|------------|---------------------------------|
+| ---------- | ------------------------------- |
 | table      | border                          |
 | caption    |                                 |
-| colgroup*  |                                 |
-| col*       |                                 |
+| colgroup\* |                                 |
+| col\*      |                                 |
 | thead      |                                 |
-| tfoot*     |                                 |
+| tfoot\*    |                                 |
 | tbody      |                                 |
 | tr         |                                 |
 | th         | rowspan, colspan, align, valign |

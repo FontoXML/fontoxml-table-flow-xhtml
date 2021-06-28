@@ -21,9 +21,7 @@
 		"description": "t__Insert a table.",
 		"icon": "table",
 		"initialData": {
-			"childNodeStructure": [
-				"table"
-			]
+			"childNodeStructure": ["table"]
 		},
 		"steps": [
 			{
