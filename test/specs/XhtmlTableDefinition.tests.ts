@@ -1,6 +1,6 @@
-import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint.js';
+import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint';
 import * as slimdom from 'slimdom';
-import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition.js';
+import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition';
 
 describe('XhtmlTableDefinition', () => {
 	let documentNode;
@@ -26,16 +26,22 @@ describe('XhtmlTableDefinition', () => {
 
 	describe('isTable()', () => {
 		it('can recognize a table element', () =>
-			chai.assert.isTrue(tableDefinition.isTable(tableNode, readOnlyBlueprint)));
+			chai.assert.isTrue(
+				tableDefinition.isTable(tableNode, readOnlyBlueprint)
+			));
 	});
 
 	describe('isTableCell()', () => {
 		it('can recognize a cell element', () =>
-			chai.assert.isTrue(tableDefinition.isTableCell(cellNode, readOnlyBlueprint)));
+			chai.assert.isTrue(
+				tableDefinition.isTableCell(cellNode, readOnlyBlueprint)
+			));
 	});
 
 	describe('isTablePart()', () => {
 		it('can recognize a table part', () =>
-			chai.assert.isTrue(tableDefinition.isTablePart(rowNode, readOnlyBlueprint)));
+			chai.assert.isTrue(
+				tableDefinition.isTablePart(rowNode, readOnlyBlueprint)
+			));
 	});
 });

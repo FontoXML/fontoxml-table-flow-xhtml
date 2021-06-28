@@ -1,17 +1,17 @@
-import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint.js';
-import documentsManager from 'fontoxml-documents/src/documentsManager.js';
-import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager.js';
-import addTransform from 'fontoxml-operations/src/addTransform.js';
-import operationsManager from 'fontoxml-operations/src/operationsManager.js';
-import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean.js';
-import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction.js';
-import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager.js';
+import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint';
+import documentsManager from 'fontoxml-documents/src/documentsManager';
+import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
+import addTransform from 'fontoxml-operations/src/addTransform';
+import operationsManager from 'fontoxml-operations/src/operationsManager';
+import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
+import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction';
+import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
 
-import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition.js';
+import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
 
 const FONTO_FUNCTIONS = namespaceManager.getNamespaceUri(null, 'fonto');
 
-export default function install() {
+export default function install(): void {
 	operationsManager.addAlternativeOperation(
 		'set-cell-horizontal-alignment-left',
 		'xhtml-set-cell-horizontal-alignment-left'
@@ -41,15 +41,20 @@ export default function install() {
 		'xhtml-set-cell-vertical-alignment-center'
 	);
 
-	addTransform('checkXhtmlTable', function(stepData) {
+	addTransform('checkXhtmlTable', function (stepData) {
 		// Obtain table node from context node ID
 		const tableNode =
-			stepData.contextNodeId && documentsManager.getNodeById(stepData.contextNodeId);
+			stepData.contextNodeId &&
+			documentsManager.getNodeById(stepData.contextNodeId);
 
 		if (
 			!(
 				tableNode &&
-				evaluateXPathToBoolean('fonto:is-xhtml-table(.)', tableNode, readOnlyBlueprint)
+				evaluateXPathToBoolean(
+					'fonto:is-xhtml-table(.)',
+					tableNode,
+					readOnlyBlueprint
+				)
 			)
 		) {
 			// If there is no node or the node is not an xhtml table,
@@ -59,7 +64,7 @@ export default function install() {
 		return stepData;
 	});
 
-	addTransform('checkXhtmlTableCell', function(stepData) {
+	addTransform('checkXhtmlTableCell', function (stepData) {
 		// Whilst we pass all cellNodeIds as parameter, we are only going to use the first one,
 		// because we only need one cell to do the check.
 		const cellNode =
@@ -106,10 +111,11 @@ export default function install() {
 				return false;
 			}
 
-			const tableDefinition = tableDefinitionManager.getTableDefinitionForNode(
-				node,
-				dynamicContext.domFacade
-			);
+			const tableDefinition =
+				tableDefinitionManager.getTableDefinitionForNode(
+					node,
+					dynamicContext.domFacade
+				);
 
 			return !!(
 				tableDefinition &&

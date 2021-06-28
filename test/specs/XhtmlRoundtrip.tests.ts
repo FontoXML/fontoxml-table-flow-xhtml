@@ -1,13 +1,13 @@
-import Blueprint from 'fontoxml-blueprints/src/Blueprint.js';
-import CoreDocument from 'fontoxml-core/src/Document.js';
-import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager.js';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
-import indicesManager from 'fontoxml-indices/src/indicesManager.js';
-import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean.js';
-import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition.js';
-import mergeCells from 'fontoxml-table-flow/src/TableGridModel/mutations/merging/mergeCells.js';
-import splitNonSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitNonSpanningCell.js';
-import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell.js';
+import Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import CoreDocument from 'fontoxml-core/src/Document';
+import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
+import indicesManager from 'fontoxml-indices/src/indicesManager';
+import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
+import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition';
+import mergeCells from 'fontoxml-table-flow/src/TableGridModel/mutations/merging/mergeCells';
+import splitNonSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitNonSpanningCell';
+import splitSpanningCell from 'fontoxml-table-flow/src/TableGridModel/mutations/splitting/splitSpanningCell';
 import * as slimdom from 'slimdom';
 
 const mergeCellWithCellToTheRight = mergeCells.mergeCellWithCellToTheRight;
@@ -18,7 +18,8 @@ const mergeCellWithCellAbove = mergeCells.mergeCellWithCellAbove;
 const splitSpanningCellIntoRows = splitSpanningCell.splitCellIntoRows;
 const splitSpanningCellIntoColumns = splitSpanningCell.splitCellIntoColumns;
 
-const splitNonSpanningCellIntoRows = splitNonSpanningCell.splitNonSpanningCellIntoRows;
+const splitNonSpanningCellIntoRows =
+	splitNonSpanningCell.splitNonSpanningCellIntoRows;
 
 const stubFormat = {
 	synthesizer: {
@@ -29,15 +30,15 @@ const stubFormat = {
 				node,
 				blueprint
 			);
-		}
+		},
 	},
 	metadata: {
-		get: (_option, _node) => false
+		get: (_option, _node) => false,
 	},
 	validator: {
 		canContain: () => true,
-		validateDown: () => []
-	}
+		validateDown: () => [],
+	},
 };
 
 describe('XHTML tables: XML to XML roundtrip', () => {
@@ -52,23 +53,39 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 		blueprint = new Blueprint(coreDocument.dom);
 	});
 
-	function transformTable(jsonIn, jsonOut, options = {}, mutateGridModel = () => {}) {
+	function transformTable(
+		jsonIn,
+		jsonOut,
+		options = {},
+		mutateGridModel = () => {}
+	) {
 		coreDocument.dom.mutate(() => jsonMLMapper.parse(jsonIn, documentNode));
 
 		const tableDefinition = new XhtmlTableDefinition(options);
 		const tableNode = documentNode.firstChild;
-		const gridModel = tableDefinition.buildTableGridModel(tableNode, blueprint);
+		const gridModel = tableDefinition.buildTableGridModel(
+			tableNode,
+			blueprint
+		);
 		chai.assert.isUndefined(gridModel.error);
 
 		mutateGridModel(gridModel);
 
-		const success = tableDefinition.applyToDom(gridModel, tableNode, blueprint, stubFormat);
+		const success = tableDefinition.applyToDom(
+			gridModel,
+			tableNode,
+			blueprint,
+			stubFormat
+		);
 		chai.assert.isTrue(success);
 
 		blueprint.realize();
 		// The changes will be set to merge with the base index, this needs to be commited.
 		indicesManager.getIndexSet().commitMerge();
-		chai.assert.deepEqual(jsonMLMapper.serialize(documentNode.firstChild), jsonOut);
+		chai.assert.deepEqual(
+			jsonMLMapper.serialize(documentNode.firstChild),
+			jsonOut
+		);
 	}
 
 	describe('Without changes', () => {
@@ -79,7 +96,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -91,7 +108,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -99,12 +116,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -119,24 +136,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -148,24 +166,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -177,24 +196,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -206,24 +226,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -237,24 +258,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -266,27 +288,28 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -298,24 +321,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -327,27 +351,28 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -361,24 +386,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
 					['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -386,25 +412,52 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 			it('can handle a 4x4 table using prefixes, changing nothing', () => {
 				namespaceManager.clear();
-				namespaceManager.addNamespace('xhtml', 'http://www.w3.org/1999/xhtml');
+				namespaceManager.addNamespace(
+					'xhtml',
+					'http://www.w3.org/1999/xhtml'
+				);
 
 				const jsonIn = [
 					'xhtml:table',
 					{ 'xmlns:xhtml': 'http://www.w3.org/1999/xhtml' },
 					[
 						'xhtml:thead',
-						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
+						[
+							'xhtml:tr',
+							['xhtml:th'],
+							['xhtml:th'],
+							['xhtml:th'],
+							['xhtml:th'],
+						],
 					],
 					[
 						'xhtml:tbody',
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
-					]
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+					],
 				];
 
 				let gridModel;
-				const callback = gm => {
+				const callback = (gm) => {
 					gridModel = gm;
 				};
 
@@ -414,33 +467,62 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					[
 						'xhtml:thead',
-						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
+						[
+							'xhtml:tr',
+							['xhtml:th'],
+							['xhtml:th'],
+							['xhtml:th'],
+							['xhtml:th'],
+						],
 					],
 					[
 						'xhtml:tbody',
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
-					]
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+					],
 				];
 
 				const options = {
 					table: {
-						namespaceURI: 'http://www.w3.org/1999/xhtml'
+						namespaceURI: 'http://www.w3.org/1999/xhtml',
 					},
 					shouldCreateColumnSpecificationNodes: false,
 					useTh: true,
 					useTbody: true,
-					useThead: true
+					useThead: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, callback);
-				chai.assert.isNotNull(gridModel.getCellAtCoordinates(0, 0).element.parentNode);
+				chai.assert.isNotNull(
+					gridModel.getCellAtCoordinates(0, 0).element.parentNode
+				);
 			});
 
 			it('can handle a 4x4 table using prefixes, changing nodenames', () => {
 				namespaceManager.clear();
-				namespaceManager.addNamespace('xhtml', 'http://www.w3.org/1999/xhtml');
+				namespaceManager.addNamespace(
+					'xhtml',
+					'http://www.w3.org/1999/xhtml'
+				);
 
 				const jsonIn = [
 					'xhtml:table',
@@ -448,18 +530,42 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					[
 						'xhtml:thead',
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
 					],
 					[
 						'xhtml:tbody',
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
-					]
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+					],
 				];
 
 				let gridModel;
-				const callback = gm => {
+				const callback = (gm) => {
 					gridModel = gm;
 				};
 
@@ -469,32 +575,57 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 					[
 						'xhtml:thead',
-						['xhtml:tr', ['xhtml:th'], ['xhtml:th'], ['xhtml:th'], ['xhtml:th']]
+						[
+							'xhtml:tr',
+							['xhtml:th'],
+							['xhtml:th'],
+							['xhtml:th'],
+							['xhtml:th'],
+						],
 					],
 					[
 						'xhtml:tbody',
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']],
-						['xhtml:tr', ['xhtml:td'], ['xhtml:td'], ['xhtml:td'], ['xhtml:td']]
-					]
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+						[
+							'xhtml:tr',
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+							['xhtml:td'],
+						],
+					],
 				];
 
 				const options = {
 					table: {
-						namespaceURI: 'http://www.w3.org/1999/xhtml'
+						namespaceURI: 'http://www.w3.org/1999/xhtml',
 					},
 					shouldCreateColumnSpecificationNodes: false,
 					// The following setting causes all element names to change around
 					useTh: true,
 					useTbody: true,
-					useThead: true
+					useThead: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, callback);
 				for (let width = 0; width < 3; ++width) {
 					for (let height = 0; height < 4; ++height) {
 						chai.assert.isNotNull(
-							gridModel.getCellAtCoordinates(height, width).element.parentNode,
+							gridModel.getCellAtCoordinates(height, width)
+								.element.parentNode,
 							`Cell at (${height};${width}) is still in the document`
 						);
 					}
@@ -507,27 +638,28 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
 					[
 						'thead',
 						['tr', ['th'], ['th'], ['th'], ['th']],
-						['tr', ['th'], ['th'], ['th'], ['th']]
+						['tr', ['th'], ['th'], ['th'], ['th']],
 					],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -539,24 +671,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -568,27 +701,28 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'thead',
 						['tr', ['th'], ['th'], ['th'], ['th']],
-						['tr', ['th'], ['th'], ['th'], ['th']]
+						['tr', ['th'], ['th'], ['th'], ['th']],
 					],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
 					['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -604,11 +738,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
@@ -617,15 +752,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -639,31 +774,32 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -677,11 +813,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
@@ -690,15 +827,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -710,16 +847,17 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
@@ -728,15 +866,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -752,11 +890,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
@@ -765,15 +904,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -787,31 +926,32 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
 					[
 						'thead',
 						['tr', ['th'], ['th'], ['th'], ['th']],
-						['tr', ['th'], ['th'], ['th'], ['th']]
+						['tr', ['th'], ['th'], ['th'], ['th']],
 					],
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -825,11 +965,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
@@ -838,15 +979,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -858,16 +999,17 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'thead',
 						['tr', ['th'], ['th'], ['th'], ['th']],
-						['tr', ['th'], ['th'], ['th'], ['th']]
+						['tr', ['th'], ['th'], ['th'], ['th']],
 					],
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
@@ -876,15 +1018,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -899,12 +1041,13 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
-					['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]]
+					['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
@@ -913,15 +1056,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -934,32 +1077,33 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
-					['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]]
+					['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]],
 				];
 
-				const mutateGridModel = gridModel => gridModel.increaseHeaderRowCount(1);
+				const mutateGridModel = (gridModel) =>
+					gridModel.increaseHeaderRowCount(1);
 
 				const jsonOut = [
 					'table',
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -972,12 +1116,13 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
-					['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]]
+					['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
@@ -986,15 +1131,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1006,13 +1151,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					['tbody', ['tr', ['td'], ['td'], ['td'], ['td']]],
-					['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]]
+					['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]],
 				];
 
-				const mutateGridModel = gridModel => gridModel.decreaseHeaderRowCount();
+				const mutateGridModel = (gridModel) =>
+					gridModel.decreaseHeaderRowCount();
 
 				const jsonOut = [
 					'table',
@@ -1021,15 +1167,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1046,11 +1192,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel => gridModel.insertRow(0, false);
+			const mutateGridModel = (gridModel) =>
+				gridModel.insertRow(0, false);
 
 			const jsonOut = [
 				'table',
@@ -1060,15 +1207,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1082,11 +1229,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel => gridModel.insertRow(2, false);
+			const mutateGridModel = (gridModel) =>
+				gridModel.insertRow(2, false);
 
 			const jsonOut = [
 				'table',
@@ -1096,15 +1244,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1118,11 +1266,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel => gridModel.insertRow(3, true);
+			const mutateGridModel = (gridModel) => gridModel.insertRow(3, true);
 
 			const jsonOut = [
 				'table',
@@ -1132,15 +1280,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1152,16 +1300,17 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				[
 					'thead',
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				],
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel => gridModel.insertRow(0, false);
+			const mutateGridModel = (gridModel) =>
+				gridModel.insertRow(0, false);
 
 			const jsonOut = [
 				'table',
@@ -1169,20 +1318,20 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'thead',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				],
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1194,16 +1343,16 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				[
 					'thead',
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				],
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel => gridModel.insertRow(1, true);
+			const mutateGridModel = (gridModel) => gridModel.insertRow(1, true);
 
 			const jsonOut = [
 				'table',
@@ -1211,20 +1360,20 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'thead',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				],
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1235,7 +1384,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				'table',
 				['thead', ['tr', ['td'], ['td'], ['td']]],
 				['tr', ['td'], ['td'], ['td', '1x2']],
-				['tr', ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -1243,17 +1392,17 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['thead', ['tr', ['td'], ['td'], ['td']]],
 				['tr', ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td', '1x2']],
-				['tr', ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: false,
-				useTh: false
+				useTh: false,
 			};
 
-			const mutateGridModel = gridModel => gridModel.insertRow(1, true);
+			const mutateGridModel = (gridModel) => gridModel.insertRow(1, true);
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
 		});
@@ -1263,24 +1412,28 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				'table',
 				['thead', ['tr', ['th'], ['th'], ['th']]],
 				['tr', ['td'], ['td'], ['td', '1x2']],
-				['tr', ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
 				'table',
-				['thead', ['tr', ['th'], ['th'], ['th']], ['tr', ['th'], ['th'], ['th']]],
+				[
+					'thead',
+					['tr', ['th'], ['th'], ['th']],
+					['tr', ['th'], ['th'], ['th']],
+				],
 				['tr', ['td'], ['td'], ['td', '1x2']],
-				['tr', ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
-			const mutateGridModel = gridModel => gridModel.insertRow(1, true);
+			const mutateGridModel = (gridModel) => gridModel.insertRow(1, true);
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
 		});
@@ -1291,7 +1444,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['thead', ['tr', ['th'], ['th'], ['th', '0x2']]],
 				['tr', ['th'], ['th'], ['th', '1x2']],
 				['tr', ['td'], ['td'], ['td', '2x2']],
-				['tr', ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -1300,17 +1453,17 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th']],
 				['tr', ['th'], ['th'], ['th', '1x2']],
 				['tr', ['td'], ['td'], ['td', '2x2']],
-				['tr', ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
-			const mutateGridModel = gridModel => gridModel.insertRow(1, true);
+			const mutateGridModel = (gridModel) => gridModel.insertRow(1, true);
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
 		});
@@ -1326,11 +1479,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(0);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
 				const jsonOut = [
 					'table',
@@ -1338,15 +1491,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1360,11 +1513,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(2);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(2);
 
 				const jsonOut = [
 					'table',
@@ -1372,15 +1525,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1394,11 +1547,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(3);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(3);
 
 				const jsonOut = [
 					'table',
@@ -1406,15 +1559,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1428,23 +1581,23 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(0);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1456,23 +1609,23 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(2);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(2);
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1484,23 +1637,23 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(3);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(3);
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1514,23 +1667,23 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(0);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1542,23 +1695,23 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(0);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
 				const jsonOut = [
 					'table',
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1570,23 +1723,23 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(1);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(1);
 
 				const jsonOut = [
 					'table',
 					['tr', ['th'], ['th'], ['th'], ['th']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: false,
 					useTbody: false,
-					useTh: true
+					useTh: true,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1600,23 +1753,23 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(0);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1628,26 +1781,26 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(0);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
 				const jsonOut = [
 					'table',
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1659,26 +1812,26 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(1);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(1);
 
 				const jsonOut = [
 					'table',
 					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1694,11 +1847,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(0);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
 				const jsonOut = [
 					'table',
@@ -1706,15 +1859,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1726,16 +1879,16 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(0);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(0);
 
 				const jsonOut = [
 					'table',
@@ -1743,15 +1896,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1763,16 +1916,16 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'thead',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteRow(1);
+				const mutateGridModel = (gridModel) => gridModel.deleteRow(1);
 
 				const jsonOut = [
 					'table',
@@ -1780,15 +1933,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					[
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1807,11 +1960,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(0, false);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(0, false);
 
 					const jsonOut = [
 						'table',
@@ -1820,15 +1974,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: false,
 						useThead: true,
 						useTbody: true,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1842,11 +1996,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(2, false);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(2, false);
 
 					const jsonOut = [
 						'table',
@@ -1855,15 +2010,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: false,
 						useThead: true,
 						useTbody: true,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1877,11 +2032,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(3, true);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(3, true);
 
 					const jsonOut = [
 						'table',
@@ -1890,15 +2046,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: false,
 						useThead: true,
 						useTbody: true,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1918,11 +2074,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(0, false);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(0, false);
 
 					const jsonOut = [
 						'table',
@@ -1936,15 +2093,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: true,
 						useThead: true,
 						useTbody: true,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -1962,11 +2119,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(2, false);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(2, false);
 
 					const jsonOut = [
 						'table',
@@ -1980,15 +2138,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: true,
 						useThead: true,
 						useTbody: true,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2006,11 +2164,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(3, true);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(3, true);
 
 					const jsonOut = [
 						'table',
@@ -2024,15 +2183,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+						],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: true,
 						useThead: true,
 						useTbody: true,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2048,24 +2207,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(0, false);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(0, false);
 
 					const jsonOut = [
 						'table',
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: false,
 						useThead: true,
 						useTbody: false,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2077,24 +2237,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(2, false);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(2, false);
 
 					const jsonOut = [
 						'table',
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: false,
 						useThead: true,
 						useTbody: false,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2106,24 +2267,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(3, true);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(3, true);
 
 					const jsonOut = [
 						'table',
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: false,
 						useThead: true,
 						useTbody: false,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2141,10 +2303,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(0, false);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(0, false);
 
 					const jsonOut = [
 						'table',
@@ -2156,14 +2319,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: true,
 						useThead: true,
 						useTbody: false,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2179,10 +2342,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(2, false);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(2, false);
 
 					const jsonOut = [
 						'table',
@@ -2194,14 +2358,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: true,
 						useThead: true,
 						useTbody: false,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2217,10 +2381,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					];
 
-					const mutateGridModel = gridModel => gridModel.insertColumn(3, true);
+					const mutateGridModel = (gridModel) =>
+						gridModel.insertColumn(3, true);
 
 					const jsonOut = [
 						'table',
@@ -2232,14 +2397,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 					];
 
 					const options = {
 						shouldCreateColumnSpecificationNodes: true,
 						useThead: true,
 						useTbody: false,
-						useTh: false
+						useTh: false,
 					};
 
 					transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2256,11 +2421,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.insertColumn(0, false);
+				const mutateGridModel = (gridModel) =>
+					gridModel.insertColumn(0, false);
 
 				const jsonOut = [
 					'table',
@@ -2269,15 +2435,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2291,11 +2457,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.insertColumn(2, false);
+				const mutateGridModel = (gridModel) =>
+					gridModel.insertColumn(2, false);
 
 				const jsonOut = [
 					'table',
@@ -2304,15 +2471,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2326,11 +2493,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.insertColumn(3, true);
+				const mutateGridModel = (gridModel) =>
+					gridModel.insertColumn(3, true);
 
 				const jsonOut = [
 					'table',
@@ -2339,15 +2507,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2365,11 +2533,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteColumn(0);
+				const mutateGridModel = (gridModel) =>
+					gridModel.deleteColumn(0);
 
 				const jsonOut = [
 					'table',
@@ -2378,15 +2547,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2400,11 +2569,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteColumn(2);
+				const mutateGridModel = (gridModel) =>
+					gridModel.deleteColumn(2);
 
 				const jsonOut = [
 					'table',
@@ -2413,15 +2583,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2435,11 +2605,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteColumn(3);
+				const mutateGridModel = (gridModel) =>
+					gridModel.deleteColumn(3);
 
 				const jsonOut = [
 					'table',
@@ -2448,15 +2619,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2470,24 +2641,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteColumn(0);
+				const mutateGridModel = (gridModel) =>
+					gridModel.deleteColumn(0);
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2499,24 +2671,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteColumn(2);
+				const mutateGridModel = (gridModel) =>
+					gridModel.deleteColumn(2);
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2528,24 +2701,25 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				];
 
-				const mutateGridModel = gridModel => gridModel.deleteColumn(3);
+				const mutateGridModel = (gridModel) =>
+					gridModel.deleteColumn(3);
 
 				const jsonOut = [
 					'table',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td']],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: false,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2561,11 +2735,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.insertColumn(0, false);
+				const mutateGridModel = (gridModel) =>
+					gridModel.insertColumn(0, false);
 
 				const jsonOut = [
 					'table',
@@ -2574,15 +2749,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2596,11 +2771,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.insertColumn(2, false);
+				const mutateGridModel = (gridModel) =>
+					gridModel.insertColumn(2, false);
 
 				const jsonOut = [
 					'table',
@@ -2609,15 +2785,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2631,11 +2807,12 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
-				const mutateGridModel = gridModel => gridModel.insertColumn(3, true);
+				const mutateGridModel = (gridModel) =>
+					gridModel.insertColumn(3, true);
 
 				const jsonOut = [
 					'table',
@@ -2644,15 +2821,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 						'tbody',
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td'], ['td']]
-					]
+						['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+					],
 				];
 
 				const options = {
 					shouldCreateColumnSpecificationNodes: false,
 					useThead: true,
 					useTbody: true,
-					useTh: false
+					useTh: false,
 				};
 
 				transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2668,12 +2845,16 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel =>
-				mergeCellWithCellAbove(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
+			const mutateGridModel = (gridModel) =>
+				mergeCellWithCellAbove(
+					gridModel,
+					gridModel.getCellAtCoordinates(1, 1),
+					blueprint
+				);
 
 			const jsonOut = [
 				'table',
@@ -2681,15 +2862,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td', { rowspan: '2' }], ['td']],
 					['tr', ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2702,11 +2883,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel =>
+			const mutateGridModel = (gridModel) =>
 				mergeCellWithCellToTheRight(
 					gridModel,
 					gridModel.getCellAtCoordinates(1, 1),
@@ -2719,15 +2900,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td', { colspan: '2' }]],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2740,12 +2921,16 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel =>
-				mergeCellWithCellBelow(gridModel, gridModel.getCellAtCoordinates(1, 1), blueprint);
+			const mutateGridModel = (gridModel) =>
+				mergeCellWithCellBelow(
+					gridModel,
+					gridModel.getCellAtCoordinates(1, 1),
+					blueprint
+				);
 
 			const jsonOut = [
 				'table',
@@ -2753,15 +2938,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td', { rowspan: '2' }], ['td']],
-					['tr', ['td'], ['td']]
-				]
+					['tr', ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2774,11 +2959,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel =>
+			const mutateGridModel = (gridModel) =>
 				mergeCellWithCellToTheLeft(
 					gridModel,
 					gridModel.getCellAtCoordinates(1, 1),
@@ -2791,15 +2976,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td', { colspan: '2' }], ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2814,12 +2999,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td', { rowspan: '2' }], ['td']],
 					['tr', ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel =>
-				splitSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(1, 1));
+			const mutateGridModel = (gridModel) =>
+				splitSpanningCellIntoRows(
+					gridModel,
+					gridModel.getCellAtCoordinates(1, 1)
+				);
 
 			const jsonOut = [
 				'table',
@@ -2827,15 +3015,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2845,28 +3033,44 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			const jsonIn = [
 				'table',
 				['thead', ['tr', ['td'], ['td'], ['td']]],
-				['tbody', ['tr', ['td'], ['td'], ['td']], ['tr', ['td'], ['td'], ['td']]]
+				[
+					'tbody',
+					['tr', ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel =>
-				splitNonSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(0, 1));
+			const mutateGridModel = (gridModel) =>
+				splitNonSpanningCellIntoRows(
+					gridModel,
+					gridModel.getCellAtCoordinates(0, 1)
+				);
 
 			const jsonOut = [
 				'table',
 				[
 					'thead',
-					['tr', ['td', { rowspan: '2' }], ['td'], ['td', { rowspan: '2' }]],
-					['tr', ['td']]
+					[
+						'tr',
+						['td', { rowspan: '2' }],
+						['td'],
+						['td', { rowspan: '2' }],
+					],
+					['tr', ['td']],
 				],
 
-				['tbody', ['tr', ['td'], ['td'], ['td']], ['tr', ['td'], ['td'], ['td']]]
+				[
+					'tbody',
+					['tr', ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2876,11 +3080,18 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			const jsonIn = [
 				'table',
 				['thead', ['tr', ['td'], ['td'], ['td']]],
-				['tbody', ['tr', ['td'], ['td'], ['td']], ['tr', ['td'], ['td'], ['td']]]
+				[
+					'tbody',
+					['tr', ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel =>
-				splitNonSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(1, 1));
+			const mutateGridModel = (gridModel) =>
+				splitNonSpanningCellIntoRows(
+					gridModel,
+					gridModel.getCellAtCoordinates(1, 1)
+				);
 
 			const jsonOut = [
 				'table',
@@ -2888,17 +3099,22 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 
 				[
 					'tbody',
-					['tr', ['td', { rowspan: '2' }], ['td'], ['td', { rowspan: '2' }]],
+					[
+						'tr',
+						['td', { rowspan: '2' }],
+						['td'],
+						['td', { rowspan: '2' }],
+					],
 					['tr', ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2908,11 +3124,18 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			const jsonIn = [
 				'table',
 				['thead', ['tr', ['td'], ['td'], ['td']]],
-				['tbody', ['tr', ['td'], ['td'], ['td']], ['tr', ['td'], ['td'], ['td']]]
+				[
+					'tbody',
+					['tr', ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel =>
-				splitNonSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(2, 1));
+			const mutateGridModel = (gridModel) =>
+				splitNonSpanningCellIntoRows(
+					gridModel,
+					gridModel.getCellAtCoordinates(2, 1)
+				);
 
 			const jsonOut = [
 				'table',
@@ -2921,16 +3144,21 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td', { rowspan: '2' }], ['td'], ['td', { rowspan: '2' }]],
-					['tr', ['td']]
-				]
+					[
+						'tr',
+						['td', { rowspan: '2' }],
+						['td'],
+						['td', { rowspan: '2' }],
+					],
+					['tr', ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -2943,12 +3171,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td', { colspan: '2' }]],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
-			const mutateGridModel = gridModel =>
-				splitSpanningCellIntoColumns(gridModel, gridModel.getCellAtCoordinates(1, 1));
+			const mutateGridModel = (gridModel) =>
+				splitSpanningCellIntoColumns(
+					gridModel,
+					gridModel.getCellAtCoordinates(1, 1)
+				);
 
 			const jsonOut = [
 				'table',
@@ -2956,38 +3187,45 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
 		});
 
 		it('can split the cell in only header row into rows', () => {
-			const jsonIn = ['table', ['tr', ['th'], ['th', '0x1']], ['tr', ['td'], ['td']]];
+			const jsonIn = [
+				'table',
+				['tr', ['th'], ['th', '0x1']],
+				['tr', ['td'], ['td']],
+			];
 
 			const jsonOut = [
 				'table',
 				['tr', ['th', { rowspan: '2' }], ['th', '0x1']],
 				['tr', ['th']],
-				['tr', ['td'], ['td']]
+				['tr', ['td'], ['td']],
 			];
 
-			const mutateGridModel = gridModel =>
-				splitNonSpanningCellIntoRows(gridModel, gridModel.getCellAtCoordinates(0, 1));
+			const mutateGridModel = (gridModel) =>
+				splitNonSpanningCellIntoRows(
+					gridModel,
+					gridModel.getCellAtCoordinates(0, 1)
+				);
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -3002,9 +3240,9 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				],
-				['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]]
+				['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]],
 			];
 
 			const jsonOut = [
@@ -3012,14 +3250,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3031,7 +3269,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3041,15 +3279,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3061,7 +3299,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3069,14 +3307,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: false,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3088,7 +3326,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3096,14 +3334,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: false,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3115,7 +3353,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3127,7 +3365,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
@@ -3135,7 +3373,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				useThead: false,
 				useTbody: false,
 				useTh: true,
-				useBorders: false
+				useBorders: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3147,7 +3385,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3155,14 +3393,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3174,7 +3412,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3184,15 +3422,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: false
+				useTh: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3204,7 +3442,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3214,15 +3452,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3234,13 +3472,13 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
+					['tr', ['td'], ['td'], ['td'], ['td']],
 				],
 				[
 					'tbody',
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const jsonOut = [
@@ -3250,15 +3488,15 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
 					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']]
-				]
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useThead: true,
 				useTbody: true,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3270,7 +3508,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3278,13 +3516,13 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: false,
 				useTh: true,
-				useBorders: false
+				useBorders: false,
 			};
 
 			transformTable(jsonIn, jsonOut, options);
@@ -3302,10 +3540,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
-			const mutateGridModel = gridModel => gridModel.insertRow(2, false);
+			const mutateGridModel = (gridModel) =>
+				gridModel.insertRow(2, false);
 
 			const jsonOut = [
 				'table',
@@ -3317,14 +3556,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: true,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -3340,10 +3579,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
-			const mutateGridModel = gridModel => gridModel.insertRow(2, false);
+			const mutateGridModel = (gridModel) =>
+				gridModel.insertRow(2, false);
 
 			const jsonOut = [
 				'table',
@@ -3355,14 +3595,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: true,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -3374,10 +3614,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
-			const mutateGridModel = gridModel => gridModel.insertRow(2, false);
+			const mutateGridModel = (gridModel) =>
+				gridModel.insertRow(2, false);
 
 			const jsonOut = [
 				'table',
@@ -3389,14 +3630,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: true,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -3412,10 +3653,11 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
-			const mutateGridModel = gridModel => gridModel.insertRow(2, false);
+			const mutateGridModel = (gridModel) =>
+				gridModel.insertRow(2, false);
 
 			const jsonOut = [
 				'table',
@@ -3427,14 +3669,14 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
 				shouldCreateColumnSpecificationNodes: true,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
 			transformTable(jsonIn, jsonOut, options, mutateGridModel);
@@ -3448,7 +3690,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3457,7 +3699,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
@@ -3465,10 +3707,10 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				useBorders: true,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
-			transformTable(jsonIn, jsonOut, options, gridModel => {
+			transformTable(jsonIn, jsonOut, options, (gridModel) => {
 				gridModel.tableSpecification.borders = true;
 				gridModel.giveCellsBorders();
 			});
@@ -3481,7 +3723,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3490,7 +3732,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
@@ -3498,10 +3740,10 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				useBorders: true,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
-			transformTable(jsonIn, jsonOut, options, gridModel => {
+			transformTable(jsonIn, jsonOut, options, (gridModel) => {
 				gridModel.tableSpecification.borders = false;
 				gridModel.makeCellsBorderless();
 			});
@@ -3513,7 +3755,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const jsonOut = [
@@ -3521,7 +3763,7 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				['tr', ['th'], ['th'], ['th'], ['th']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td']],
-				['tr', ['td'], ['td'], ['td'], ['td']]
+				['tr', ['td'], ['td'], ['td'], ['td']],
 			];
 
 			const options = {
@@ -3529,10 +3771,10 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 				useBorders: true,
 				useThead: false,
 				useTbody: false,
-				useTh: true
+				useTh: true,
 			};
 
-			transformTable(jsonIn, jsonOut, options, gridModel => {
+			transformTable(jsonIn, jsonOut, options, (gridModel) => {
 				gridModel.tableSpecification.borders = false;
 				gridModel.makeCellsBorderless();
 			});

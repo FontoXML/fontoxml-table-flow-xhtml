@@ -1,13 +1,14 @@
-import TableDefinition from 'fontoxml-table-flow/src/TableDefinition.js';
-import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy.js';
-import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy.js';
-import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy.js';
-import getSpecificationValueStrategies from 'fontoxml-table-flow/src/getSpecificationValueStrategies.js';
-import normalizeCellNodeStrategies from 'fontoxml-table-flow/src/normalizeCellNodeStrategies.js';
-import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies.js';
-import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies.js';
+import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
+import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
+import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
+import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
+import getSpecificationValueStrategies from 'fontoxml-table-flow/src/getSpecificationValueStrategies';
+import normalizeCellNodeStrategies from 'fontoxml-table-flow/src/normalizeCellNodeStrategies';
+import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies';
+import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
+import type { XhtmlTableOptions } from 'fontoxml-typescript-migration-debt/src/types';
 
-function parseWidth(width) {
+function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
 	const widthPart = /^(\d+(?:\.\d+)?)[%*]$/.exec(width);
 	if (widthPart === null) {
 		return null;
@@ -23,16 +24,22 @@ class XhtmlTableDefinition extends TableDefinition {
 	/**
 	 * @param {XhtmlTableOptions} options
 	 */
-	constructor(options) {
+	constructor(options: XhtmlTableOptions) {
 		const useThead = !!options.useThead;
 		const useTbody = !!options.useTbody;
 		let useTh = !!options.useTh;
-		const useBorders = options.useBorders !== false && !options.cellStylingTranslationQuery;
-		const shouldCreateColumnSpecificationNodes = !!options.shouldCreateColumnSpecificationNodes;
+		const useBorders =
+			options.useBorders !== false &&
+			!options.cellStylingTranslationQuery;
+		const shouldCreateColumnSpecificationNodes =
+			!!options.shouldCreateColumnSpecificationNodes;
 		const columnWidthType = options.columnWidthType || 'none'; // ' percentual' | 'relative' | 'none'
 
 		// Warn the developer that columnWidthType is specified without shouldCreateColumnSpecificationNodes set to true.
-		if (columnWidthType !== 'none' && !shouldCreateColumnSpecificationNodes) {
+		if (
+			columnWidthType !== 'none' &&
+			!shouldCreateColumnSpecificationNodes
+		) {
 			throw new Error(
 				'XHTML table: using columnWidthType requires shouldCreateColumnSpecificationNodes to be true.'
 			);
@@ -41,13 +48,22 @@ class XhtmlTableDefinition extends TableDefinition {
 		// Warn the developer that thead is used as header-defining element. This is required when
 		// using tbody.
 		if (useTbody && !useThead && options.useThead !== undefined) {
-			throw new Error('XHTML table: Using tbody requires the use of thead.');
+			throw new Error(
+				'XHTML table: Using tbody requires the use of thead.'
+			);
 		}
 
 		// Warn the developer that th is being used as header-defining element. At least one header
 		// type is required.
-		if (!useThead && !useTh && options.useThead !== undefined && options.useTh !== undefined) {
-			throw new Error('XHTML table: At least one header type (th or thead) muse be used.');
+		if (
+			!useThead &&
+			!useTh &&
+			options.useThead !== undefined &&
+			options.useTh !== undefined
+		) {
+			throw new Error(
+				'XHTML table: At least one header type (th or thead) muse be used.'
+			);
 		}
 
 		if (!useThead && !useTh) {
@@ -55,7 +71,9 @@ class XhtmlTableDefinition extends TableDefinition {
 		}
 
 		const namespaceURI =
-			options.table && options.table.namespaceURI ? options.table.namespaceURI : '';
+			options.table && options.table.namespaceURI
+				? options.table.namespaceURI
+				: '';
 
 		const namespaceSelector = 'Q{' + namespaceURI + '}';
 		const selectorParts = {
@@ -73,7 +91,11 @@ class XhtmlTableDefinition extends TableDefinition {
 			headerCell: namespaceSelector + 'th',
 			columnSpecificationGroup: namespaceSelector + 'colgroup',
 			columnSpecification: namespaceSelector + 'col',
-			caption: namespaceSelector + 'caption[parent::' + namespaceSelector + 'table]'
+			caption:
+				namespaceSelector +
+				'caption[parent::' +
+				namespaceSelector +
+				'table]',
 		};
 
 		// Alias selector parts
@@ -110,12 +132,13 @@ class XhtmlTableDefinition extends TableDefinition {
 
 			supportsRowSpanningCellsAtBottom: true,
 
-			shouldCreateColumnSpecificationNodes: shouldCreateColumnSpecificationNodes,
+			shouldCreateColumnSpecificationNodes:
+				shouldCreateColumnSpecificationNodes,
 
 			// Defining node selectors
 			tablePartsNodeSelector: Object.keys(selectorParts)
-				.filter(selector => selector !== 'caption')
-				.map(key => 'self::' + selectorParts[key])
+				.filter((selector) => selector !== 'caption')
+				.map((key) => 'self::' + selectorParts[key])
 				.join(' or '),
 
 			// Header row node selector
@@ -158,7 +181,8 @@ class XhtmlTableDefinition extends TableDefinition {
 				'let $rowspan := ./@rowspan return if ($rowspan) then $rowspan => number() else 1',
 			getColumnSpanForCellNodeXPathQuery:
 				'let $colspan := ./@colspan return if ($colspan) then $colspan => number() else 1',
-			cellStylingTranslationQuery: options.cellStylingTranslationQuery || '',
+			cellStylingTranslationQuery:
+				options.cellStylingTranslationQuery || '',
 
 			// Normalizations
 			normalizeContainerNodeStrategies: [
@@ -174,7 +198,7 @@ class XhtmlTableDefinition extends TableDefinition {
 							'tbody'
 					  )
 					: normalizeContainerNodeStrategies.createRemoveBodyContainerNodeStrategy(),
-				normalizeContainerNodeStrategies.createRemoveFooterContainerNodeStrategy()
+				normalizeContainerNodeStrategies.createRemoveFooterContainerNodeStrategy(),
 			],
 
 			normalizeCellNodeStrategies: [
@@ -190,19 +214,29 @@ class XhtmlTableDefinition extends TableDefinition {
 				normalizeCellNodeStrategies.createConvertFormerHeaderCellNodeStrategy(
 					namespaceURI,
 					'td'
-				)
+				),
 			],
 
 			// Creates
-			createCellNodeStrategy: createCreateCellNodeStrategy(namespaceURI, 'td'),
+			createCellNodeStrategy: createCreateCellNodeStrategy(
+				namespaceURI,
+				'td'
+			),
 			createRowStrategy: createCreateRowStrategy(namespaceURI, 'tr'),
-			createColumnSpecificationNodeStrategy: shouldCreateColumnSpecificationNodes
-				? createCreateColumnSpecificationNodeStrategy(
-						namespaceURI,
-						'col',
-						'./*[self::' + thead + ' or self::' + tbody + ' or self::' + tr + ']'
-				  )
-				: undefined,
+			createColumnSpecificationNodeStrategy:
+				shouldCreateColumnSpecificationNodes
+					? createCreateColumnSpecificationNodeStrategy(
+							namespaceURI,
+							'col',
+							'./*[self::' +
+								thead +
+								' or self::' +
+								tbody +
+								' or self::' +
+								tr +
+								']'
+					  )
+					: undefined,
 
 			// Specification
 			getTableSpecificationStrategies: useBorders
@@ -210,7 +244,7 @@ class XhtmlTableDefinition extends TableDefinition {
 						getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 							'borders',
 							'./@border = "1"'
-						)
+						),
 				  ]
 				: [],
 
@@ -226,7 +260,7 @@ class XhtmlTableDefinition extends TableDefinition {
 				getSpecificationValueStrategies.createGetValueAsStringStrategy(
 					'verticalAlignment',
 					'./@valign'
-				)
+				),
 			].concat(
 				useBorders
 					? [
@@ -237,7 +271,7 @@ class XhtmlTableDefinition extends TableDefinition {
 							getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
 								'rowSeparator',
 								'./ancestor::' + table + '[1]/@border = "1"'
-							)
+							),
 					  ]
 					: []
 			),
@@ -251,13 +285,17 @@ class XhtmlTableDefinition extends TableDefinition {
 							null,
 							'1',
 							'0'
-						)
+						),
 				  ]
 				: [],
 
 			setCellNodeAttributeStrategies: [
-				setAttributeStrategies.createRowSpanAsAttributeStrategy('rowspan'),
-				setAttributeStrategies.createColumnSpanAsAttributeStrategy('colspan'),
+				setAttributeStrategies.createRowSpanAsAttributeStrategy(
+					'rowspan'
+				),
+				setAttributeStrategies.createColumnSpanAsAttributeStrategy(
+					'colspan'
+				),
 				setAttributeStrategies.createStringValueAsAttributeStrategy(
 					'char',
 					'characterAlignment'
@@ -269,7 +307,7 @@ class XhtmlTableDefinition extends TableDefinition {
 				setAttributeStrategies.createStringValueAsAttributeStrategy(
 					'valign',
 					'verticalAlignment'
-				)
+				),
 			],
 
 			getColumnSpecificationStrategies: [
@@ -280,12 +318,12 @@ class XhtmlTableDefinition extends TableDefinition {
 				getSpecificationValueStrategies.createGetValueAsStringStrategy(
 					'verticalAlignment',
 					'./@valign'
-				)
+				),
 			],
 			setColumnSpecificationNodeAttributeStrategies: [],
 
 			// Widths
-			widthToHtmlWidthStrategy: function(width, widths) {
+			widthToHtmlWidthStrategy: function (width, widths) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -298,7 +336,7 @@ class XhtmlTableDefinition extends TableDefinition {
 
 				return (100 * proportion) / totalProportion + '%';
 			},
-			addWidthsStrategy: function(width1, width2) {
+			addWidthsStrategy: function (width1, width2) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -312,10 +350,11 @@ class XhtmlTableDefinition extends TableDefinition {
 				const proportion = proportion1 + proportion2;
 
 				return proportion !== 0
-					? proportion + (columnWidthType === 'percentual' ? '%' : '*')
+					? proportion +
+							(columnWidthType === 'percentual' ? '%' : '*')
 					: '';
 			},
-			divideByTwoStrategy: function(width) {
+			divideByTwoStrategy: function (width) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -328,10 +367,11 @@ class XhtmlTableDefinition extends TableDefinition {
 				const proportion = parsedWidth;
 
 				return proportion !== 0
-					? proportion / 2 + (columnWidthType === 'percentual' ? '%' : '*')
+					? proportion / 2 +
+							(columnWidthType === 'percentual' ? '%' : '*')
 					: '';
 			},
-			widthsToFractionsStrategy: function(widths) {
+			widthsToFractionsStrategy: function (widths) {
 				const parsedWidths = widths.map(parseWidth);
 
 				if (parsedWidths.includes(null)) {
@@ -339,72 +379,116 @@ class XhtmlTableDefinition extends TableDefinition {
 					return parsedWidths.map(() => newWidth);
 				}
 
-				const totalWidth = parsedWidths.reduce((total, width) => total + width, 0);
+				const totalWidth = parsedWidths.reduce(
+					(total, width) => total + width,
+					0
+				);
 
-				return parsedWidths.map(width => width / totalWidth);
+				return parsedWidths.map((width) => width / totalWidth);
 			},
-			normalizeColumnWidthsStrategy: function(columnWidths) {
+			normalizeColumnWidthsStrategy: function (columnWidths) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
 				if (!columnWidthType) {
-					return columnWidths.map(_ => '');
+					return columnWidths.map((_) => '');
 				}
 				if (columnWidthType === 'relative') {
-					const relativeWidths = columnWidths.map(relative => parseFloat(relative) + '*');
+					const relativeWidths = columnWidths.map(
+						(relative) => parseFloat(relative) + '*'
+					);
 					return relativeWidths;
 				}
-				const ratios = columnWidths.map(percentage => parseFloat(percentage));
-				const total = ratios.reduce((total, columnWidth) => total + columnWidth, 0);
-				return ratios.map(ratio => (ratio / total).toFixed(4) * 100 + '%');
+				const ratios = columnWidths.map((percentage) =>
+					parseFloat(percentage)
+				);
+				const total = ratios.reduce(
+					(total, columnWidth) => total + columnWidth,
+					0
+				);
+				return ratios.map(
+					(ratio) => (ratio / total).toFixed(4) * 100 + '%'
+				);
 			},
-			fractionsToWidthsStrategy: function(fractions) {
+			fractionsToWidthsStrategy: function (fractions) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
 				if (columnWidthType === 'percentual') {
-					return fractions.map(fraction => (fraction * 100).toFixed(2) + '%');
+					return fractions.map(
+						(fraction) => (fraction * 100).toFixed(2) + '%'
+					);
 				}
-				return fractions.map(fraction => (fraction * 100).toFixed(2) + '*');
+				return fractions.map(
+					(fraction) => (fraction * 100).toFixed(2) + '*'
+				);
 			},
 
 			// Widget menu operations
 			columnWidgetMenuOperations: options.columnWidgetMenuOperations || [
 				{
 					contents: [
-						{ name: 'contextual-xhtml-set-cell-horizontal-alignment-left' },
-						{ name: 'contextual-xhtml-set-cell-horizontal-alignment-center' },
-						{ name: 'contextual-xhtml-set-cell-horizontal-alignment-right' },
-						{ name: 'contextual-xhtml-set-cell-horizontal-alignment-justify' }
-					]
+						{
+							name: 'contextual-xhtml-set-cell-horizontal-alignment-left',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-horizontal-alignment-center',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-horizontal-alignment-right',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-horizontal-alignment-justify',
+						},
+					],
 				},
 				{
 					contents: [
-						{ name: 'contextual-xhtml-set-cell-vertical-alignment-top' },
-						{ name: 'contextual-xhtml-set-cell-vertical-alignment-center' },
-						{ name: 'contextual-xhtml-set-cell-vertical-alignment-bottom' }
-					]
+						{
+							name: 'contextual-xhtml-set-cell-vertical-alignment-top',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-vertical-alignment-center',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-vertical-alignment-bottom',
+						},
+					],
 				},
-				{ contents: [{ name: 'column-delete-at-index' }] }
+				{ contents: [{ name: 'column-delete-at-index' }] },
 			],
 			rowWidgetMenuOperations: options.rowWidgetMenuOperations || [
 				{
 					contents: [
-						{ name: 'contextual-xhtml-set-cell-horizontal-alignment-left' },
-						{ name: 'contextual-xhtml-set-cell-horizontal-alignment-center' },
-						{ name: 'contextual-xhtml-set-cell-horizontal-alignment-right' },
-						{ name: 'contextual-xhtml-set-cell-horizontal-alignment-justify' }
-					]
+						{
+							name: 'contextual-xhtml-set-cell-horizontal-alignment-left',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-horizontal-alignment-center',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-horizontal-alignment-right',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-horizontal-alignment-justify',
+						},
+					],
 				},
 				{
 					contents: [
-						{ name: 'contextual-xhtml-set-cell-vertical-alignment-top' },
-						{ name: 'contextual-xhtml-set-cell-vertical-alignment-center' },
-						{ name: 'contextual-xhtml-set-cell-vertical-alignment-bottom' }
-					]
+						{
+							name: 'contextual-xhtml-set-cell-vertical-alignment-top',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-vertical-alignment-center',
+						},
+						{
+							name: 'contextual-xhtml-set-cell-vertical-alignment-bottom',
+						},
+					],
 				},
-				{ contents: [{ name: 'contextual-row-delete' }] }
-			]
+				{ contents: [{ name: 'contextual-row-delete' }] },
+			],
 		};
 
 		if (columnWidthType !== 'none') {
@@ -415,7 +499,10 @@ class XhtmlTableDefinition extends TableDefinition {
 				)
 			);
 			properties.setColumnSpecificationNodeAttributeStrategies.push(
-				setAttributeStrategies.createStringValueAsAttributeStrategy('width', 'columnWidth')
+				setAttributeStrategies.createStringValueAsAttributeStrategy(
+					'width',
+					'columnWidth'
+				)
 			);
 		}
 

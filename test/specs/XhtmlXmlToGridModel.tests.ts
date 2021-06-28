@@ -1,9 +1,9 @@
-import Blueprint from 'fontoxml-blueprints/src/Blueprint.js';
-import CoreDocument from 'fontoxml-core/src/Document.js';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper.js';
+import Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import CoreDocument from 'fontoxml-core/src/Document';
+import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
 import * as slimdom from 'slimdom';
 
-import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition.js';
+import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition';
 
 describe('XHTML tables: XML to GridModel', () => {
 	let documentNode;
@@ -26,7 +26,10 @@ describe('XHTML tables: XML to GridModel', () => {
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 1);
@@ -42,14 +45,17 @@ describe('XHTML tables: XML to GridModel', () => {
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -67,15 +73,18 @@ describe('XHTML tables: XML to GridModel', () => {
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -91,20 +100,23 @@ describe('XHTML tables: XML to GridModel', () => {
 						[
 							'tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						[
 							'tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -123,18 +135,28 @@ describe('XHTML tables: XML to GridModel', () => {
 							['td'],
 							['?someProcessingInstruction', 'someContent'],
 							['td'],
-							['td']
+							['td'],
 						],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['!', 'some comment'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						[
+							'tr',
+							['td'],
+							['!', 'some comment'],
+							['td'],
+							['td'],
+							['td'],
+						],
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -152,14 +174,17 @@ describe('XHTML tables: XML to GridModel', () => {
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -175,14 +200,17 @@ describe('XHTML tables: XML to GridModel', () => {
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -198,14 +226,17 @@ describe('XHTML tables: XML to GridModel', () => {
 						['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -221,17 +252,20 @@ describe('XHTML tables: XML to GridModel', () => {
 						[
 							'thead',
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -247,14 +281,17 @@ describe('XHTML tables: XML to GridModel', () => {
 						['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -270,17 +307,20 @@ describe('XHTML tables: XML to GridModel', () => {
 						[
 							'thead',
 							['tr', ['th'], ['th'], ['th'], ['th']],
-							['tr', ['th'], ['th'], ['th'], ['th']]
+							['tr', ['th'], ['th'], ['th'], ['th']],
 						],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']]
+						['tr', ['td'], ['td'], ['td'], ['td']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -298,15 +338,18 @@ describe('XHTML tables: XML to GridModel', () => {
 							'tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -322,20 +365,23 @@ describe('XHTML tables: XML to GridModel', () => {
 						[
 							'thead',
 							['tr', ['th'], ['th'], ['th'], ['th']],
-							['tr', ['th'], ['th'], ['th'], ['th']]
+							['tr', ['th'], ['th'], ['th'], ['th']],
 						],
 						[
 							'tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -351,14 +397,17 @@ describe('XHTML tables: XML to GridModel', () => {
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['th'], ['td'], ['td'], ['td']],
 						['tr', ['th'], ['td'], ['td'], ['td']],
-						['tr', ['th'], ['td'], ['td'], ['td']]
+						['tr', ['th'], ['td'], ['td'], ['td']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -374,14 +423,17 @@ describe('XHTML tables: XML to GridModel', () => {
 						['tr', ['th'], ['th'], ['th'], ['th']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
 						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['th'], ['th'], ['th'], ['th']]
+						['tr', ['th'], ['th'], ['th'], ['th']],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -399,15 +451,18 @@ describe('XHTML tables: XML to GridModel', () => {
 						[
 							'tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
-						]
+							['tr', ['td'], ['td'], ['td'], ['td']],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -424,16 +479,19 @@ describe('XHTML tables: XML to GridModel', () => {
 						[
 							'tbody',
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
-						['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]]
+						['tfoot', ['tr', ['td'], ['td'], ['td'], ['td']]],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -451,20 +509,37 @@ describe('XHTML tables: XML to GridModel', () => {
 							['?someProcessingInstruction', 'someContent'],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['?someProcessingInstruction', 'someContent']
+							['?someProcessingInstruction', 'someContent'],
 						],
 						[
 							'tbody',
-							['tr', ['td'], ['td'], ['!', 'some comment'], ['td'], ['td']],
-							['tr', ['!', 'some comment'], ['td'], ['td'], ['td'], ['td']]
-						]
+							[
+								'tr',
+								['td'],
+								['td'],
+								['!', 'some comment'],
+								['td'],
+								['td'],
+							],
+							[
+								'tr',
+								['!', 'some comment'],
+								['td'],
+								['td'],
+								['td'],
+								['td'],
+							],
+						],
 					],
 					documentNode
 				)
 			);
 
 			const tableElement = documentNode.firstChild;
-			const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableElement,
+				blueprint
+			);
 			chai.assert.isUndefined(gridModel.error);
 
 			chai.assert.equal(gridModel.getHeight(), 4);
@@ -483,14 +558,17 @@ describe('XHTML tables: XML to GridModel', () => {
 							['tr', ['td', { colspan: '2' }], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
@@ -499,7 +577,10 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(0, 1);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			it('can deserialize a 4x4 table containing a column spanning cell on the first header row', () => {
@@ -510,14 +591,17 @@ describe('XHTML tables: XML to GridModel', () => {
 							['tr', ['th', { colspan: '2' }], ['th'], ['th']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
@@ -526,7 +610,10 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(0, 1);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			it('can deserialize a 4x4 table with a column spanning cell on the first row (tbody based)', () => {
@@ -536,18 +623,26 @@ describe('XHTML tables: XML to GridModel', () => {
 							'table',
 							[
 								'tbody',
-								['tr', ['td', { colspan: '2' }], ['td'], ['td']],
+								[
+									'tr',
+									['td', { colspan: '2' }],
+									['td'],
+									['td'],
+								],
 								['tr', ['td'], ['td'], ['td'], ['td']],
 								['tr', ['td'], ['td'], ['td'], ['td']],
-								['tr', ['td'], ['td'], ['td'], ['td']]
-							]
+								['tr', ['td'], ['td'], ['td'], ['td']],
+							],
 						],
 						documentNode
 					)
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4);
@@ -556,7 +651,10 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(0, 1);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			it('can deserialize a 4x4 table with a column spanning cell on the first header row (thead based)', () => {
@@ -564,29 +662,47 @@ describe('XHTML tables: XML to GridModel', () => {
 					jsonMLMapper.parse(
 						[
 							'table',
-							['thead', ['tr', ['th', { colspan: '2' }], ['th'], ['th']]],
+							[
+								'thead',
+								[
+									'tr',
+									['th', { colspan: '2' }],
+									['th'],
+									['th'],
+								],
+							],
 							[
 								'tbody',
 								['tr', ['td'], ['td'], ['td'], ['td']],
 								['tr', ['td'], ['td'], ['td'], ['td']],
-								['tr', ['td'], ['td'], ['td'], ['td']]
-							]
+								['tr', ['td'], ['td'], ['td'], ['td']],
+							],
 						],
 						documentNode
 					)
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 1, 'headerRowCount');
+				chai.assert.equal(
+					gridModel.headerRowCount,
+					1,
+					'headerRowCount'
+				);
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(0, 1);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			it('throws when building a gridModel from a table containing incorrect colspans', () => {
@@ -594,10 +710,16 @@ describe('XHTML tables: XML to GridModel', () => {
 					jsonMLMapper.parse(
 						[
 							'table',
-							['tr', ['td', { colspan: '2' }], ['td'], ['td'], ['td']],
+							[
+								'tr',
+								['td', { colspan: '2' }],
+								['td'],
+								['td'],
+								['td'],
+							],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
@@ -606,7 +728,10 @@ describe('XHTML tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tableElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -617,23 +742,33 @@ describe('XHTML tables: XML to GridModel', () => {
 						[
 							'table',
 							['tr', ['th'], ['th'], ['td', { rowspan: '2' }]],
-							['tr', ['th'], ['th']]
+							['tr', ['th'], ['th']],
 						],
 						documentNode
 					)
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 2, 'height');
 				chai.assert.equal(gridModel.getWidth(), 3, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 0, 'headerRowCount');
+				chai.assert.equal(
+					gridModel.headerRowCount,
+					0,
+					'headerRowCount'
+				);
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 2);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 2);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			it('can deserialize a table with a row spanning cell (th) into empty rows', () => {
@@ -641,28 +776,45 @@ describe('XHTML tables: XML to GridModel', () => {
 					jsonMLMapper.parse(
 						[
 							'table',
-							['tr', ['th', { rowspan: '3' }], ['th', { rowspan: '3' }]],
+							[
+								'tr',
+								['th', { rowspan: '3' }],
+								['th', { rowspan: '3' }],
+							],
 							['tr'],
 							['tr'],
-							['tr', ['td'], ['td']]
+							['tr', ['td'], ['td']],
 						],
 						documentNode
 					)
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4, 'height');
 				chai.assert.equal(gridModel.getWidth(), 2, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 3, 'headerRowCount');
+				chai.assert.equal(
+					gridModel.headerRowCount,
+					3,
+					'headerRowCount'
+				);
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 0);
 				const thirdSpanningCell = gridModel.getCellAtCoordinates(2, 0);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
-				chai.assert.deepEqual(secondSpanningCell.element, thirdSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
+				chai.assert.deepEqual(
+					secondSpanningCell.element,
+					thirdSpanningCell.element
+				);
 			});
 		});
 
@@ -672,26 +824,42 @@ describe('XHTML tables: XML to GridModel', () => {
 					jsonMLMapper.parse(
 						[
 							'table',
-							['tr', ['td', { rowspan: '2' }], ['td'], ['td'], ['td']],
+							[
+								'tr',
+								['td', { rowspan: '2' }],
+								['td'],
+								['td'],
+								['td'],
+							],
 							['tr', ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 0, 'headerRowCount');
+				chai.assert.equal(
+					gridModel.headerRowCount,
+					0,
+					'headerRowCount'
+				);
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 0);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			it('can deserialize a 4x4 table with a row spanning cell with a following empty row', () => {
@@ -704,27 +872,37 @@ describe('XHTML tables: XML to GridModel', () => {
 								['td', { rowspan: '2' }],
 								['td', { rowspan: '2' }],
 								['td', { rowspan: '2' }],
-								['td', { rowspan: '2' }]
+								['td', { rowspan: '2' }],
 							],
 							['tr'],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 0, 'headerRowCount');
+				chai.assert.equal(
+					gridModel.headerRowCount,
+					0,
+					'headerRowCount'
+				);
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 0);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
 			});
 
 			// virtual row flag should allow Xhtml table grid to create virutal rows at the end of the table
@@ -740,8 +918,8 @@ describe('XHTML tables: XML to GridModel', () => {
 								['td', { rowspan: '3' }],
 								['td', { rowspan: '3' }],
 								['td', { rowspan: '3' }],
-								['td', { rowspan: '3' }]
-							]
+								['td', { rowspan: '3' }],
+							],
 						],
 						documentNode
 					)
@@ -749,19 +927,32 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const tableElement = documentNode.firstChild;
 
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 5, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 1, 'headerRowCount');
+				chai.assert.equal(
+					gridModel.headerRowCount,
+					1,
+					'headerRowCount'
+				);
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(2, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(3, 0);
 				const thirdSpanningCell = gridModel.getCellAtCoordinates(4, 0);
 
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
-				chai.assert.deepEqual(firstSpanningCell.element, thirdSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					thirdSpanningCell.element
+				);
 			});
 
 			it('can deserialize a table with a single row spanning cell with one less entry in the next rows to accomdate the row spanning cell', () => {
@@ -771,9 +962,15 @@ describe('XHTML tables: XML to GridModel', () => {
 							'table',
 							['tr', ['th'], ['th'], ['th'], ['th']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td', { rowspan: '3' }], ['td'], ['td'], ['td']],
+							[
+								'tr',
+								['td', { rowspan: '3' }],
+								['td'],
+								['td'],
+								['td'],
+							],
 							['tr', ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td']],
 						],
 
 						documentNode
@@ -782,19 +979,32 @@ describe('XHTML tables: XML to GridModel', () => {
 
 				const tableElement = documentNode.firstChild;
 
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 5, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 1, 'headerRowCount');
+				chai.assert.equal(
+					gridModel.headerRowCount,
+					1,
+					'headerRowCount'
+				);
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(2, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(3, 0);
 				const thirdSpanningCell = gridModel.getCellAtCoordinates(4, 0);
 
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
-				chai.assert.deepEqual(firstSpanningCell.element, thirdSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					thirdSpanningCell.element
+				);
 			});
 
 			it('throws error with a table with a single row spanning cell with one less entry in the next rows to accomdate the row spanning cell and an empty last virtual row', () => {
@@ -804,9 +1014,15 @@ describe('XHTML tables: XML to GridModel', () => {
 							'table',
 							['tr', ['th'], ['th'], ['th'], ['th']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td', { rowspan: '4' }], ['td'], ['td'], ['td']],
+							[
+								'tr',
+								['td', { rowspan: '4' }],
+								['td'],
+								['td'],
+								['td'],
+							],
 							['tr', ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td']],
 						],
 
 						documentNode
@@ -816,7 +1032,10 @@ describe('XHTML tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tableElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -831,11 +1050,11 @@ describe('XHTML tables: XML to GridModel', () => {
 								['td', { rowspan: '2' }],
 								['td', { rowspan: '2' }],
 								['td', { rowspan: '2' }],
-								['td', { rowspan: '2' }]
+								['td', { rowspan: '2' }],
 							],
 							['tr', ['td'], ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
@@ -844,7 +1063,10 @@ describe('XHTML tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tableElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -856,7 +1078,7 @@ describe('XHTML tables: XML to GridModel', () => {
 							'table',
 							['tr', ['th'], ['th'], ['th'], ['th']],
 							['tr'],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
@@ -865,7 +1087,10 @@ describe('XHTML tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tableElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -875,10 +1100,16 @@ describe('XHTML tables: XML to GridModel', () => {
 					jsonMLMapper.parse(
 						[
 							'table',
-							['tr', ['td', { rowspan: '3' }], ['td'], ['td'], ['td']],
+							[
+								'tr',
+								['td', { rowspan: '3' }],
+								['td'],
+								['td'],
+								['td'],
+							],
 							['tr', ['td'], ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
@@ -887,7 +1118,10 @@ describe('XHTML tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tableElement,
+						blueprint
+					),
 					'error'
 				);
 			});
@@ -899,31 +1133,52 @@ describe('XHTML tables: XML to GridModel', () => {
 					jsonMLMapper.parse(
 						[
 							'table',
-							['tr', ['td', { colspan: '2', rowspan: '2' }], ['td'], ['td']],
+							[
+								'tr',
+								['td', { colspan: '2', rowspan: '2' }],
+								['td'],
+								['td'],
+							],
 							['tr', ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
 				);
 
 				const tableElement = documentNode.firstChild;
-				const gridModel = tableDefinition.buildTableGridModel(tableElement, blueprint);
+				const gridModel = tableDefinition.buildTableGridModel(
+					tableElement,
+					blueprint
+				);
 				chai.assert.isUndefined(gridModel.error);
 
 				chai.assert.equal(gridModel.getHeight(), 4, 'height');
 				chai.assert.equal(gridModel.getWidth(), 4, 'width');
-				chai.assert.equal(gridModel.headerRowCount, 0, 'headerRowCount');
+				chai.assert.equal(
+					gridModel.headerRowCount,
+					0,
+					'headerRowCount'
+				);
 
 				const firstSpanningCell = gridModel.getCellAtCoordinates(0, 0);
 				const secondSpanningCell = gridModel.getCellAtCoordinates(1, 0);
 				const thirdSpanningCell = gridModel.getCellAtCoordinates(0, 1);
 				const fourthSpanningCell = gridModel.getCellAtCoordinates(1, 1);
 				chai.assert.isOk(firstSpanningCell);
-				chai.assert.deepEqual(firstSpanningCell.element, secondSpanningCell.element);
-				chai.assert.deepEqual(secondSpanningCell.element, thirdSpanningCell.element);
-				chai.assert.deepEqual(thirdSpanningCell.element, fourthSpanningCell.element);
+				chai.assert.deepEqual(
+					firstSpanningCell.element,
+					secondSpanningCell.element
+				);
+				chai.assert.deepEqual(
+					secondSpanningCell.element,
+					thirdSpanningCell.element
+				);
+				chai.assert.deepEqual(
+					thirdSpanningCell.element,
+					fourthSpanningCell.element
+				);
 			});
 
 			it('throws when building a gridModel from a table containing incorrect rowspans and colspans', () => {
@@ -931,10 +1186,15 @@ describe('XHTML tables: XML to GridModel', () => {
 					jsonMLMapper.parse(
 						[
 							'table',
-							['tr', ['td', { colspan: '3', rowspan: '3' }], ['td'], ['td']],
+							[
+								'tr',
+								['td', { colspan: '3', rowspan: '3' }],
+								['td'],
+								['td'],
+							],
 							['tr', ['td'], ['td']],
 							['tr', ['td'], ['td'], ['td'], ['td']],
-							['tr', ['td'], ['td'], ['td'], ['td']]
+							['tr', ['td'], ['td'], ['td'], ['td']],
 						],
 						documentNode
 					)
@@ -943,7 +1203,10 @@ describe('XHTML tables: XML to GridModel', () => {
 				const tableElement = documentNode.firstChild;
 
 				chai.assert.property(
-					tableDefinition.buildTableGridModel(tableElement, blueprint),
+					tableDefinition.buildTableGridModel(
+						tableElement,
+						blueprint
+					),
 					'error'
 				);
 			});
