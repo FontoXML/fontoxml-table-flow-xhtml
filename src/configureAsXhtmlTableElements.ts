@@ -83,7 +83,7 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  *
  * The cell element menu button widgets are added based on the existence of contextual operations on
  * cell level. Make sure that only cell-specific operations are added to the cell widget, so that
- * users are only given options relevant to them. Check {@link fonto-documentation/docs/editor/fontoxml-editor-documentation/quickstarts/configure-tables.xml#id-d8cde415-f9e0-ba0c-14a5-cdb5f92d647d our guide}
+ * users are only given options relevant to them. Check {@link fonto-documentation/docs/configure/elements/configure-tables.xml#id-d8cde415-f9e0-ba0c-14a5-cdb5f92d647d our guide}
  * for more information on table widgets.
  *
  * Example on how you can add this element menu on the widget:
@@ -97,7 +97,7 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  *
  * ```
  *
- * XHTML tables can also be configured to be collapsible. Refer to {@link fonto-documentation/docs/editor/fontoxml-editor-documentation/quickstarts/configure-tables.xml#id-6c3f43af-b40c-4fa3-ab47-f0fd2d4ab85c our guide} to learn more.
+ * XHTML tables can also be configured to be collapsible. Refer to {@link fonto-documentation/docs/configure/elements/configure-tables.xml#id-6c3f43af-b40c-4fa3-ab47-f0fd2d4ab85c our guide} to learn more.
  *
  * @fontosdk
  *

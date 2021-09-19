@@ -31,7 +31,7 @@ import type { XPathQuery } from 'fontoxml-selectors/src/types';
  * table insertion operation.
  * - When you have cellStylingTranslationQuery, there is no use of the buttons to change borders
  * in the default table context menu and the
- * {@link fonto-documentation/docs/editor/api/component/TableToolbar.xml} and we hide them
+ * {@link TableToolbar} and we hide them
  * by default.
  *
  * ## Example
