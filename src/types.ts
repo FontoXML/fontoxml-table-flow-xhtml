@@ -161,12 +161,41 @@ export type cellStylingTranslationQuery = XPathQuery;
  *
  * @fontosdk  members
  */
-export type cellStylingOptions = {
+export type CellStylingOptions = {
+	/**
+	 * For the background color you can use any color value CSS allows.
+	 * You do need to make sure that the color has enough contrast with your text color.
+	 * To check if your contrast ratio is high enough, you can use https://webaim.org/resources/contrastchecker/.
+	 * It should at least pass AA. If the contrast ratio isn’t high enough, you can either
+	 * change the lightness or decrease the opacity of your original color.
+	 *
+	 * @fontosdk
+	 */
 	backgroundColor: string;
-	borderTop: configureAsXhtmlTableElements.styleAndWidth;
-	borderBottom: configureAsXhtmlTableElements.styleAndWidth;
-	borderLeft: configureAsXhtmlTableElements.styleAndWidth;
-	borderRight: configureAsXhtmlTableElements.styleAndWidth;
+	/**
+	 * Set the style and/or width of your top border
+	 *
+	 * @fontosdk
+	 */
+	borderTop: CellBorderStylingOptions;
+	/**
+	 * Set the style and/or width of your bottom border
+	 *
+	 * @fontosdk
+	 */
+	borderBottom: CellBorderStylingOptions;
+	/**
+	 * Set the style and/or width of your left border
+	 *
+	 * @fontosdk
+	 */
+	borderLeft: CellBorderStylingOptions;
+	/**
+	 * Set the style and/or width of your right border
+	 *
+	 * @fontosdk
+	 */
+	borderRight: CellBorderStylingOptions;
 };
 
 /**
@@ -182,7 +211,28 @@ export type cellStylingOptions = {
  *
  * @fontosdk  members
  */
-export type styleAndWidth = {
-	style: string;
-	width: string;
+export type CellBorderStylingOptions = {
+	/**
+	 * The border style, only the values: 'solid',
+	 * 'dashed', 'dotted', 'double', 'ridge', 'groove', 'outset', 'inset', 'none'.
+	 * This is similar to the options in css, except 'hidden' is not part of it.
+	 *
+	 * @fontosdk
+	 */
+	style:
+		| 'dashed'
+		| 'dotted'
+		| 'double'
+		| 'groove'
+		| 'inset'
+		| 'none'
+		| 'outset'
+		| 'ridge'
+		| 'solid';
+	/**
+	 * The border width, only the values '1px', '2px', '3px', '4px' and '5px' are allowed.
+	 *
+	 * @fontosdk
+	 */
+	width: '1px' | '2px' | '3px' | '4px' | '5px';
 };
