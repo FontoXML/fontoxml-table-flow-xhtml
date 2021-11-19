@@ -212,18 +212,8 @@ export default function configureAsXhtmlTableElements(
 		sxModule,
 		{
 			...options,
-			cell: {
-				defaultTextContainer:
-					options.td && options.td.defaultTextContainer
-						? options.td.defaultTextContainer
-						: null,
-			},
-			headerCell: {
-				defaultTextContainer:
-					options.th && options.th.defaultTextContainer
-						? options.th.defaultTextContainer
-						: null,
-			},
+			cell: options.td,
+			headerCell: options.th,
 		},
 		tableDefinition
 	);
