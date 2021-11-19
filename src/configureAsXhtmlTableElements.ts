@@ -1,9 +1,12 @@
 import configureAsBlock from 'fontoxml-families/src/configureAsBlock';
 import type {
 	AllowExpansionInContentView,
+	DefaultTextContainer,
 	Widget,
 	WidgetSubAreaByName,
 } from 'fontoxml-families/src/types';
+import type { SxModule } from 'fontoxml-modular-schema-experience/src/sxManager';
+import type { ContextualOperation } from 'fontoxml-operations/src/types';
 import type { XPathQuery, XPathTest } from 'fontoxml-selectors/src/types';
 import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
 
@@ -103,7 +106,7 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  *
  * @category add-on/fontoxml-table-flow-xhtml
  *
- * @param  {Object}                             sxModule
+ * @param  {SxModule}                           sxModule
  * @param  {Object}                             [options]
  * @param  {number}                             [options.priority]                                    Selector priority for all elements configured by this function.
  * @param  {AllowExpansionInContentView}        [options.allowExpansionInContentView]                 Defines the availability of expansion of a table.
@@ -122,10 +125,10 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  * @param  {WidgetSubAreaByName|Widget[]|null}  [options.rowBefore]                                   Used to add a single icon widget before each row using
  *                                                                                                    {@link createIconWidget}. Row widgets are linked to the row elements
  *                                                                                                    of the table. Any widget can be added but only icon widget is supported.
- * @param  {Object[]|null}                      [options.columnWidgetMenuOperations]                  To configure table widget menu for columns. It accepts an array of
+ * @param  {ContextualOperation[]|null}         [options.columnWidgetMenuOperations]                  To configure table widget menu for columns. It accepts an array of
  *                                                                                                    {@link ContextualOperation}s, but only supports "name" and "contents"
  *                                                                                                    properties. It is allowed to have only one layer of menu.
- * @param  {Object[]|null}                      [options.rowWidgetMenuOperations]                     To configure table widget menu for rows. It accepts an array of
+ * @param  {ContextualOperation[]|null}         [options.rowWidgetMenuOperations]                     To configure table widget menu for rows. It accepts an array of
  *                                                                                                    {@link ContextualOperation}s, but only supports "name" and "contents"
  *                                                                                                    properties. It is allowed to have only one layer of menu.
  * @param  {boolean}                            [options.useTh]                                       Set to true if th should be used.
@@ -136,11 +139,11 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  * @param  {Object}                             [options.table]                                       Options for the table element.
  * @param  {XPathTest}                          [options.table.tableFilterSelector]                   An optional additional selector for the table which will be used
  *                                                                                                    to refine whether a table element should be considered as an xhtml table.
- * @param  {string}                             [options.table.namespaceURI='']                       The namespace URI for this table.
+ * @param  {string|null}                        [options.table.namespaceURI='']                       The namespace URI for this table.
  * @param  {Object}                             [options.td]                                          Configuration options for the td element.
- * @param  {string}                             [options.td.defaultTextContainer]                     The default text container for the td element.
+ * @param  {DefaultTextContainer}               [options.td.defaultTextContainer]                     The default text container for the td element.
  * @param  {Object}                             [options.th]                                          Configuration options for the th element.
- * @param  {string}                             [options.th.defaultTextContainer]                     The default text container for the th element.
+ * @param  {DefaultTextContainer}               [options.th.defaultTextContainer]                     The default text container for the th element.
  * @param  {boolean}                            [options.useDefaultContextMenu=true]                  Whether or not to use a preconfigured context menu for
  *                                                                                                    elements within the table.
  * @param  {cellStylingTranslationQuery}        [options.cellStylingTranslationQuery]                 An {@link XPathQuery} that should return the styling for the cell.
@@ -158,7 +161,7 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  *                                                                                                    rows and total columns in a table.
  */
 export default function configureAsXhtmlTableElements(
-	sxModule: Object,
+	sxModule: SxModule,
 	options?: {
 		priority?: number;
 		allowExpansionInContentView?: AllowExpansionInContentView;
@@ -171,8 +174,8 @@ export default function configureAsXhtmlTableElements(
 		showSelectionWidget?: boolean;
 		columnBefore?: Widget[] | WidgetSubAreaByName | null;
 		rowBefore?: Widget[] | WidgetSubAreaByName | null;
-		columnWidgetMenuOperations?: Object[] | null;
-		rowWidgetMenuOperations?: Object[] | null;
+		columnWidgetMenuOperations?: ContextualOperation[] | null;
+		rowWidgetMenuOperations?: ContextualOperation[] | null;
 		useTh?: boolean;
 		useThead?: boolean;
 		useTbody?: boolean;
@@ -180,13 +183,13 @@ export default function configureAsXhtmlTableElements(
 		shouldCreateColumnSpecificationNodes?: boolean;
 		table?: {
 			tableFilterSelector?: XPathTest;
-			namespaceURI?: string;
+			namespaceURI?: string | null;
 		};
 		td?: {
-			defaultTextContainer?: string;
+			defaultTextContainer?: DefaultTextContainer;
 		};
 		th?: {
-			defaultTextContainer?: string;
+			defaultTextContainer?: DefaultTextContainer;
 		};
 		useDefaultContextMenu?: boolean;
 		cellStylingTranslationQuery?: $TSFixMeAnyFontoSdk;
@@ -195,18 +198,6 @@ export default function configureAsXhtmlTableElements(
 	}
 ): void {
 	options = options || {};
-	options.cell = {
-		defaultTextContainer:
-			options.td && options.td.defaultTextContainer
-				? options.td.defaultTextContainer
-				: null,
-	};
-	options.headerCell = {
-		defaultTextContainer:
-			options.th && options.th.defaultTextContainer
-				? options.th.defaultTextContainer
-				: null,
-	};
 	const tableDefinition = new XhtmlTableDefinition(options);
 	configureAsTableElements(sxModule, options, tableDefinition);
 	const priority = options.priority;
@@ -217,5 +208,23 @@ export default function configureAsXhtmlTableElements(
 		priority,
 	});
 
-	configureAsTableElements(sxModule, options, tableDefinition);
+	configureAsTableElements(
+		sxModule,
+		{
+			...options,
+			cell: {
+				defaultTextContainer:
+					options.td && options.td.defaultTextContainer
+						? options.td.defaultTextContainer
+						: null,
+			},
+			headerCell: {
+				defaultTextContainer:
+					options.th && options.th.defaultTextContainer
+						? options.th.defaultTextContainer
+						: null,
+			},
+		},
+		tableDefinition
+	);
 }
