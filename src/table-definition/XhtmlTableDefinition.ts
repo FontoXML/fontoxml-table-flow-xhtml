@@ -18,11 +18,12 @@ function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
 }
 
 /**
+ * @remarks
  * Configures the table definition for XHTML tables.
  */
 class XhtmlTableDefinition extends TableDefinition {
 	/**
-	 * @param {XhtmlTableOptions} options
+	 * @param options -
 	 */
 	constructor(options: XhtmlTableOptions) {
 		const useThead = !!options.useThead;

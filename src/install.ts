@@ -91,16 +91,13 @@ export default function install(): void {
 	});
 
 	/**
-	 * Returns whether the given node is an xhtml table node. If null or nothing is passed, the
-	 * function will return false.
+	 * @remarks
+	 * Returns whether the given node is an xhtml table node. If null or nothing is
+	 * passed, the function will return false.
 	 *
-	 * @name fonto:is-xhtml-table
+	 * @param node -
 	 *
-	 * @category xpath
-	 *
-	 * @param  {node()}  [node]
-	 *
-	 * @return {xs:boolean}  Whether the passed node is an xhtml table.
+	 * @returns Whether the passed node is an xhtml table.
 	 */
 	registerCustomXPathFunction(
 		{ namespaceURI: FONTO_FUNCTIONS, localName: 'is-xhtml-table' },
