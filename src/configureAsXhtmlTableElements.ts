@@ -130,7 +130,7 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  *                                                       to `false`, the cell element of the first row.
  *                                                       Tables that do not have these elements will
  *                                                       not show `columnBefore` widgets. {@link
- *                                                       fonto-documentation/docs/editor/api/index.xml#id-9d2b1ad5-bbc1-6c44-d491-16dc213c53f2
+ *                                                       fonto-documentation/docs/generated-content/editor-api/index.xml#id-cd5577eb-9790-92d6-e3ac-8d1554fe6b12
  *                                                       | All widgets} are supported.
  * @param options.rowBefore                            - Used to add a single icon widget before each
  *                                                       row using {@link createIconWidget}. Row
