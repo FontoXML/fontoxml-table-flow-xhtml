@@ -46,42 +46,42 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  * 	],
  * 	showInsertionWidget: true,
  * 	showSelectionWidget: true,
- * 	columnWidgetMenuOperations: [
- * 		{
- * 			contents: [
- * 				{ name: 'contextual-xhtml-set-cell-horizontal-alignment-left' },
- * 				{ name: 'contextual-xhtml-set-cell-horizontal-alignment-center' },
- * 				{ name: 'contextual-xhtml-set-cell-horizontal-alignment-right' },
- * 				{ name: 'contextual-xhtml-set-cell-horizontal-alignment-justify' }
- * 			]
- * 		},
- * 		{
- * 			contents: [
- * 				{ name: 'contextual-xhtml-set-cell-vertical-alignment-top' },
- * 				{ name: 'contextual-xhtml-set-cell-vertical-alignment-center' },
- * 				{ name: 'contextual-xhtml-set-cell-vertical-alignment-bottom' }
- * 			]
- * 		},
- * 		{ contents: [{ name: 'column-delete-at-index' }] }
- * 	],
- * 	rowWidgetMenuOperations: [
- * 		{
- * 			contents: [
- * 				{ name: 'contextual-xhtml-set-cell-horizontal-alignment-left' },
- * 				{ name: 'contextual-xhtml-set-cell-horizontal-alignment-center' },
- * 				{ name: 'contextual-xhtml-set-cell-horizontal-alignment-right' },
- * 				{ name: 'contextual-xhtml-set-cell-horizontal-alignment-justify' }
- * 			]
- * 		},
- * 		{
- * 			contents: [
- * 				{ name: 'contextual-xhtml-set-cell-vertical-alignment-top' },
- * 				{ name: 'contextual-xhtml-set-cell-vertical-alignment-center' },
- * 				{ name: 'contextual-xhtml-set-cell-vertical-alignment-bottom' }
- * 			]
- * 		},
- * 		{ contents: [{ name: 'contextual-row-delete' }] }
- * 	],
+ * 	columnsWidgetMenuOperations: [
+ *		{
+ *			contents: [
+ *				{ name: 'xhtml-set-cell-horizontal-alignment-left' },
+ *				{ name: 'xhtml-set-cell-horizontal-alignment-center' },
+ *				{ name: 'xhtml-set-cell-horizontal-alignment-right' },
+ *				{ name: 'xhtml-set-cell-horizontal-alignment-justify' }
+ *			]
+ *		},
+ *		{
+ *			contents: [
+ *				{ name: 'xhtml-set-cell-vertical-alignment-top' },
+ *				{ name: 'xhtml-set-cell-vertical-alignment-center' },
+ *				{ name: 'xhtml-set-cell-vertical-alignment-bottom' }
+ *			]
+ *		},
+ *		{ contents: [{ name: 'columns-delete' }] }
+ *	],
+ *	rowsWidgetMenuOperations: [
+ *		{
+ *			contents: [
+ *				{ name: 'xhtml-set-cell-horizontal-alignment-left' },
+ *				{ name: 'xhtml-set-cell-horizontal-alignment-center' },
+ *				{ name: 'xhtml-set-cell-horizontal-alignment-right' },
+ *				{ name: 'xhtml-set-cell-horizontal-alignment-justify' }
+ *			]
+ *		},
+ *		{
+ *			contents: [
+ *				{ name: 'xhtml-set-cell-vertical-alignment-top' },
+ *				{ name: 'xhtml-set-cell-vertical-alignment-center' },
+ *				{ name: 'xhtml-set-cell-vertical-alignment-bottom' }
+ *			]
+ *		},
+ *		{ contents: [{ name: 'rows-delete' }] }
+ *	],
  * 	cellStylingTranslationQuery: 'import module namespace app = "http://www.fontoxml.com/app"; app:cellStylingTranslationQuery(., $tableEdges)'
  * });
  * ```
@@ -137,16 +137,16 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  *                                                       widgets are linked to the row elements of the
  *                                                       table. Any widget can be added but only icon
  *                                                       widget is supported.
- * @param options.columnWidgetMenuOperations           - To configure table widget menu for columns. It
- *                                                       accepts an array of {@link
- *                                                       ContextualOperation}s, but only supports
- *                                                       "name" and "contents" properties. It is
- *                                                       allowed to have only one layer of menu.
- * @param options.rowWidgetMenuOperations              - To configure table widget menu for rows. It
- *                                                       accepts an array of {@link
- *                                                       ContextualOperation}s, but only supports
- *                                                       "name" and "contents" properties. It is
- *                                                       allowed to have only one layer of menu.
+ * @param options.columnWidgetMenuOperations           - This is deprecated. Use columnsWidgetMenuOperations instead.
+ * @param options.columnsWidgetMenuOperations          - To configure table widget menu for columns.
+ *                                                       It accepts an array of {@link ContextualOperation}s,
+ *                                                       but only supports "name" and "contents" properties.
+ *                                                       It is allowed to have only one layer of menu.
+ * @param options.rowWidgetMenuOperations              - This is deprecated. Use rowsWidgetMenuOperations instead.
+ * @param options.rowsWidgetMenuOperations             - To configure table widget menu for rows.
+ *                                                       It accepts an array of {@link ContextualOperation}s,
+ *                                                       but only supports "name" and "contents"
+ *                                                       properties. It is allowed to have only one layer of menu.
  * @param options.useTh                                - Set to true if th should be used.
  * @param options.useThead                             - Set to true if thead should be used.
  * @param options.useTbody                             - Set to true if tbody should be used.
@@ -199,8 +199,18 @@ export default function configureAsXhtmlTableElements(
 		showSelectionWidget?: boolean;
 		columnBefore?: Widget[] | WidgetSubAreaByName | null;
 		rowBefore?: Widget[] | WidgetSubAreaByName | null;
+		/**
+		 * @deprecated
+		 * Instead use columnsWidgetMenuOperations.
+		 */
 		columnWidgetMenuOperations?: ContextualOperation[] | null;
+		columnsWidgetMenuOperations?: ContextualOperation[] | null;
+		/**
+		 * @deprecated
+		 * Instead use rowsWidgetMenuOperations.
+		 */
 		rowWidgetMenuOperations?: ContextualOperation[] | null;
+		rowsWidgetMenuOperations?: ContextualOperation[] | null;
 		useTh?: boolean;
 		useThead?: boolean;
 		useTbody?: boolean;

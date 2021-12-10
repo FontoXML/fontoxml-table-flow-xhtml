@@ -395,70 +395,74 @@ class XhtmlTableDefinition extends TableDefinition {
 				);
 			},
 
+			// Deprecated
+			columnWidgetMenuOperations: options.columnWidgetMenuOperations,
+			rowWidgetMenuOperations: options.rowWidgetMenuOperations,
 			// Widget menu operations
-			columnWidgetMenuOperations: options.columnWidgetMenuOperations || [
+			columnsWidgetMenuOperations:
+				options.columnsWidgetMenuOperations || [
+					{
+						contents: [
+							{
+								name: 'xhtml-set-cell-horizontal-alignment-left',
+							},
+							{
+								name: 'xhtml-set-cell-horizontal-alignment-center',
+							},
+							{
+								name: 'xhtml-set-cell-horizontal-alignment-right',
+							},
+							{
+								name: 'xhtml-set-cell-horizontal-alignment-justify',
+							},
+						],
+					},
+					{
+						contents: [
+							{
+								name: 'xhtml-set-cell-vertical-alignment-top',
+							},
+							{
+								name: 'xhtml-set-cell-vertical-alignment-center',
+							},
+							{
+								name: 'xhtml-set-cell-vertical-alignment-bottom',
+							},
+						],
+					},
+					{ contents: [{ name: 'columns-delete' }] },
+				],
+			rowsWidgetMenuOperations: options.rowsWidgetMenuOperations || [
 				{
 					contents: [
 						{
-							name: 'contextual-xhtml-set-cell-horizontal-alignment-left',
+							name: 'xhtml-set-cell-horizontal-alignment-left',
 						},
 						{
-							name: 'contextual-xhtml-set-cell-horizontal-alignment-center',
+							name: 'xhtml-set-cell-horizontal-alignment-center',
 						},
 						{
-							name: 'contextual-xhtml-set-cell-horizontal-alignment-right',
+							name: 'xhtml-set-cell-horizontal-alignment-right',
 						},
 						{
-							name: 'contextual-xhtml-set-cell-horizontal-alignment-justify',
+							name: 'xhtml-set-cell-horizontal-alignment-justify',
 						},
 					],
 				},
 				{
 					contents: [
 						{
-							name: 'contextual-xhtml-set-cell-vertical-alignment-top',
+							name: 'xhtml-set-cell-vertical-alignment-top',
 						},
 						{
-							name: 'contextual-xhtml-set-cell-vertical-alignment-center',
+							name: 'xhtml-set-cell-vertical-alignment-center',
 						},
 						{
-							name: 'contextual-xhtml-set-cell-vertical-alignment-bottom',
+							name: 'xhtml-set-cell-vertical-alignment-bottom',
 						},
 					],
 				},
-				{ contents: [{ name: 'column-delete-at-index' }] },
-			],
-			rowWidgetMenuOperations: options.rowWidgetMenuOperations || [
-				{
-					contents: [
-						{
-							name: 'contextual-xhtml-set-cell-horizontal-alignment-left',
-						},
-						{
-							name: 'contextual-xhtml-set-cell-horizontal-alignment-center',
-						},
-						{
-							name: 'contextual-xhtml-set-cell-horizontal-alignment-right',
-						},
-						{
-							name: 'contextual-xhtml-set-cell-horizontal-alignment-justify',
-						},
-					],
-				},
-				{
-					contents: [
-						{
-							name: 'contextual-xhtml-set-cell-vertical-alignment-top',
-						},
-						{
-							name: 'contextual-xhtml-set-cell-vertical-alignment-center',
-						},
-						{
-							name: 'contextual-xhtml-set-cell-vertical-alignment-bottom',
-						},
-					],
-				},
-				{ contents: [{ name: 'contextual-row-delete' }] },
+				{ contents: [{ name: 'rows-delete' }] },
 			],
 		};
 
