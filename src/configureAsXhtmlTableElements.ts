@@ -1,14 +1,10 @@
 import configureAsBlock from 'fontoxml-families/src/configureAsBlock';
-import type {
-	AllowExpansionInContentView,
-	DefaultTextContainer,
-	Widget,
-	WidgetSubAreaByName,
-} from 'fontoxml-families/src/types';
 import type { SxModule } from 'fontoxml-modular-schema-experience/src/sxManager';
-import type { ContextualOperation } from 'fontoxml-operations/src/types';
-import type { XPathQuery, XPathTest } from 'fontoxml-selectors/src/types';
 import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
+import type {
+	TableElementsSharedOptions,
+	TableElementsXhtmlOptions,
+} from 'fontoxml-table-flow/src/types.configureAsTableElements';
 
 import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
 
@@ -188,49 +184,7 @@ import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
  */
 export default function configureAsXhtmlTableElements(
 	sxModule: SxModule,
-	options?: {
-		priority?: number;
-		allowExpansionInContentView?: AllowExpansionInContentView;
-		showInsertionWidget?: boolean;
-		/**
-		 * @deprecated Instead use showSelectionWidget.
-		 */
-		showHighlightingWidget?: boolean;
-		showSelectionWidget?: boolean;
-		columnBefore?: Widget[] | WidgetSubAreaByName | null;
-		rowBefore?: Widget[] | WidgetSubAreaByName | null;
-		/**
-		 * @deprecated
-		 * Instead use columnsWidgetMenuOperations.
-		 */
-		columnWidgetMenuOperations?: ContextualOperation[] | null;
-		columnsWidgetMenuOperations?: ContextualOperation[] | null;
-		/**
-		 * @deprecated
-		 * Instead use rowsWidgetMenuOperations.
-		 */
-		rowWidgetMenuOperations?: ContextualOperation[] | null;
-		rowsWidgetMenuOperations?: ContextualOperation[] | null;
-		useTh?: boolean;
-		useThead?: boolean;
-		useTbody?: boolean;
-		useBorders?: boolean;
-		shouldCreateColumnSpecificationNodes?: boolean;
-		table?: {
-			tableFilterSelector?: XPathTest;
-			namespaceURI?: string | null;
-		};
-		td?: {
-			defaultTextContainer?: DefaultTextContainer;
-		};
-		th?: {
-			defaultTextContainer?: DefaultTextContainer;
-		};
-		useDefaultContextMenu?: boolean;
-		cellStylingTranslationQuery?: $TSFixMeAnyFontoSdk;
-		isCollapsibleQuery?: XPathQuery;
-		isInitiallyCollapsedQuery?: XPathQuery;
-	}
+	options?: TableElementsSharedOptions & TableElementsXhtmlOptions
 ): void {
 	options = options || {};
 	const tableDefinition = new XhtmlTableDefinition(options);
