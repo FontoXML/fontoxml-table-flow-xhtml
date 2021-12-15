@@ -1,4 +1,4 @@
-import type { DefaultTextContainer } from 'fontoxml-families/src/types';
+import type { DefaultTextContainerConfiguration } from 'fontoxml-base-flow/src/types';
 import type { XPathQuery, XPathTest } from 'fontoxml-selectors/src/types';
 
 /**
@@ -312,7 +312,11 @@ export type TableElementsXhtmlOptions = {
 		 *
 		 * @fontosdk
 		 */
-		defaultTextContainer?: DefaultTextContainer;
+		defaultTextContainer?:
+			| DefaultTextContainerConfiguration
+			| string
+			| null
+			| undefined;
 	};
 	/**
 	 * @remarks
@@ -327,7 +331,11 @@ export type TableElementsXhtmlOptions = {
 		 *
 		 * @fontosdk
 		 */
-		defaultTextContainer?: DefaultTextContainer;
+		defaultTextContainer?:
+			| DefaultTextContainerConfiguration
+			| string
+			| null
+			| undefined;
 	};
 	/**
 	 * @remarks
