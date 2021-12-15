@@ -1,4 +1,5 @@
-import type { XPathQuery } from 'fontoxml-selectors/src/types';
+import type { DefaultTextContainer } from 'fontoxml-families/src/types';
+import type { XPathQuery, XPathTest } from 'fontoxml-selectors/src/types';
 
 /**
  * @remarks
@@ -6,6 +7,8 @@ import type { XPathQuery } from 'fontoxml-selectors/src/types';
  * of a cell. For example if you have a style attribute on your cell node, then you
  * can use this query to translate the properties on that attribute to actual
  * styling on the cell.
+ *
+ * The query is expected to return an XQuery map of the shape of {@link CellStylingOptions}.
  *
  * Note that cellStylingTranslationQuery does not work together with any of the
  * other border options in the `XhtmlTableDefinition`. So you need to pay extra
@@ -20,7 +23,7 @@ import type { XPathQuery } from 'fontoxml-selectors/src/types';
  *   cellStylingTranslationQuery is `tableEdge` and it consists of the information
  *   regarding the cell is on top, right, bottom and left edge or not:
  *
- * ```
+ * ```xq
  * map {
  *     "topEdge": true(),
  *     "rightEdge": true(),
@@ -37,7 +40,7 @@ import type { XPathQuery } from 'fontoxml-selectors/src/types';
  *
  * ## Example
  *
- * ```
+ * ```xq
  * declare %public function app:evaluateBorderStyle(
  * 	$style as xs:string?,
  * 	$width as xs:string?,
@@ -94,9 +97,11 @@ import type { XPathQuery } from 'fontoxml-selectors/src/types';
  * 				$styles("background-color")
  * 	}
  * };
+ * ```
  *
- * (: For if you use the same attribute as in the example above, here we will also give an example on parsing the style attribute: :)
+ * For if you use the same attribute as in the example above, here we will also give an example on parsing the style attribute:
  *
+ * ```xq *
  * declare variable  $styleOptions := ('none', 'hidden', 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset');
  *
  * declare %private function app:splitBorderProperty($name as xs:string, $style as xs:string) {
@@ -145,7 +150,7 @@ import type { XPathQuery } from 'fontoxml-selectors/src/types';
  *
  * @returns The options, that you can use to style the cell
  */
-export type cellStylingTranslationQuery = XPathQuery;
+export type CellStylingTranslationQuery = XPathQuery;
 
 /**
  * @fontosdk
@@ -223,4 +228,114 @@ export type CellBorderStylingOptions = {
 	 * @fontosdk
 	 */
 	width: '1px' | '2px' | '3px' | '4px' | '5px';
+};
+
+/**
+ * @remarks
+ * The options accepted by {@link configureAsXhtmlTableElements}. Please see
+ * {@link TableElementsSharedOptions} for more information on the other
+ * options accepted by this function.
+ *
+ * @fontosdk
+ */
+export type TableElementsXhtmlOptions = {
+	/**
+	 * @remarks
+	 * Set to true if th should be used.
+	 *
+	 * @fontosdk
+	 */
+	useTh?: boolean;
+	/**
+	 * @remarks
+	 * Set to true if thead should be used.
+	 *
+	 * @fontosdk
+	 */
+	useThead?: boolean;
+	/**
+	 * @remarks
+	 * Set to true if tbody should be used.
+	 *
+	 * @fontosdk
+	 */
+	useTbody?: boolean;
+	/**
+	 * @remarks
+	 * Set to false if the borders attribute should not be used.
+	 *
+	 * @fontosdk
+	 */
+	useBorders?: boolean;
+	/**
+	 * @remarks
+	 * Set to true if the table should include <col> elements by default.
+	 *
+	 * @fontosdk
+	 */
+	shouldCreateColumnSpecificationNodes?: boolean;
+	/**
+	 * @remarks
+	 *
+	 *
+	 * @fontosdk
+	 */
+	table?: {
+		/**
+		 * @remarks
+		 * An optional additional selector for the table
+		 * which will be used to refine whether a table
+		 * element should be considered as an xhtml
+		 * table.
+		 *
+		 * @fontosdk
+		 */
+		tableFilterSelector?: XPathTest;
+		/**
+		 * @remarks
+		 * The namespace URI for this table.
+		 *
+		 * @fontosdk
+		 */
+		namespaceURI?: string | null;
+	};
+	/**
+	 * @remarks
+	 * Configuration options for the td element.
+	 *
+	 * @fontosdk
+	 */
+	td?: {
+		/**
+		 * @remarks
+		 * The default text container for the td element.
+		 *
+		 * @fontosdk
+		 */
+		defaultTextContainer?: DefaultTextContainer;
+	};
+	/**
+	 * @remarks
+	 * Configuration options for the th element.
+	 *
+	 * @fontosdk
+	 */
+	th?: {
+		/**
+		 * @remarks
+		 * The default text container for the th element.
+		 *
+		 * @fontosdk
+		 */
+		defaultTextContainer?: DefaultTextContainer;
+	};
+	/**
+	 * @remarks
+	 * An {@link XPathQuery} that should return the styling for a cell (as the
+	 * {@link CellStylingOptions} object). For more details see
+	 * {@link CellStylingTranslationQuery}.
+	 *
+	 * @fontosdk
+	 */
+	cellStylingTranslationQuery?: CellStylingTranslationQuery;
 };
