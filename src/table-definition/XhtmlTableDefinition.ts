@@ -1,14 +1,34 @@
+import makeOrExpression from 'fontoxml-selectors/src/makeOrExpression';
+import xq from 'fontoxml-selectors/src/xq';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
 import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
 import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
-import getSpecificationValueStrategies from 'fontoxml-table-flow/src/getSpecificationValueStrategies';
-import normalizeCellNodeStrategies from 'fontoxml-table-flow/src/normalizeCellNodeStrategies';
-import normalizeContainerNodeStrategies from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies';
-import setAttributeStrategies from 'fontoxml-table-flow/src/setAttributeStrategies';
+import {
+	createGetValueAsBooleanStrategy,
+	createGetValueAsStringStrategy,
+} from 'fontoxml-table-flow/src/getSpecificationValueStrategies';
+import {
+	createConvertFormerHeaderCellNodeStrategy,
+	createConvertHeaderCellNodeStrategy,
+} from 'fontoxml-table-flow/src/normalizeCellNodeStrategies';
+import {
+	createAddBodyContainerNodeStrategy,
+	createAddHeaderContainerNodeStrategy,
+	createRemoveBodyContainerNodeStrategy,
+	createRemoveFooterContainerNodeStrategy,
+	createRemoveHeaderContainerNodeStrategy,
+} from 'fontoxml-table-flow/src/normalizeContainerNodeStrategies';
+import {
+	createBooleanValueAsAttributeStrategy,
+	createColumnSpanAsAttributeStrategy,
+	createRowSpanAsAttributeStrategy,
+	createStringValueAsAttributeStrategy,
+} from 'fontoxml-table-flow/src/setAttributeStrategies';
 import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
+import type { TableDefinitionProperties } from 'fontoxml-table-flow/src/types';
 import type { XhtmlTableOptions } from 'fontoxml-typescript-migration-debt/src/types';
 
-function parseWidth(width: $TSFixMeAny): $TSFixMeAny {
+function parseWidth(width: string): number | null {
 	const widthPart = /^(\d+(?:\.\d+)?)[%*]$/.exec(width);
 	if (widthPart === null) {
 		return null;
@@ -25,7 +45,7 @@ class XhtmlTableDefinition extends TableDefinition {
 	/**
 	 * @param options -
 	 */
-	constructor(options: XhtmlTableOptions) {
+	public constructor(options: XhtmlTableOptions) {
 		const useThead = !!options.useThead;
 		const useTbody = !!options.useTbody;
 		let useTh = !!options.useTh;
@@ -76,39 +96,40 @@ class XhtmlTableDefinition extends TableDefinition {
 				? options.table.namespaceURI
 				: '';
 
-		const namespaceSelector = `Q{${namespaceURI}}`;
-		const selectorParts = {
-			table: `${namespaceSelector}table${
+		const tablePartSelectors = {
+			table: xq`${xq(`self::Q{${namespaceURI}}table`)}[${
 				options.table && options.table.tableFilterSelector
-					? `[${options.table.tableFilterSelector}]`
-					: ''
-			}`,
-			headerContainer: `${namespaceSelector}thead`,
-			bodyContainer: `${namespaceSelector}tbody`,
-			footerContainer: `${namespaceSelector}tfoot`,
-			row: `${namespaceSelector}tr`,
-			cell: `${namespaceSelector}td`,
-			headerCell: `${namespaceSelector}th`,
-			columnSpecificationGroup: `${namespaceSelector}colgroup`,
-			columnSpecification: `${namespaceSelector}col`,
-			caption: `${namespaceSelector}caption[parent::${namespaceSelector}table]`,
+					? xq(options.table.tableFilterSelector)
+					: xq`true()`
+			}]`,
+			headerContainer: xq(`self::Q{${namespaceURI}}thead`),
+			bodyContainer: xq(`self::Q{${namespaceURI}}tbody`),
+			footerContainer: xq(`self::Q{${namespaceURI}}tfoot`),
+			row: xq(`self::Q{${namespaceURI}}tr`),
+			cell: xq(`self::Q{${namespaceURI}}td`),
+			headerCell: xq(`self::Q{${namespaceURI}}th`),
+			columnSpecificationGroup: xq(`self::Q{${namespaceURI}}colgroup`),
+			columnSpecification: xq(`self::Q{${namespaceURI}}col`),
+			caption: xq(
+				`self::Q{${namespaceURI}}caption[parent::Q{${namespaceURI}}table]`
+			),
 		};
 
 		// Alias selector parts
-		const table = selectorParts.table;
-		const thead = selectorParts.headerContainer;
-		const tbody = selectorParts.bodyContainer;
-		const tfoot = selectorParts.footerContainer;
-		const tr = selectorParts.row;
-		const td = selectorParts.cell;
-		const th = selectorParts.headerCell;
-		const col = selectorParts.columnSpecification;
-		const colGroup = selectorParts.columnSpecificationGroup;
+		const table = tablePartSelectors.table;
+		const thead = tablePartSelectors.headerContainer;
+		const tbody = tablePartSelectors.bodyContainer;
+		const tfoot = tablePartSelectors.footerContainer;
+		const tr = tablePartSelectors.row;
+		const td = tablePartSelectors.cell;
+		const th = tablePartSelectors.headerCell;
+		const col = tablePartSelectors.columnSpecification;
+		const colGroup = tablePartSelectors.columnSpecificationGroup;
 
 		const tableNodesSelector = `self::${col} or self::${colGroup} or self::${tr} or self::${thead} or self::${tbody} or self::${tfoot}`;
 
-		const properties = {
-			selectorParts,
+		const properties: TableDefinitionProperties = {
+			tablePartSelectors,
 
 			supportsBorders: useBorders,
 
@@ -116,82 +137,67 @@ class XhtmlTableDefinition extends TableDefinition {
 
 			supportsRowSpanningCellsAtBottom: true,
 
-			shouldCreateColumnSpecificationNodes,
-
 			// Defining node selectors
-			tablePartsNodeSelector: Object.keys(selectorParts)
-				.filter((selector) => selector !== 'caption')
-				.map((key) => `self::${selectorParts[key]}`)
-				.join(' or '),
-
+			tablePartsNodeSelector: makeOrExpression(
+				Object.keys(tablePartSelectors)
+					.filter((selector) => selector !== 'caption')
+					.map((key) => tablePartSelectors[key])
+			),
 			// Header row node selector
-			headerRowNodeSelector: `self::${tr}[parent::${thead} or not(child::${td})]`,
+			headerRowNodeSelector: xq`${tr}[parent::*[${thead}] or not(child::*[${td}])]`,
 
 			// Finds
-			findHeaderRowNodesXPathQuery: `
-            ./${thead}/${tr}, ./${tr}[${td}][1]/preceding-sibling::${tr}`,
-			findBodyRowNodesXPathQuery: `
-            if (./${tbody})
-                then ./${tbody}/${tr}
-                else let $firstBodyRow := ./${tr}[${td}][1]
-                    return ($firstBodyRow, $firstBodyRow/following-sibling::${tr})`,
-			findFooterRowNodesXPathQuery: `if (./${tfoot}) then ./${tfoot}/${tr} else ()`,
+			findHeaderRowNodesXPathQuery: xq`
+            child::*[${thead}]/child::*[${tr}], child::*[${tr}[child::*[${td}]]][1]/preceding-sibling::*[${tr}]`,
+			findBodyRowNodesXPathQuery: xq`
+            if (child::*[${tbody}])
+                then child::*[${tbody}]/child::*[${tr}]
+                else let $firstBodyRow := child::*[${tr}[child::*[${td}]]][1]
+                    return ($firstBodyRow, $firstBodyRow/following-sibling::*[${tr}])`,
+			findFooterRowNodesXPathQuery: xq`if (child::*[${tfoot}]) then child::*[${tfoot}]/child::*[${tr}] else ()`,
 
-			findHeaderContainerNodesXPathQuery: `./${thead}`,
-			findBodyContainerNodesXPathQuery: `./${tbody}`,
-			findFooterContainerNodesXPathQuery: `./${tfoot}`,
+			findHeaderContainerNodesXPathQuery: xq`child::*[${thead}]`,
+			findBodyContainerNodesXPathQuery: xq`child::*[${tbody}]`,
+			findFooterContainerNodesXPathQuery: xq`child::*[${tfoot}]`,
 
-			findColumnSpecificationNodesXPathQuery: `./${col}`,
+			findColumnSpecificationNodesXPathQuery: xq`child::*[${col}]`,
 
-			findCellNodesXPathQuery: `child::*[self::${td} or self::${th}]`,
+			findCellNodesXPathQuery: xq`child::*[${td} or ${th}]`,
 
-			findNonTableNodesPrecedingRowsXPathQuery: `./*[(${tableNodesSelector}) => not() and following-sibling::*[${tableNodesSelector}]]`,
+			findNonTableNodesPrecedingRowsXPathQuery: xq`child::*[(${tableNodesSelector}) => not() and following-sibling::*[${tableNodesSelector}]]`,
 
 			// Data
-			getNumberOfColumnsXPathQuery: `let $firstRow :=
-                    if (./${thead}/${tr}) then head(./${thead}/${tr})
-                    else if (./${tbody}/${tr}) then head(./${tbody}/${tr})
-                    else head(./${tr}),
-                $cells := $firstRow/*[self::${td} | self::${th}]
+			getNumberOfColumnsXPathQuery: xq`let $firstRow :=
+                    if (child::*[${thead}]/child::*[${tr}]) then head(child::*[${thead}]/child::*[${tr}])
+                    else if (child::*[${tbody}]/child::*[${tr}]) then head(child::*[${tbody}]/child::*[${tr}])
+                    else head(child::*[${tr}]),
+                $cells := $firstRow/child::*[${td} | ${th}]
                 return (for $node in $cells return let $colspan := $node/@colspan => number() return if ($colspan) then $colspan else 1) => sum()`,
-			getRowSpanForCellNodeXPathQuery:
-				'let $rowspan := ./@rowspan return if ($rowspan) then $rowspan => number() else 1',
-			getColumnSpanForCellNodeXPathQuery:
-				'let $colspan := ./@colspan return if ($colspan) then $colspan => number() else 1',
+			getRowSpanForCellNodeXPathQuery: xq`let $rowspan := ./@rowspan return if ($rowspan) then $rowspan => number() else 1`,
+			getColumnSpanForCellNodeXPathQuery: xq`let $colspan := ./@colspan return if ($colspan) then $colspan => number() else 1`,
 			cellStylingTranslationQuery:
-				options.cellStylingTranslationQuery || '',
+				options.cellStylingTranslationQuery &&
+				xq(options.cellStylingTranslationQuery),
 
 			// Normalizations
 			normalizeContainerNodeStrategies: [
 				useThead
-					? normalizeContainerNodeStrategies.createAddHeaderContainerNodeStrategy(
+					? createAddHeaderContainerNodeStrategy(
 							namespaceURI,
 							'thead'
 					  )
-					: normalizeContainerNodeStrategies.createRemoveHeaderContainerNodeStrategy(),
+					: createRemoveHeaderContainerNodeStrategy(),
 				useTbody
-					? normalizeContainerNodeStrategies.createAddBodyContainerNodeStrategy(
-							namespaceURI,
-							'tbody'
-					  )
-					: normalizeContainerNodeStrategies.createRemoveBodyContainerNodeStrategy(),
-				normalizeContainerNodeStrategies.createRemoveFooterContainerNodeStrategy(),
+					? createAddBodyContainerNodeStrategy(namespaceURI, 'tbody')
+					: createRemoveBodyContainerNodeStrategy(),
+				createRemoveFooterContainerNodeStrategy(),
 			],
 
 			normalizeCellNodeStrategies: [
 				useTh
-					? normalizeCellNodeStrategies.createConvertHeaderCellNodeStrategy(
-							namespaceURI,
-							'th'
-					  )
-					: normalizeCellNodeStrategies.createConvertHeaderCellNodeStrategy(
-							namespaceURI,
-							'td'
-					  ),
-				normalizeCellNodeStrategies.createConvertFormerHeaderCellNodeStrategy(
-					namespaceURI,
-					'td'
-				),
+					? createConvertHeaderCellNodeStrategy(namespaceURI, 'th')
+					: createConvertHeaderCellNodeStrategy(namespaceURI, 'td'),
+				createConvertFormerHeaderCellNodeStrategy(namespaceURI, 'td'),
 			],
 
 			// Creates
@@ -205,52 +211,48 @@ class XhtmlTableDefinition extends TableDefinition {
 					? createCreateColumnSpecificationNodeStrategy(
 							namespaceURI,
 							'col',
-							`./*[self::${thead} or self::${tbody} or self::${tr}]`
+							xq`./*[${thead} or ${tbody} or ${tr}]`
 					  )
 					: undefined,
 
 			// Specification
 			getTableSpecificationStrategies: useBorders
 				? [
-						getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+						createGetValueAsBooleanStrategy(
 							'borders',
-							'./@border = "1"'
+							xq`./@border = "1"`
 						),
 				  ]
 				: [],
 
 			getCellSpecificationStrategies: [
-				getSpecificationValueStrategies.createGetValueAsStringStrategy(
-					'characterAlignment',
-					'./@char'
-				),
-				getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				createGetValueAsStringStrategy('characterAlignment', './@char'),
+				createGetValueAsStringStrategy(
 					'horizontalAlignment',
-					'./@align'
+					xq`./@align`
 				),
-				getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				createGetValueAsStringStrategy(
 					'verticalAlignment',
-					'./@valign'
+					xq`./@valign`
 				),
-			].concat(
-				useBorders
+				...(useBorders
 					? [
-							getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+							createGetValueAsBooleanStrategy(
 								'columnSeparator',
-								`./ancestor::${table}[1]/@border = "1"`
+								xq`./ancestor::*[${table}][1]/@border = "1"`
 							),
-							getSpecificationValueStrategies.createGetValueAsBooleanStrategy(
+							createGetValueAsBooleanStrategy(
 								'rowSeparator',
-								`./ancestor::${table}[1]/@border = "1"`
+								xq`./ancestor::*[${table}][1]/@border = "1"`
 							),
 					  ]
-					: []
-			),
+					: []),
+			],
 
 			// Set attributes
 			setTableNodeAttributeStrategies: useBorders
 				? [
-						setAttributeStrategies.createBooleanValueAsAttributeStrategy(
+						createBooleanValueAsAttributeStrategy(
 							'border',
 							'borders',
 							null,
@@ -261,32 +263,28 @@ class XhtmlTableDefinition extends TableDefinition {
 				: [],
 
 			setCellNodeAttributeStrategies: [
-				setAttributeStrategies.createRowSpanAsAttributeStrategy(
-					'rowspan'
-				),
-				setAttributeStrategies.createColumnSpanAsAttributeStrategy(
-					'colspan'
-				),
-				setAttributeStrategies.createStringValueAsAttributeStrategy(
+				createRowSpanAsAttributeStrategy('rowspan'),
+				createColumnSpanAsAttributeStrategy('colspan'),
+				createStringValueAsAttributeStrategy(
 					'char',
 					'characterAlignment'
 				),
-				setAttributeStrategies.createStringValueAsAttributeStrategy(
+				createStringValueAsAttributeStrategy(
 					'align',
 					'horizontalAlignment'
 				),
-				setAttributeStrategies.createStringValueAsAttributeStrategy(
+				createStringValueAsAttributeStrategy(
 					'valign',
 					'verticalAlignment'
 				),
 			],
 
 			getColumnSpecificationStrategies: [
-				getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				createGetValueAsStringStrategy(
 					'horizontalAlignment',
 					'./@align'
 				),
-				getSpecificationValueStrategies.createGetValueAsStringStrategy(
+				createGetValueAsStringStrategy(
 					'verticalAlignment',
 					'./@valign'
 				),
@@ -301,7 +299,8 @@ class XhtmlTableDefinition extends TableDefinition {
 
 				const proportion = parseWidth(width) || 1;
 				const totalProportion = widths.reduce(
-					(total, proportion) => total + parseWidth(proportion) || 1,
+					(total: number, proportion) =>
+						total + parseWidth(proportion) || 1,
 					0
 				);
 
@@ -321,8 +320,9 @@ class XhtmlTableDefinition extends TableDefinition {
 				const proportion = proportion1 + proportion2;
 
 				return proportion !== 0
-					? proportion +
-							(columnWidthType === 'percentual' ? '%' : '*')
+					? `${proportion}${
+							columnWidthType === 'percentual' ? '%' : '*'
+					  }`
 					: '';
 			},
 			divideByTwoStrategy(width) {
@@ -338,26 +338,27 @@ class XhtmlTableDefinition extends TableDefinition {
 				const proportion = parsedWidth;
 
 				return proportion !== 0
-					? proportion / 2 +
-							(columnWidthType === 'percentual' ? '%' : '*')
+					? `${proportion / 2}${
+							columnWidthType === 'percentual' ? '%' : '*'
+					  }`
 					: '';
 			},
-			widthsToFractionsStrategy(widths) {
+			widthsToFractionsStrategy(widths: string[]): string[] {
 				const parsedWidths = widths.map(parseWidth);
 
 				if (parsedWidths.includes(null)) {
 					const newWidth = 1 / parsedWidths.length;
-					return parsedWidths.map(() => newWidth);
+					return parsedWidths.map(() => newWidth.toString());
 				}
 
 				const totalWidth = parsedWidths.reduce(
-					(total, width) => total + width,
+					(total: number, width) => total + width,
 					0
 				);
 
-				return parsedWidths.map((width) => width / totalWidth);
+				return parsedWidths.map((width) => `${width / totalWidth}`);
 			},
-			normalizeColumnWidthsStrategy(columnWidths) {
+			normalizeColumnWidthsStrategy(columnWidths: string[]): string[] {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -374,14 +375,14 @@ class XhtmlTableDefinition extends TableDefinition {
 					parseFloat(percentage)
 				);
 				const total = ratios.reduce(
-					(total, columnWidth) => total + columnWidth,
+					(total: number, columnWidth) => total + columnWidth,
 					0
 				);
 				return ratios.map(
-					(ratio) => `${(ratio / total).toFixed(4) * 100}%`
+					(ratio) => `${((ratio / total) * 100).toFixed(4)}%`
 				);
 			},
-			fractionsToWidthsStrategy(fractions) {
+			fractionsToWidthsStrategy(fractions): string[] {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -468,16 +469,10 @@ class XhtmlTableDefinition extends TableDefinition {
 
 		if (columnWidthType !== 'none') {
 			properties.getColumnSpecificationStrategies.push(
-				getSpecificationValueStrategies.createGetValueAsStringStrategy(
-					'columnWidth',
-					'./@width'
-				)
+				createGetValueAsStringStrategy('columnWidth', './@width')
 			);
 			properties.setColumnSpecificationNodeAttributeStrategies.push(
-				setAttributeStrategies.createStringValueAsAttributeStrategy(
-					'width',
-					'columnWidth'
-				)
+				createStringValueAsAttributeStrategy('width', 'columnWidth')
 			);
 		}
 

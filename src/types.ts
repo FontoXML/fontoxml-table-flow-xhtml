@@ -1,5 +1,9 @@
 import type { DefaultTextContainerConfiguration } from 'fontoxml-base-flow/src/types';
-import type { XPathQuery, XPathTest } from 'fontoxml-selectors/src/types';
+import type {
+	XPathQuery,
+	XPathTest,
+	XQExpression,
+} from 'fontoxml-selectors/src/types';
 
 /**
  * @remarks
@@ -150,7 +154,7 @@ import type { XPathQuery, XPathTest } from 'fontoxml-selectors/src/types';
  *
  * @returns The options, that you can use to style the cell
  */
-export type CellStylingTranslationQuery = XPathQuery;
+export type CellStylingTranslationQuery = XPathQuery | XQExpression;
 
 /**
  * @fontosdk
