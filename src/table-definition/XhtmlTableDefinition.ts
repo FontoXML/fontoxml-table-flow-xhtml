@@ -343,12 +343,12 @@ class XhtmlTableDefinition extends TableDefinition {
 					  }`
 					: '';
 			},
-			widthsToFractionsStrategy(widths: string[]): string[] {
+			widthsToFractionsStrategy(widths: string[]): number[] {
 				const parsedWidths = widths.map(parseWidth);
 
 				if (parsedWidths.includes(null)) {
 					const newWidth = 1 / parsedWidths.length;
-					return parsedWidths.map(() => newWidth.toString());
+					return parsedWidths.map(() => newWidth);
 				}
 
 				const totalWidth = parsedWidths.reduce(
@@ -356,7 +356,7 @@ class XhtmlTableDefinition extends TableDefinition {
 					0
 				);
 
-				return parsedWidths.map((width) => `${width / totalWidth}`);
+				return parsedWidths.map((width) => width / totalWidth);
 			},
 			normalizeColumnWidthsStrategy(columnWidths: string[]): string[] {
 				if (columnWidthType === 'none') {
@@ -384,7 +384,7 @@ class XhtmlTableDefinition extends TableDefinition {
 			},
 			fractionsToWidthsStrategy(fractions): string[] {
 				if (columnWidthType === 'none') {
-					return '';
+					return [];
 				}
 				if (columnWidthType === 'percentual') {
 					return fractions.map(
