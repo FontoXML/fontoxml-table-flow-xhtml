@@ -1,5 +1,5 @@
 import makeOrExpression from 'fontoxml-selectors/src/makeOrExpression';
-import xq from 'fontoxml-selectors/src/xq';
+import xq, { ensureXQExpression } from 'fontoxml-selectors/src/xq';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
 import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
 import createCreateRowStrategy from 'fontoxml-table-flow/src/createCreateRowStrategy';
@@ -97,20 +97,28 @@ class XhtmlTableDefinition extends TableDefinition {
 				: '';
 
 		const tablePartSelectors = {
-			table: xq`${xq(`self::Q{${namespaceURI}}table`)}[${
+			table: xq`${ensureXQExpression(`self::Q{${namespaceURI}}table`)}[${
 				options.table && options.table.tableFilterSelector
-					? xq(options.table.tableFilterSelector)
+					? ensureXQExpression(options.table.tableFilterSelector)
 					: xq`true()`
 			}]`,
-			headerContainer: xq(`self::Q{${namespaceURI}}thead`),
-			bodyContainer: xq(`self::Q{${namespaceURI}}tbody`),
-			footerContainer: xq(`self::Q{${namespaceURI}}tfoot`),
-			row: xq(`self::Q{${namespaceURI}}tr`),
-			cell: xq(`self::Q{${namespaceURI}}td`),
-			headerCell: xq(`self::Q{${namespaceURI}}th`),
-			columnSpecificationGroup: xq(`self::Q{${namespaceURI}}colgroup`),
-			columnSpecification: xq(`self::Q{${namespaceURI}}col`),
-			caption: xq(
+			headerContainer: ensureXQExpression(
+				`self::Q{${namespaceURI}}thead`
+			),
+			bodyContainer: ensureXQExpression(`self::Q{${namespaceURI}}tbody`),
+			footerContainer: ensureXQExpression(
+				`self::Q{${namespaceURI}}tfoot`
+			),
+			row: ensureXQExpression(`self::Q{${namespaceURI}}tr`),
+			cell: ensureXQExpression(`self::Q{${namespaceURI}}td`),
+			headerCell: ensureXQExpression(`self::Q{${namespaceURI}}th`),
+			columnSpecificationGroup: ensureXQExpression(
+				`self::Q{${namespaceURI}}colgroup`
+			),
+			columnSpecification: ensureXQExpression(
+				`self::Q{${namespaceURI}}col`
+			),
+			caption: ensureXQExpression(
 				`self::Q{${namespaceURI}}caption[parent::Q{${namespaceURI}}table]`
 			),
 		};
@@ -177,7 +185,7 @@ class XhtmlTableDefinition extends TableDefinition {
 			getColumnSpanForCellNodeXPathQuery: xq`let $colspan := ./@colspan return if ($colspan) then $colspan => number() else 1`,
 			cellStylingTranslationQuery:
 				options.cellStylingTranslationQuery &&
-				xq(options.cellStylingTranslationQuery),
+				ensureXQExpression(options.cellStylingTranslationQuery),
 
 			// Normalizations
 			normalizeContainerNodeStrategies: [

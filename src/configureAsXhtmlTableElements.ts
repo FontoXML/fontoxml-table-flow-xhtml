@@ -1,6 +1,6 @@
 import configureAsBlock from 'fontoxml-families/src/configureAsBlock';
 import type { SxModule } from 'fontoxml-modular-schema-experience/src/sxManager';
-import xq from 'fontoxml-selectors/src/xq';
+import { ensureXQExpression } from 'fontoxml-selectors/src/xq';
 import configureAsTableElements from 'fontoxml-table-flow/src/configureAsTableElements';
 import type { TableElementsSharedOptions } from 'fontoxml-table-flow/src/types';
 
@@ -121,7 +121,9 @@ export default function configureAsXhtmlTableElements(
 			: '';
 	configureAsBlock(
 		sxModule,
-		xq(`self::Q{${namespaceURI}}caption[parent::Q{${namespaceURI}}table]`),
+		ensureXQExpression(
+			`self::Q{${namespaceURI}}caption[parent::Q{${namespaceURI}}table]`
+		),
 		undefined,
 		{
 			priority,
