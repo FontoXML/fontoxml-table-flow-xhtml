@@ -350,4 +350,15 @@ export type TableElementsXhtmlOptions = {
 	 * @fontosdk
 	 */
 	cellStylingTranslationQuery?: CellStylingTranslationQuery;
+
+	/**
+	 * @remarks
+	 * Describes how columns widths should be serialized in the XML. Can
+	 * either be 'percentual' (making the sizes look like '25%'), 'relative' (which
+	 * makes them look like '2*') or 'none', which disables columns widhts
+	 * altogether.
+	 *
+	 * @fontosdk
+	 */
+	columnWidthType: 'percentual' | 'relative' | 'none';
 };
