@@ -45,7 +45,7 @@
 				}
 			},
 			{
-				"type": "transform/setCellNodeIdsToHighlightedCells"
+				"type": "transform/setCellNodeIdsToSelectedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-left"
@@ -98,7 +98,7 @@
 				}
 			},
 			{
-				"type": "transform/setCellNodeIdsToHighlightedCells"
+				"type": "transform/setCellNodeIdsToSelectedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-right"
@@ -151,7 +151,7 @@
 				}
 			},
 			{
-				"type": "transform/setCellNodeIdsToHighlightedCells"
+				"type": "transform/setCellNodeIdsToSelectedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-center"
@@ -204,7 +204,7 @@
 				}
 			},
 			{
-				"type": "transform/setCellNodeIdsToHighlightedCells"
+				"type": "transform/setCellNodeIdsToSelectedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-horizontal-alignment-justify"
@@ -291,7 +291,7 @@
 				}
 			},
 			{
-				"type": "transform/setCellNodeIdsToHighlightedCells"
+				"type": "transform/setCellNodeIdsToSelectedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-vertical-alignment-top"
@@ -343,7 +343,7 @@
 				}
 			},
 			{
-				"type": "transform/setCellNodeIdsToHighlightedCells"
+				"type": "transform/setCellNodeIdsToSelectedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-vertical-alignment-bottom"
@@ -395,7 +395,7 @@
 				}
 			},
 			{
-				"type": "transform/setCellNodeIdsToHighlightedCells"
+				"type": "transform/setCellNodeIdsToSelectedCells"
 			},
 			{
 				"type": "operation/contextual-xhtml-set-cell-vertical-alignment-center"
