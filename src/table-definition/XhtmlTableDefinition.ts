@@ -134,7 +134,14 @@ class XhtmlTableDefinition extends TableDefinition {
 		const col = tablePartSelectors.columnSpecification;
 		const colGroup = tablePartSelectors.columnSpecificationGroup;
 
-		const tableNodesSelector = `self::${col} or self::${colGroup} or self::${tr} or self::${thead} or self::${tbody} or self::${tfoot}`;
+		const tableNodesSelector = makeOrExpression([
+			col,
+			colGroup,
+			tr,
+			thead,
+			tbody,
+			tfoot,
+		]);
 
 		const properties: TableDefinitionProperties = {
 			tablePartSelectors,
