@@ -25,8 +25,12 @@ import {
 	createStringValueAsAttributeStrategy,
 } from 'fontoxml-table-flow/src/setAttributeStrategies';
 import TableDefinition from 'fontoxml-table-flow/src/TableDefinition';
-import type { TableDefinitionProperties } from 'fontoxml-table-flow/src/types';
-import type { XhtmlTableOptions } from 'fontoxml-typescript-migration-debt/src/types';
+import type {
+	TableDefinitionProperties,
+	TableElementsSharedOptions,
+} from 'fontoxml-table-flow/src/types';
+
+import type { TableElementsXhtmlOptions } from '../types';
 
 function parseWidth(width: string): number | null {
 	const widthPart = /^(\d+(?:\.\d+)?)[%*]$/.exec(width);
@@ -45,7 +49,9 @@ class XhtmlTableDefinition extends TableDefinition {
 	/**
 	 * @param options -
 	 */
-	public constructor(options: XhtmlTableOptions) {
+	public constructor(
+		options: TableElementsSharedOptions & TableElementsXhtmlOptions
+	) {
 		const useThead = !!options.useThead;
 		const useTbody = !!options.useTbody;
 		let useTh = !!options.useTh;
