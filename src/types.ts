@@ -360,5 +360,5 @@ export type TableElementsXhtmlOptions = {
 	 *
 	 * @fontosdk
 	 */
-	columnWidthType: 'percentual' | 'relative' | 'none';
+	columnWidthType?: 'none' | 'percentual' | 'relative';
 };

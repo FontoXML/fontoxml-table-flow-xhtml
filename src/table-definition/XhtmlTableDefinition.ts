@@ -381,7 +381,7 @@ class XhtmlTableDefinition extends TableDefinition {
 			},
 			normalizeColumnWidthsStrategy(columnWidths: string[]): string[] {
 				if (columnWidthType === 'none') {
-					return '';
+					return [];
 				}
 				if (!columnWidthType) {
 					return columnWidths.map((_) => '');
