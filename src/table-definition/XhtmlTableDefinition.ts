@@ -1,4 +1,3 @@
-import makeOrExpression from 'fontoxml-selectors/src/makeOrExpression';
 import xq, { ensureXQExpression } from 'fontoxml-selectors/src/xq';
 import createCreateCellNodeStrategy from 'fontoxml-table-flow/src/createCreateCellNodeStrategy';
 import createCreateColumnSpecificationNodeStrategy from 'fontoxml-table-flow/src/createCreateColumnSpecificationNodeStrategy';
@@ -140,14 +139,7 @@ class XhtmlTableDefinition extends TableDefinition {
 		const col = tablePartSelectors.columnSpecification;
 		const colGroup = tablePartSelectors.columnSpecificationGroup;
 
-		const tableNodesSelector = makeOrExpression([
-			col,
-			colGroup,
-			tr,
-			thead,
-			tbody,
-			tfoot,
-		]);
+		const tableNodesSelector = xq`${col} or ${colGroup} or ${tr} or ${thead} or ${tbody} or ${tfoot}`;
 
 		const properties: TableDefinitionProperties = {
 			tablePartSelectors,
@@ -159,11 +151,7 @@ class XhtmlTableDefinition extends TableDefinition {
 			supportsRowSpanningCellsAtBottom: true,
 
 			// Defining node selectors
-			tablePartsNodeSelector: makeOrExpression(
-				Object.keys(tablePartSelectors)
-					.filter((selector) => selector !== 'caption')
-					.map((key) => tablePartSelectors[key])
-			),
+			tablePartsNodeSelector: xq`${table} or ${thead} or ${tbody} or ${tfoot} or ${tr} or ${td} or ${th} or ${colGroup} or ${col}`,
 			// Header row node selector
 			headerRowNodeSelector: xq`${tr}[parent::*[${thead}] or not(child::*[${td}])]`,
 
