@@ -34,7 +34,15 @@ export type TableElementsXhtmlOptions = {
 	useTbody?: boolean;
 	/**
 	 * @remarks
+	 *
 	 * Set to false if the borders attribute should not be used.
+	 *
+	 * This sets whether the `borders` attribute should be read from and written to. The available
+	 * values for the `borders` attribute are `1`, which shows the borders of the table, and `0`,
+	 * which hides them.
+	 *
+	 * This is `true` by default, meaning the `borders` attribute will be read from. If it is set to
+	 * `false`, all the borders will be rendered but they will not be editable.
 	 *
 	 * @fontosdk
 	 */
