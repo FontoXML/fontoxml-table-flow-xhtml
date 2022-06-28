@@ -1,4 +1,5 @@
 import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint';
+import type { DocumentedXPathFunction } from 'fontoxml-documentation-helpers/src/types';
 import documentsManager from 'fontoxml-documents/src/documentsManager';
 import type { NodeId } from 'fontoxml-dom-identification/src/types';
 import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
@@ -9,7 +10,7 @@ import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolea
 import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction';
 import type { XQDynamicContext } from 'fontoxml-selectors/src/types';
 import xq from 'fontoxml-selectors/src/xq';
-import tableDefinitionManager from 'fontoxml-table-flow/src/tableDefinitionManager';
+import isTableNodeInstanceOfTableDefinition from 'fontoxml-table-flow/src/isTableNodeInstanceOfTableDefinition';
 
 import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
 
@@ -112,30 +113,39 @@ export default function install(): void {
 	 * Returns whether the given node is an xhtml table node. If null or nothing is
 	 * passed, the function will return false.
 	 *
-	 * @param node -
+	 * @fontosdk
+	 *
+	 * @param node - The node to check
 	 *
 	 * @returns Whether the passed node is an xhtml table.
 	 */
-	registerCustomXPathFunction(
-		{ namespaceURI: FONTO_FUNCTIONS, localName: 'is-xhtml-table' },
+	const isXhtmlTableXPathFunction: DocumentedXPathFunction<
+		{
+			namespaceURI: typeof FONTO_FUNCTIONS;
+			localName: 'is-xhtml-table';
+		},
+		['node()?'],
+		'xs:boolean'
+	> = [
+		{
+			namespaceURI: FONTO_FUNCTIONS,
+			localName: 'is-xhtml-table',
+		},
 		['node()?'],
 		'xs:boolean',
-		(dynamicContext: XQDynamicContext, node: FontoNode<'readable'>) => {
-			if (!node) {
-				return false;
-			}
-
-			const tableDefinition =
-				tableDefinitionManager.getTableDefinitionForNode(
+		function (
+			dynamicContext: XQDynamicContext,
+			node: FontoNode<'readable'>
+		): boolean {
+			return (
+				node &&
+				isTableNodeInstanceOfTableDefinition(
+					dynamicContext.domFacade,
 					node,
-					dynamicContext.domFacade
-				);
-
-			return !!(
-				tableDefinition &&
-				tableDefinition instanceof XhtmlTableDefinition &&
-				tableDefinition.isTable(node, dynamicContext.domFacade)
+					XhtmlTableDefinition
+				)
 			);
-		}
-	);
+		},
+	];
+	registerCustomXPathFunction(...isXhtmlTableXPathFunction);
 }
