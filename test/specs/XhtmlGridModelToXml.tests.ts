@@ -178,6 +178,73 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 		});
 
+		it('can delete multiple rows when we have a row with merged cells', () => {
+			documentNode = new slimdom.Document();
+			coreDocument = new CoreDocument(documentNode);
+			blueprint = new Blueprint(coreDocument.dom);
+			const jsonIn = [
+				'table',
+				{ border: '1' },
+				[
+					'thead',
+					['tr', ['th', { rowspan: '2' }, '0x0'], ['th', '0x1']],
+					['tr', ['th', '1x1']],
+				],
+				['tr', ['td', '2x0'], ['td', '2x1']],
+				['tr', ['td', '3x0'], ['td', '3x1']],
+				['tr', ['td', '4x0'], ['td', '4x1']],
+			];
+
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(jsonIn, documentNode)
+			);
+			tableNode = documentNode.firstChild;
+			const tableDefinition = new XhtmlTableDefinition({
+				useThead: true,
+				useTh: true,
+			});
+			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), jsonIn);
+
+			const tableGridModel = tableDefinition.buildTableGridModel(
+				tableNode,
+				blueprint
+			);
+
+			tableGridModel.deleteRow(4);
+			tableGridModel.deleteRow(3);
+
+			const jsonOut = [
+				'table',
+				{ border: '1' },
+				[
+					'thead',
+					['tr', ['th', { rowspan: '2' }, '0x0'], ['th', '0x1']],
+					['tr', ['th', '1x1']],
+				],
+				['tr', ['td', '2x0'], ['td', '2x1']],
+			];
+
+			// to be sure that deleteRow function did not apply changes to the dom.
+			chai.assert.notDeepEqual(
+				jsonMLMapper.serialize(tableNode),
+				jsonOut
+			);
+
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(
+					tableGridModel,
+					tableNode,
+					blueprint,
+					stubFormat
+				)
+			);
+
+			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
+
+			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), jsonOut);
+		});
+
 		it('can insert a row of a table with header column but row containers', () => {
 			documentNode = new slimdom.Document();
 			coreDocument = new CoreDocument(documentNode);
