@@ -405,9 +405,6 @@ class XhtmlTableDefinition extends TableDefinition {
 				);
 			},
 
-			// Deprecated
-			columnWidgetMenuOperations: options.columnWidgetMenuOperations,
-			rowWidgetMenuOperations: options.rowWidgetMenuOperations,
 			// Widget menu operations
 			columnsWidgetMenuOperations:
 				options.columnsWidgetMenuOperations || [
