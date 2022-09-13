@@ -381,7 +381,9 @@ class XhtmlTableDefinition extends TableDefinition {
 					return relativeWidths;
 				}
 				const ratios = columnWidths.map((percentage) =>
-					parseFloat(percentage)
+					percentage
+						? parseFloat(percentage)
+						: 100 / columnWidths.length
 				);
 				const total = ratios.reduce(
 					(total: number, columnWidth) => total + columnWidth,
