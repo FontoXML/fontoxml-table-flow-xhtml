@@ -7,14 +7,14 @@ import XhtmlTableDefinition from '../table-definition/XhtmlTableDefinition';
 
 /**
  * @remarks
- * Returns whether the given node is an xhtml table node. If null or nothing is
- * passed, the function will return false.
+ * Returns true for any xhtml table element and false for any other node or
+ * empty sequence.
  *
  * @fontosdk
  *
  * @param node - The node to check
  *
- * @returns Whether the passed node is an xhtml table.
+ * @returns True for any XHTML table element, false otherwise.
  */
 const fn: DocumentedXPathFunction<
 	{
