@@ -1,20 +1,13 @@
 import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint';
-import type { DocumentedXPathFunction } from 'fontoxml-documentation-helpers/src/types';
 import documentsManager from 'fontoxml-documents/src/documentsManager';
 import type { NodeId } from 'fontoxml-dom-identification/src/types';
-import namespaceManager from 'fontoxml-dom-namespaces/src/namespaceManager';
-import type { FontoNode } from 'fontoxml-dom-utils/src/types';
 import addTransform from 'fontoxml-operations/src/addTransform';
 import operationsManager from 'fontoxml-operations/src/operationsManager';
 import evaluateXPathToBoolean from 'fontoxml-selectors/src/evaluateXPathToBoolean';
 import registerCustomXPathFunction from 'fontoxml-selectors/src/registerCustomXPathFunction';
-import type { XQDynamicContext } from 'fontoxml-selectors/src/types';
 import xq from 'fontoxml-selectors/src/xq';
-import isTableNodeInstanceOfTableDefinition from 'fontoxml-table-flow/src/isTableNodeInstanceOfTableDefinition';
 
-import XhtmlTableDefinition from './table-definition/XhtmlTableDefinition';
-
-const FONTO_FUNCTIONS = namespaceManager.getNamespaceUri(null, 'fonto');
+import isXhtmlTable from './custom-xpath-functions/isXhtmlTable';
 
 export default function install(): void {
 	operationsManager.addAlternativeOperation(
@@ -108,44 +101,5 @@ export default function install(): void {
 		}
 	);
 
-	/**
-	 * @remarks
-	 * Returns whether the given node is an xhtml table node. If null or nothing is
-	 * passed, the function will return false.
-	 *
-	 * @fontosdk
-	 *
-	 * @param node - The node to check
-	 *
-	 * @returns Whether the passed node is an xhtml table.
-	 */
-	const isXhtmlTableXPathFunction: DocumentedXPathFunction<
-		{
-			namespaceURI: typeof FONTO_FUNCTIONS;
-			localName: 'is-xhtml-table';
-		},
-		['node()?'],
-		'xs:boolean'
-	> = [
-		{
-			namespaceURI: FONTO_FUNCTIONS,
-			localName: 'is-xhtml-table',
-		},
-		['node()?'],
-		'xs:boolean',
-		function (
-			dynamicContext: XQDynamicContext,
-			node: FontoNode<'readable'>
-		): boolean {
-			return (
-				node &&
-				isTableNodeInstanceOfTableDefinition(
-					dynamicContext.domFacade,
-					node,
-					XhtmlTableDefinition
-				)
-			);
-		},
-	];
-	registerCustomXPathFunction(...isXhtmlTableXPathFunction);
+	registerCustomXPathFunction(...isXhtmlTable);
 }
