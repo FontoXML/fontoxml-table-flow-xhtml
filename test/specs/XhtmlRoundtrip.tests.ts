@@ -1034,7 +1034,8 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 			});
 		});
 
-		describe('thead, tbody and tfoot based', () => {
+		// Skip the tfoot tests until we have full footer row node support
+		describe.skip('thead, tbody and tfoot based', () => {
 			it('can handle a 4x4 table (thead, tbody, tfoot), increasing the header row count by 1', () => {
 				const jsonIn = [
 					'table',
@@ -3240,7 +3241,8 @@ describe('XHTML tables: XML to XML roundtrip', () => {
 	});
 
 	describe('Tables not conforming to settings (useThead, useTbody, useTh, useBorders, shouldCreateColumnSpecificationNodes)', () => {
-		it('can transform a table based on thead, tbody, tfoot with 1 header row to a table based on rows only', () => {
+		// Skip the tfoot tests until we have full footer row node support
+		it.skip('can transform a table based on thead, tbody, tfoot with 1 header row to a table based on rows only', () => {
 			const jsonIn = [
 				'table',
 				['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
