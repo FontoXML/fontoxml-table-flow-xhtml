@@ -2,6 +2,15 @@
 	"_xhtml-set-column-align": {
 		"steps": [
 			{
+				"type": "transform/log-deprecation-warning",
+				"data": {
+					"featureName": "XHTML table column alignment operations",
+					"link": "https://documentation.fontoxml.com/latest/upcoming-removals-8-6-ea48bfbfc233",
+					"removalRelease": "8.6.0",
+					"message?": "XHTML table column alignment operations are deprecated, because they have no effect on visualization. If you still need these operations, please check the upgrade instructions to know what to do."
+				}
+			},
+			{
 				"type": "transform/setContextNodeIdToSelectionAncestor",
 				"data": {
 					"selectionAncestorMatchesSomeOf": ["self::td", "self::th"]

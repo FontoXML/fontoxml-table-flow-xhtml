@@ -288,16 +288,7 @@ class XhtmlTableDefinition extends TableDefinition {
 				),
 			],
 
-			getColumnSpecificationStrategies: [
-				createGetValueAsStringStrategy(
-					'horizontalAlignment',
-					'./@align'
-				),
-				createGetValueAsStringStrategy(
-					'verticalAlignment',
-					'./@valign'
-				),
-			],
+			getColumnSpecificationStrategies: [],
 			setColumnSpecificationNodeAttributeStrategies: [],
 
 			// Widths
