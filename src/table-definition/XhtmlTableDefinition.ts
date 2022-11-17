@@ -292,7 +292,7 @@ class XhtmlTableDefinition extends TableDefinition {
 			setColumnSpecificationNodeAttributeStrategies: [],
 
 			// Widths
-			widthToHtmlWidthStrategy(width, widths) {
+			widthToHtmlWidthStrategy(width: string, widths: string[]) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -306,7 +306,7 @@ class XhtmlTableDefinition extends TableDefinition {
 
 				return `${(100 * proportion) / totalProportion}%`;
 			},
-			addWidthsStrategy(width1, width2) {
+			addWidthsStrategy(width1: string, width2: string) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -325,7 +325,7 @@ class XhtmlTableDefinition extends TableDefinition {
 					  }`
 					: '';
 			},
-			divideByTwoStrategy(width) {
+			divideByTwoStrategy(width: string) {
 				if (columnWidthType === 'none') {
 					return '';
 				}
@@ -367,7 +367,7 @@ class XhtmlTableDefinition extends TableDefinition {
 				}
 				if (columnWidthType === 'relative') {
 					const relativeWidths = columnWidths.map(
-						(relative) => `${parseFloat(relative)}*`
+						(relative) => `${relative ? parseFloat(relative) : 1}*`
 					);
 					return relativeWidths;
 				}
@@ -384,7 +384,7 @@ class XhtmlTableDefinition extends TableDefinition {
 					(ratio) => `${((ratio / total) * 100).toFixed(4)}%`
 				);
 			},
-			fractionsToWidthsStrategy(fractions): string[] {
+			fractionsToWidthsStrategy(fractions: number[]): string[] {
 				if (columnWidthType === 'none') {
 					return [];
 				}

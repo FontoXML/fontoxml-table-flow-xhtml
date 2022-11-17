@@ -1,68 +1,66 @@
-import * as slimdom from 'slimdom';
-
-import Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import CoreDocument from 'fontoxml-core/src/Document';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
-import indicesManager from 'fontoxml-indices/src/indicesManager';
+import type { FontoElementNode } from 'fontoxml-dom-utils/src/types';
+import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
+import normalizeColumnWidths from 'fontoxml-table-flow/src/utils/normalizeColumnWidths';
 import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition';
-
-const stubFormat = {
-	synthesizer: {
-		completeStructure: () => true,
-	},
-	metadata: {
-		get: (_option, _node) => false,
-	},
-	validator: {
-		canContain: () => true,
-	},
-};
+import { assertDocumentAsJsonMl } from 'fontoxml-unit-test-utils/src/unitTestAssertionHelpers';
+import UnitTestEnvironment from 'fontoxml-unit-test-utils/src/UnitTestEnvironment';
+import {
+	findFirstNodeInDocument,
+	runWithBlueprint,
+} from 'fontoxml-unit-test-utils/src/unitTestSetupHelpers';
 
 describe('XHTML tables: Column Width', () => {
-	let documentNode;
-	let coreDocument;
-	let blueprint;
+	let environment: UnitTestEnvironment;
 
 	beforeEach(() => {
-		documentNode = new slimdom.Document();
-		coreDocument = new CoreDocument(documentNode);
+		environment = new UnitTestEnvironment();
 
-		blueprint = new Blueprint(coreDocument.dom);
+		environment.synthesizer.setCompleteStructureImplementation(() => true);
+
+		environment.validator.setCanContainImplementation(() => true);
+		environment.validator.setValidateDownImplementation(() => []);
+	});
+
+	afterEach(() => {
+		environment.destroy();
 	});
 
 	function transformTable(
 		jsonIn,
 		jsonOut,
 		options = {},
-		mutateGridModel = () => {}
+		mutateGridModel = (_: TableGridModel) => {
+			/* no-op */
+		}
 	) {
-		coreDocument.dom.mutate(() => jsonMLMapper.parse(jsonIn, documentNode));
-
+		const documentId = environment.createDocumentFromJsonMl(jsonIn);
 		const tableDefinition = new XhtmlTableDefinition(options);
-		const tableNode = documentNode.firstChild;
-		const gridModel = tableDefinition.buildTableGridModel(
-			tableNode,
-			blueprint
-		);
-		chai.assert.isUndefined(gridModel.error);
 
-		mutateGridModel(gridModel);
+		runWithBlueprint((blueprint, _blueprintSelection, format) => {
+			const tableNode = findFirstNodeInDocument(
+				documentId,
+				'descendant::table[1]',
+				blueprint
+			) as FontoElementNode;
 
-		const success = tableDefinition.applyToDom(
-			gridModel,
-			tableNode,
-			blueprint,
-			stubFormat
-		);
-		chai.assert.isTrue(success);
+			const gridModel = tableDefinition.buildTableGridModel(
+				tableNode,
+				blueprint
+			);
+			chai.assert.isFalse('error' in gridModel);
 
-		blueprint.realize();
-		// The changes will be set to merge with the base index, this needs to be commited.
-		indicesManager.getIndexSet().commitMerge();
-		chai.assert.deepEqual(
-			jsonMLMapper.serialize(documentNode.firstChild),
-			jsonOut
-		);
+			mutateGridModel(gridModel as TableGridModel);
+
+			const success = tableDefinition.applyToDom(
+				gridModel as TableGridModel,
+				tableNode,
+				blueprint,
+				format
+			);
+			chai.assert.isTrue(success);
+		});
+
+		assertDocumentAsJsonMl(documentId, jsonOut);
 	}
 
 	it('can handle a 4x4 table based, adding 1 column before index 0 with percentual column type', () => {
@@ -141,6 +139,53 @@ describe('XHTML tables: Column Width', () => {
 				['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
 				['tr', ['td'], ['td'], ['td'], ['td'], ['td']],
+			],
+		];
+
+		const options = {
+			shouldCreateColumnSpecificationNodes: true,
+			columnWidthType: 'relative',
+			useThead: true,
+			useTbody: true,
+			useTh: false,
+		};
+
+		transformTable(jsonIn, jsonOut, options, mutateGridModel);
+	});
+
+	it('can normalize columns after deleting a column', () => {
+		const jsonIn = [
+			'table',
+			['col'],
+			['col'],
+			['col'],
+			['col'],
+			[
+				'tbody',
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+			],
+		];
+
+		const mutateGridModel = (gridModel: TableGridModel) => {
+			gridModel.deleteColumn(0);
+
+			normalizeColumnWidths(gridModel);
+		};
+
+		const jsonOut = [
+			'table',
+			['col', { width: '1*' }],
+			['col', { width: '1*' }],
+			['col', { width: '1*' }],
+			[
+				'tbody',
+				['tr', ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td']],
 			],
 		];
 
