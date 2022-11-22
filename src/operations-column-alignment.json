@@ -31,6 +31,11 @@
 	"xhtml-set-col-horizontal-alignment-left": {
 		"__documentation": {
 			"fontosdk": true,
+			"deprecated": [
+				"This operation is deprecated as of 8.3.0 and will be removed in 8.6.0,",
+				"because they have no effect on visualization. If you still need these",
+				"operations, please check the upgrade instructions to know what to do."
+			],
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align left",
@@ -48,6 +53,11 @@
 	"xhtml-set-col-horizontal-alignment-center": {
 		"__documentation": {
 			"fontosdk": true,
+			"deprecated": [
+				"This operation is deprecated as of 8.3.0 and will be removed in 8.6.0,",
+				"because they have no effect on visualization. If you still need these",
+				"operations, please check the upgrade instructions to know what to do."
+			],
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align center",
@@ -65,6 +75,11 @@
 	"xhtml-set-col-horizontal-alignment-right": {
 		"__documentation": {
 			"fontosdk": true,
+			"deprecated": [
+				"This operation is deprecated as of 8.3.0 and will be removed in 8.6.0,",
+				"because they have no effect on visualization. If you still need these",
+				"operations, please check the upgrade instructions to know what to do."
+			],
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Align right",
@@ -82,6 +97,11 @@
 	"xhtml-set-col-horizontal-alignment-justify": {
 		"__documentation": {
 			"fontosdk": true,
+			"deprecated": [
+				"This operation is deprecated as of 8.3.0 and will be removed in 8.6.0,",
+				"because they have no effect on visualization. If you still need these",
+				"operations, please check the upgrade instructions to know what to do."
+			],
 			"category": "add-on/fontoxml-table-flow-xhtml"
 		},
 		"label": "t__Justify",
