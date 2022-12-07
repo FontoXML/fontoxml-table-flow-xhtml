@@ -82,7 +82,7 @@ import type { TableElementsXhtmlOptions } from './types';
  * ```
  *
  * The cell element menu button widgets are added based on the existence of
- * contextual operations on cell level. Make sure that only cell-specific
+ * {@link ContextualOperation | contextual operations} on cell level. Make sure that only cell-specific
  * operations are added to the cell widget, so that users are only given options
  * relevant to them. Check {@link
  * fonto-documentation/docs/configure/elements/configure-tables.xml#id-d8cde415-f9e0-ba0c-14a5-cdb5f92d647d
