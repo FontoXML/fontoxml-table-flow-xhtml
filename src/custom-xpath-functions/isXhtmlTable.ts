@@ -18,7 +18,13 @@ import XhtmlTableDefinition from '../table-definition/XhtmlTableDefinition';
  */
 const fn: DocumentedXPathFunction<
 	{
+		/**
+		 * @fontosdk
+		 */
 		namespaceURI: 'http://www.fontoxml.com/functions';
+		/**
+		 * @fontosdk
+		 */
 		localName: 'is-xhtml-table';
 	},
 	['node()?'],
