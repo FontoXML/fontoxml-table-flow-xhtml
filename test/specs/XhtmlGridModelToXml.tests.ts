@@ -167,6 +167,139 @@ describe('XHTML tables: Grid model to XML', () => {
 			);
 		});
 
+		it('can delete a colgroup after removing a row', () => {
+			documentNode = new slimdom.Document();
+			coreDocument = new CoreDocument(documentNode);
+			blueprint = new Blueprint(coreDocument.dom);
+			const jsonIn = [
+				'table',
+				{ border: '1' },
+				[
+					'colgroup',
+					['col', { width: '1*' }],
+					['col', { width: '1*' }],
+					['col', { width: '1*' }],
+				],
+				['tr', ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td']],
+			];
+
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(jsonIn, documentNode)
+			);
+			tableNode = documentNode.firstChild;
+			tableDefinition = new XhtmlTableDefinition({
+				useTh: true,
+				shouldCreateColumnSpecificationNodes: true,
+			});
+
+			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), jsonIn);
+
+			const tableGridModel = tableDefinition.buildTableGridModel(
+				tableNode,
+				blueprint
+			);
+
+			tableGridModel.deleteRow(0);
+
+			const serializedTable2 = [
+				'table',
+				{ border: '1' },
+				['col', { width: '1*' }],
+				['col', { width: '1*' }],
+				['col', { width: '1*' }],
+				['tr', ['td'], ['td'], ['td']],
+			];
+
+			// to be sure that deleteRow function did not apply changes to the dom.
+			chai.assert.notDeepEqual(
+				jsonMLMapper.serialize(tableNode),
+				serializedTable2
+			);
+
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(
+					tableGridModel,
+					tableNode,
+					blueprint,
+					stubFormat
+				)
+			);
+
+			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
+
+			chai.assert.deepEqual(
+				jsonMLMapper.serialize(tableNode),
+				serializedTable2
+			);
+		});
+
+		it('can delete a colgroup after removing a column', () => {
+			documentNode = new slimdom.Document();
+			coreDocument = new CoreDocument(documentNode);
+			blueprint = new Blueprint(coreDocument.dom);
+			const jsonIn = [
+				'table',
+				{ border: '1' },
+				[
+					'colgroup',
+					['col', { width: '1*' }],
+					['col', { width: '1*' }],
+					['col', { width: '1*' }],
+				],
+				['tr', ['td'], ['td'], ['td']],
+			];
+
+			coreDocument.dom.mutate(() =>
+				jsonMLMapper.parse(jsonIn, documentNode)
+			);
+			tableNode = documentNode.firstChild;
+			tableDefinition = new XhtmlTableDefinition({
+				shouldCreateColumnSpecificationNodes: true,
+			});
+
+			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), jsonIn);
+
+			const tableGridModel = tableDefinition.buildTableGridModel(
+				tableNode,
+				blueprint
+			);
+
+			tableGridModel.deleteColumn(0);
+
+			const serializedTable2 = [
+				'table',
+				{ border: '1' },
+				['col', { width: '1*' }],
+				['col', { width: '1*' }],
+				['tr', ['td'], ['td']],
+			];
+
+			// to be sure that deleteRow function did not apply changes to the dom.
+			chai.assert.notDeepEqual(
+				jsonMLMapper.serialize(tableNode),
+				serializedTable2
+			);
+
+			chai.assert.isTrue(
+				tableDefinition.applyToDom(
+					tableGridModel,
+					tableNode,
+					blueprint,
+					stubFormat
+				)
+			);
+
+			blueprint.realize();
+			indicesManager.getIndexSet().commitMerge();
+
+			chai.assert.deepEqual(
+				jsonMLMapper.serialize(tableNode),
+				serializedTable2
+			);
+		});
+
 		it('can delete multiple rows when we have a row with merged cells', () => {
 			runEditTableTest(
 				[

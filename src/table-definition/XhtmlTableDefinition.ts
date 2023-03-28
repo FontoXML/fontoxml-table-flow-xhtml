@@ -29,6 +29,7 @@ import type {
 	TableElementsSharedOptions,
 } from 'fontoxml-table-flow/src/types';
 
+import { createRemoveColgroupNodeStrategy } from '../normalizeColumnSpecificationStrategies';
 import type { TableElementsXhtmlOptions } from '../types';
 
 function parseWidth(width: string): number | null {
@@ -169,7 +170,7 @@ class XhtmlTableDefinition extends TableDefinition {
 			findBodyContainerNodesXPathQuery: xq`child::*[${tbody}]`,
 			findFooterContainerNodesXPathQuery: xq`child::*[${tfoot}]`,
 
-			findColumnSpecificationNodesXPathQuery: xq`child::*[${col}]`,
+			findColumnSpecificationNodesXPathQuery: xq`child::*[${col}] | child::*[${colGroup}]/child::*[${col}]`,
 
 			findCellNodesXPathQuery: xq`child::*[${td} or ${th}]`,
 
@@ -200,6 +201,13 @@ class XhtmlTableDefinition extends TableDefinition {
 					? createAddBodyContainerNodeStrategy(namespaceURI, 'tbody')
 					: createRemoveBodyContainerNodeStrategy(),
 				createRemoveFooterContainerNodeStrategy(),
+				shouldCreateColumnSpecificationNodes
+					? createRemoveColgroupNodeStrategy(
+							tablePartSelectors.columnSpecificationGroup
+					  )
+					: () => {
+							/* no-op*/
+					  },
 			],
 
 			normalizeCellNodeStrategies: [
