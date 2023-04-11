@@ -1,28 +1,29 @@
-import * as slimdom from 'slimdom';
-
 import readOnlyBlueprint from 'fontoxml-blueprints/src/readOnlyBlueprint';
+import type { FontoNode } from 'fontoxml-dom-utils/src/types';
+import xq from 'fontoxml-selectors/src/xq';
 import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition';
+import UnitTestEnvironment from 'fontoxml-unit-test-utils/src/UnitTestEnvironment';
+import { findFirstNodeInDocument } from 'fontoxml-unit-test-utils/src/unitTestSetupHelpers';
 
 describe('XhtmlTableDefinition', () => {
-	let documentNode;
-	let tableNode;
-	let rowNode;
-	let cellNode;
-	let tableDefinition;
-
+	let environment: UnitTestEnvironment;
+	let tableNode: FontoNode;
+	let rowNode: FontoNode;
+	let cellNode: FontoNode;
+	let tableDefinition: XhtmlTableDefinition;
 	beforeEach(() => {
-		documentNode = new slimdom.Document();
-		tableNode = documentNode.createElement('table');
-		documentNode.appendChild(tableNode);
-		rowNode = documentNode.createElement('tr');
-		tableNode.appendChild(rowNode);
-		cellNode = documentNode.createElement('td');
-		rowNode.appendChild(cellNode);
+		environment = new UnitTestEnvironment();
+		const documentId = environment.createDocumentFromJsonMl([
+			'table',
+			['tr', ['td']],
+		]);
+		tableNode = findFirstNodeInDocument(documentId, xq`/table`);
+		rowNode = findFirstNodeInDocument(documentId, xq`/table/tr`);
+		cellNode = findFirstNodeInDocument(documentId, xq`/table/tr/td`);
 		tableDefinition = new XhtmlTableDefinition({});
 	});
-
-	describe('XhtmlTableDefinition()', () => {
-		it('can be initialized', () => {});
+	afterEach(() => {
+		environment.destroy();
 	});
 
 	describe('isTable()', () => {

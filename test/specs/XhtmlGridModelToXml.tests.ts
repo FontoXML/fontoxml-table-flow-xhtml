@@ -1,445 +1,295 @@
-import * as slimdom from 'slimdom';
-
-import Blueprint from 'fontoxml-blueprints/src/Blueprint';
-import CoreDocument from 'fontoxml-core/src/Document';
-import jsonMLMapper from 'fontoxml-dom-utils/src/jsonMLMapper';
-import indicesManager from 'fontoxml-indices/src/indicesManager';
+import type Blueprint from 'fontoxml-blueprints/src/Blueprint';
+import blueprintQuery from 'fontoxml-blueprints/src/blueprintQuery';
+import type BlueprintSelection from 'fontoxml-blueprints/src/BlueprintSelection';
+import type { DocumentId } from 'fontoxml-documents/src/types';
+import type {
+	FontoDocumentNode,
+	FontoElementNode,
+	JsonMl,
+} from 'fontoxml-dom-utils/src/types';
+import xq from 'fontoxml-selectors/src/xq';
+import { isTableGridModel } from 'fontoxml-table-flow/src/indexedTableGridModels';
+import type TableCell from 'fontoxml-table-flow/src/TableGridModel/TableCell';
+import type TableGridModel from 'fontoxml-table-flow/src/TableGridModel/TableGridModel';
+import type { TableElementsSharedOptions } from 'fontoxml-table-flow/src/types';
 import XhtmlTableDefinition from 'fontoxml-table-flow-xhtml/src/table-definition/XhtmlTableDefinition';
-
-const stubFormat = {
-	synthesizer: {
-		completeStructure: () => true,
-	},
-	metadata: {
-		get: (_option, _node) => false,
-	},
-	validator: {
-		canContain: () => true,
-		validateDown: () => [],
-	},
-};
+import type { TableElementsXhtmlOptions } from 'fontoxml-table-flow-xhtml/src/types';
+import {
+	assertDocumentAsJsonMl,
+	assertSelectionInDocument,
+} from 'fontoxml-unit-test-utils/src/unitTestAssertionHelpers';
+import UnitTestEnvironment from 'fontoxml-unit-test-utils/src/UnitTestEnvironment';
+import {
+	findFirstNodeInDocument,
+	runWithBlueprint,
+} from 'fontoxml-unit-test-utils/src/unitTestSetupHelpers';
 
 describe('XHTML tables: Grid model to XML', () => {
-	let blueprint;
-	let coreDocument;
-	let createTable;
-	let documentNode;
-	let tableDefinition;
-	let tableNode;
-
+	let environment: UnitTestEnvironment;
 	beforeEach(() => {
-		documentNode = new slimdom.Document();
-		coreDocument = new CoreDocument(documentNode);
-		blueprint = new Blueprint(coreDocument.dom);
-
-		tableNode = documentNode.createElement('table');
-
-		tableDefinition = new XhtmlTableDefinition({});
-		createTable = tableDefinition.getTableGridModelBuilder();
-
-		coreDocument.dom.mutate(() => {
-			documentNode.appendChild(tableNode);
-		});
+		environment = new UnitTestEnvironment();
+	});
+	afterEach(() => {
+		environment.destroy();
 	});
 
-	describe('Basics', () => {
-		it('can serialize a 1x1 table', () => {
-			const tableGridModel = createTable(1, 1, true, documentNode);
+	function runCreateTableTest(
+		numberOfRows: number,
+		numberOfColumns: number,
+		hasHeader: boolean,
+		options: TableElementsSharedOptions & TableElementsXhtmlOptions,
+		expected: JsonMl
+	): void {
+		const documentId = environment.createDocumentFromXml('<table/>');
+		const documentNode = findFirstNodeInDocument(
+			documentId,
+			xq`self::node()`
+		) as FontoDocumentNode;
+		const tableDefinition = new XhtmlTableDefinition(options);
+		const tableNode = findFirstNodeInDocument(
+			documentId,
+			xq`/table`
+		) as FontoElementNode;
+		runWithBlueprint((blueprint, _, format) => {
+			const tableGridModel = tableDefinition.getTableGridModelBuilder()(
+				numberOfRows,
+				numberOfColumns,
+				hasHeader,
+				documentNode
+			);
 			chai.assert.isTrue(
 				tableDefinition.applyToDom(
 					tableGridModel,
 					tableNode,
 					blueprint,
-					stubFormat
+					format
 				)
 			);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
-				['table', { border: '1' }, ['tr', ['td']]]
-			);
 		});
+		assertDocumentAsJsonMl(documentId, expected);
+	}
 
-		it('can serialize a 4x4 table', () => {
-			const tableGridModel = createTable(4, 4, false, documentNode);
-			chai.assert.isTrue(
-				tableDefinition.applyToDom(
-					tableGridModel,
-					tableNode,
-					blueprint,
-					stubFormat
-				)
-			);
+	function runEditTableTest(
+		jsonIn: JsonMl,
+		options: TableElementsSharedOptions & TableElementsXhtmlOptions,
+		mutate: (
+			tableGridModel: TableGridModel,
+			blueprintSelection: BlueprintSelection,
+			blueprint: Blueprint
+		) => void,
+		expected: JsonMl
+	): DocumentId {
+		const documentId = environment.createDocumentFromJsonMl(jsonIn);
+		const tableDefinition = new XhtmlTableDefinition(options);
 
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
-				[
-					'table',
-					{ border: '1' },
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-				]
-			);
-		});
+		const tableNode = findFirstNodeInDocument(
+			documentId,
+			xq`//table`
+		) as FontoElementNode;
 
-		it('can serialize a 4x4 table with tbody', () => {
-			const tableGridModel = createTable(4, 4, false, documentNode);
-			const tableDefinition = new XhtmlTableDefinition({
-				useTbody: true,
-			});
-			chai.assert.isTrue(
-				tableDefinition.applyToDom(
-					tableGridModel,
-					tableNode,
-					blueprint,
-					stubFormat
-				)
-			);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
-				[
-					'table',
-					{ border: '1' },
-					[
-						'tbody',
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-						['tr', ['td'], ['td'], ['td'], ['td']],
-					],
-				]
-			);
-		});
-
-		it('can delete a row of a table without row containers', () => {
-			documentNode = new slimdom.Document();
-			coreDocument = new CoreDocument(documentNode);
-			blueprint = new Blueprint(coreDocument.dom);
-			const jsonIn = [
-				'table',
-				{ border: '1' },
-				['tr', ['th'], ['th'], ['th']],
-				['tr', ['th'], ['td'], ['td']],
-				['tr', ['th'], ['td'], ['td']],
-			];
-
-			coreDocument.dom.mutate(() =>
-				jsonMLMapper.parse(jsonIn, documentNode)
-			);
-			tableNode = documentNode.firstChild;
-			tableDefinition = new XhtmlTableDefinition({ useTh: true });
-
-			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), jsonIn);
-
+		runWithBlueprint((blueprint, blueprintSelection, format) => {
 			const tableGridModel = tableDefinition.buildTableGridModel(
 				tableNode,
 				blueprint
 			);
-
-			tableGridModel.deleteRow(0);
-
-			const serializedTable2 = [
-				'table',
-				{ border: '1' },
-				['tr', ['th'], ['td'], ['td']],
-				['tr', ['th'], ['td'], ['td']],
-			];
-
-			// to be sure that deleteRow function did not apply changes to the dom.
-			chai.assert.notDeepEqual(
-				jsonMLMapper.serialize(tableNode),
-				serializedTable2
-			);
+			if (!isTableGridModel(tableGridModel)) {
+				throw tableGridModel.error;
+			}
+			mutate(tableGridModel, blueprintSelection, blueprint);
 
 			chai.assert.isTrue(
 				tableDefinition.applyToDom(
 					tableGridModel,
 					tableNode,
 					blueprint,
-					stubFormat
+					format
 				)
 			);
+		});
+		assertDocumentAsJsonMl(documentId, expected);
 
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
+		return documentId;
+	}
 
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(tableNode),
-				serializedTable2
+	describe('Basics', () => {
+		it('can serialize a 1x1 table', () => {
+			runCreateTableTest(1, 1, true, {}, [
+				'table',
+				{ border: '1' },
+				['tr', ['td']],
+			]);
+		});
+
+		it('can serialize a 4x4 table', () => {
+			runCreateTableTest(4, 4, false, {}, [
+				'table',
+				{ border: '1' },
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+			]);
+		});
+
+		it('can serialize a 4x4 table with tbody', () => {
+			runCreateTableTest(4, 4, false, { useTbody: true }, [
+				'table',
+				{ border: '1' },
+				[
+					'tbody',
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
+			]);
+		});
+
+		it('can delete a row of a table without row containers', () => {
+			runEditTableTest(
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['th'], ['th'], ['th']],
+					['tr', ['th'], ['td'], ['td']],
+					['tr', ['th'], ['td'], ['td']],
+				],
+				{ useTh: true },
+				(gridModel) => {
+					gridModel.deleteRow(0);
+				},
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['th'], ['td'], ['td']],
+					['tr', ['th'], ['td'], ['td']],
+				]
 			);
 		});
 
 		it('can delete multiple rows when we have a row with merged cells', () => {
-			documentNode = new slimdom.Document();
-			coreDocument = new CoreDocument(documentNode);
-			blueprint = new Blueprint(coreDocument.dom);
-			const jsonIn = [
-				'table',
-				{ border: '1' },
+			runEditTableTest(
 				[
-					'thead',
-					['tr', ['th', { rowspan: '2' }, '0x0'], ['th', '0x1']],
-					['tr', ['th', '1x1']],
+					'table',
+					{ border: '1' },
+					[
+						'thead',
+						['tr', ['th', { rowspan: '2' }, '0x0'], ['th', '0x1']],
+						['tr', ['th', '1x1']],
+					],
+					['tr', ['td', '2x0'], ['td', '2x1']],
+					['tr', ['td', '3x0'], ['td', '3x1']],
+					['tr', ['td', '4x0'], ['td', '4x1']],
 				],
-				['tr', ['td', '2x0'], ['td', '2x1']],
-				['tr', ['td', '3x0'], ['td', '3x1']],
-				['tr', ['td', '4x0'], ['td', '4x1']],
-			];
-
-			coreDocument.dom.mutate(() =>
-				jsonMLMapper.parse(jsonIn, documentNode)
-			);
-			tableNode = documentNode.firstChild;
-			const tableDefinition = new XhtmlTableDefinition({
-				useThead: true,
-				useTh: true,
-			});
-			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), jsonIn);
-
-			const tableGridModel = tableDefinition.buildTableGridModel(
-				tableNode,
-				blueprint
-			);
-
-			tableGridModel.deleteRow(4);
-			tableGridModel.deleteRow(3);
-
-			const jsonOut = [
-				'table',
-				{ border: '1' },
+				{ useThead: true, useTh: true },
+				(tableGridModel) => {
+					tableGridModel.deleteRow(4);
+					tableGridModel.deleteRow(3);
+				},
 				[
-					'thead',
-					['tr', ['th', { rowspan: '2' }, '0x0'], ['th', '0x1']],
-					['tr', ['th', '1x1']],
-				],
-				['tr', ['td', '2x0'], ['td', '2x1']],
-			];
-
-			// to be sure that deleteRow function did not apply changes to the dom.
-			chai.assert.notDeepEqual(
-				jsonMLMapper.serialize(tableNode),
-				jsonOut
+					'table',
+					{ border: '1' },
+					[
+						'thead',
+						['tr', ['th', { rowspan: '2' }, '0x0'], ['th', '0x1']],
+						['tr', ['th', '1x1']],
+					],
+					['tr', ['td', '2x0'], ['td', '2x1']],
+				]
 			);
-
-			chai.assert.isTrue(
-				tableDefinition.applyToDom(
-					tableGridModel,
-					tableNode,
-					blueprint,
-					stubFormat
-				)
-			);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-
-			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), jsonOut);
 		});
 
 		it('can insert a row of a table with header column but row containers', () => {
-			documentNode = new slimdom.Document();
-			coreDocument = new CoreDocument(documentNode);
-			blueprint = new Blueprint(coreDocument.dom);
-			const jsonIn = [
-				'table',
-				{ border: '1' },
-				['tr', ['th'], ['td'], ['td']],
-				['tr', ['th'], ['td'], ['td']],
-			];
-
-			coreDocument.dom.mutate(() =>
-				jsonMLMapper.parse(jsonIn, documentNode)
-			);
-			tableNode = documentNode.firstChild;
-			tableDefinition = new XhtmlTableDefinition({ useTh: true });
-
-			chai.assert.deepEqual(jsonMLMapper.serialize(tableNode), jsonIn);
-
-			const tableGridModel = tableDefinition.buildTableGridModel(
-				tableNode,
-				blueprint
-			);
-
-			tableGridModel.insertRow(1, true);
-
-			const serializedTable2 = [
-				'table',
-				{ border: '1' },
-				['tr', ['th'], ['td'], ['td']],
-				['tr', ['th'], ['td'], ['td']],
-				['tr', ['th'], ['td'], ['td']],
-			];
-
-			// to be sure that insertRow function did not apply changes to the dom.
-			chai.assert.notDeepEqual(
-				jsonMLMapper.serialize(tableNode),
-				serializedTable2
-			);
-
-			chai.assert.isTrue(
-				tableDefinition.applyToDom(
-					tableGridModel,
-					tableNode,
-					blueprint,
-					stubFormat
-				)
-			);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(tableNode),
-				serializedTable2
+			runEditTableTest(
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['th'], ['td'], ['td']],
+					['tr', ['th'], ['td'], ['td']],
+				],
+				{ useTh: true },
+				(tableGridModel) => {
+					tableGridModel.insertRow(1, true);
+				},
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['th'], ['td'], ['td']],
+					['tr', ['th'], ['td'], ['td']],
+					['tr', ['th'], ['td'], ['td']],
+				]
 			);
 		});
 	});
 
 	describe('Headers', () => {
 		it('can serialize a 4x4 table with 1 header row', () => {
-			const tableGridModel = createTable(4, 4, true, documentNode);
-			chai.assert.isTrue(
-				tableDefinition.applyToDom(
-					tableGridModel,
-					tableNode,
-					blueprint,
-					stubFormat
-				)
-			);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
-				[
-					'table',
-					{ border: '1' },
-					['tr', ['th'], ['th'], ['th'], ['th']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-				]
-			);
+			runCreateTableTest(4, 4, true, {}, [
+				'table',
+				{ border: '1' },
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 header row (th based)', () => {
-			const tableGridModel = createTable(4, 4, true, documentNode);
-			const tableDefinition = new XhtmlTableDefinition({ useTh: true });
-			chai.assert.isTrue(
-				tableDefinition.applyToDom(
-					tableGridModel,
-					tableNode,
-					blueprint,
-					stubFormat
-				)
-			);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
-				[
-					'table',
-					{ border: '1' },
-					['tr', ['th'], ['th'], ['th'], ['th']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-				]
-			);
+			runCreateTableTest(4, 4, true, { useTh: true }, [
+				'table',
+				{ border: '1' },
+				['tr', ['th'], ['th'], ['th'], ['th']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 header row (thead based)', () => {
-			const tableGridModel = createTable(4, 4, true, documentNode);
-			const tableDefinition = new XhtmlTableDefinition({
-				useThead: true,
-			});
-			chai.assert.isTrue(
-				tableDefinition.applyToDom(
-					tableGridModel,
-					tableNode,
-					blueprint,
-					stubFormat
-				)
-			);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
-				[
-					'table',
-					{ border: '1' },
-					['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-				]
-			);
+			runCreateTableTest(4, 4, true, { useThead: true }, [
+				'table',
+				{ border: '1' },
+				['thead', ['tr', ['td'], ['td'], ['td'], ['td']]],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+			]);
 		});
 
 		it('can serialize a 4x4 table with 1 header row (th and thead based)', () => {
-			const tableGridModel = createTable(4, 4, true, documentNode);
-			const tableDefinition = new XhtmlTableDefinition({
-				useThead: true,
-				useTh: true,
-			});
-			chai.assert.isTrue(
-				tableDefinition.applyToDom(
-					tableGridModel,
-					tableNode,
-					blueprint,
-					stubFormat
-				)
-			);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
-				[
-					'table',
-					{ border: '1' },
-					['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-					['tr', ['td'], ['td'], ['td'], ['td']],
-				]
-			);
+			runCreateTableTest(4, 4, true, { useThead: true, useTh: true }, [
+				'table',
+				{ border: '1' },
+				['thead', ['tr', ['th'], ['th'], ['th'], ['th']]],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+				['tr', ['td'], ['td'], ['td'], ['td']],
+			]);
 		});
 	});
 
 	describe('Spanning cells', () => {
 		it('can serialize a 4x4 table with 1 column spanning cell', () => {
-			const tableGridModel = createTable(4, 4, false, documentNode);
-			const spanningCell = tableGridModel.getCellAtCoordinates(1, 1);
-			spanningCell.size.columns = 2;
+			runEditTableTest(
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
+				{},
+				(tableGridModel) => {
+					const spanningCell = tableGridModel.getCellAtCoordinates(
+						1,
+						1
+					) as TableCell;
+					spanningCell.size.columns = 2;
 
-			tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
-			tableGridModel.setCellAtCoordinates(spanningCell, 1, 2);
-
-			chai.assert.isTrue(
-				tableDefinition.applyToDom(
-					tableGridModel,
-					tableNode,
-					blueprint,
-					stubFormat
-				)
-			);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
+					tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
+					tableGridModel.setCellAtCoordinates(spanningCell, 1, 2);
+				},
 				[
 					'table',
 					{ border: '1' },
@@ -452,25 +302,26 @@ describe('XHTML tables: Grid model to XML', () => {
 		});
 
 		it('can serialize a 4x4 table with 1 row spanning cell', () => {
-			const tableGridModel = createTable(4, 4, false, documentNode);
-			const spanningCell = tableGridModel.getCellAtCoordinates(1, 1);
-			spanningCell.size.rows = 2;
+			runEditTableTest(
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
+				{},
+				(tableGridModel) => {
+					const spanningCell = tableGridModel.getCellAtCoordinates(
+						1,
+						1
+					) as TableCell;
+					spanningCell.size.rows = 2;
 
-			tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
-			tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
-
-			const success = tableDefinition.applyToDom(
-				tableGridModel,
-				tableNode,
-				blueprint,
-				stubFormat
-			);
-			chai.assert.isTrue(success);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
+					tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
+					tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
+				},
 				[
 					'table',
 					{ border: '1' },
@@ -483,29 +334,29 @@ describe('XHTML tables: Grid model to XML', () => {
 		});
 
 		it('can serialize a 4x4 table with 1 column and row spanning cell', () => {
-			const tableGridModel = createTable(4, 4, false, documentNode);
+			runEditTableTest(
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
+				{},
+				(tableGridModel) => {
+					const spanningCell = tableGridModel.getCellAtCoordinates(
+						1,
+						1
+					) as TableCell;
+					spanningCell.size.columns = 2;
+					spanningCell.size.rows = 2;
 
-			const spanningCell = tableGridModel.getCellAtCoordinates(1, 1);
-			spanningCell.size.columns = 2;
-			spanningCell.size.rows = 2;
-
-			tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
-			tableGridModel.setCellAtCoordinates(spanningCell, 1, 2);
-			tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
-			tableGridModel.setCellAtCoordinates(spanningCell, 2, 2);
-
-			const success = tableDefinition.applyToDom(
-				tableGridModel,
-				tableNode,
-				blueprint,
-				stubFormat
-			);
-			chai.assert.isTrue(success);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			chai.assert.deepEqual(
-				jsonMLMapper.serialize(documentNode.firstChild),
+					tableGridModel.setCellAtCoordinates(spanningCell, 1, 1);
+					tableGridModel.setCellAtCoordinates(spanningCell, 1, 2);
+					tableGridModel.setCellAtCoordinates(spanningCell, 2, 1);
+					tableGridModel.setCellAtCoordinates(spanningCell, 2, 2);
+				},
 				[
 					'table',
 					{ border: '1' },
@@ -525,112 +376,135 @@ describe('XHTML tables: Grid model to XML', () => {
 
 	describe('Selection', () => {
 		it('moves the selection over to new <th> elements with an empty original <td>', () => {
-			const tableGridModel = createTable(4, 4, true, documentNode);
+			const documentId = runEditTableTest(
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
+				{},
+				(tableGridModel, blueprintSelection) => {
+					const cellWithSelection =
+						tableGridModel.getCellAtCoordinates(0, 0) as TableCell;
+					const cellElement = cellWithSelection.element;
+					blueprintSelection.setStart(cellElement, 0);
+					blueprintSelection.collapse(true);
 
-			const cellWithSelection = tableGridModel.getCellAtCoordinates(0, 0);
-			const cellElement = cellWithSelection.element;
+					tableGridModel.increaseHeaderRowCount();
+				},
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['th'], ['th'], ['th'], ['th']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				]
+			);
 
-			const positionId = blueprint.registerPosition(
-				cellElement,
+			assertSelectionInDocument(
+				documentId,
+				xq`/table/tr/th`,
 				0,
-				false
+				xq`/table/tr/th`,
+				0
 			);
-
-			const success = tableDefinition.applyToDom(
-				tableGridModel,
-				tableNode,
-				blueprint,
-				stubFormat
-			);
-			chai.assert.isTrue(success);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			const position = blueprint.getPosition(positionId);
-			chai.assert.deepEqual(
-				position.container,
-				tableNode.firstChild.firstChild
-			);
-			chai.assert.equal(position.offset, 0);
 		});
 
 		it('moves the selection over to new <th> elements with nodes inside the original <td>', () => {
-			const tableGridModel = createTable(4, 4, true, documentNode);
+			const documentId = runEditTableTest(
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
+				{},
+				(tableGridModel, blueprintSelection, blueprint) => {
+					const cellWithSelection =
+						tableGridModel.getCellAtCoordinates(0, 0) as TableCell;
+					const cellElement = cellWithSelection.element;
+					const documentNode = blueprintQuery.getDocumentNode(
+						blueprint,
+						cellElement
+					);
+					blueprint.appendChild(
+						cellElement,
+						documentNode.createTextNode('bla')
+					);
+					blueprintSelection.setStart(cellElement, 0);
+					blueprintSelection.collapse(true);
 
-			const cellWithSelection = tableGridModel.getCellAtCoordinates(0, 0);
-			const cellElement = cellWithSelection.element;
-			blueprint.appendChild(
-				cellElement,
-				documentNode.createTextNode('bla')
+					tableGridModel.increaseHeaderRowCount();
+				},
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['th', 'bla'], ['th'], ['th'], ['th']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				]
 			);
 
-			const positionId = blueprint.registerPosition(
-				cellElement,
+			assertSelectionInDocument(
+				documentId,
+				xq`/table/tr/th`,
 				0,
-				false
+				xq`/table/tr/th`,
+				0
 			);
-
-			const success = tableDefinition.applyToDom(
-				tableGridModel,
-				tableNode,
-				blueprint,
-				stubFormat
-			);
-			chai.assert.isTrue(success);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			const position = blueprint.getPosition(positionId);
-			chai.assert.deepEqual(
-				position.container,
-				tableNode.firstChild.firstChild
-			);
-			chai.assert.equal(position.offset, 0);
 		});
 
 		it('moves the non-collapsed selection over to new <th> elements with nodes inside the original <td>', () => {
-			const tableGridModel = createTable(4, 4, true, documentNode);
+			const documentId = runEditTableTest(
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				],
+				{},
+				(tableGridModel, blueprintSelection, blueprint) => {
+					const cellWithSelection =
+						tableGridModel.getCellAtCoordinates(0, 0) as TableCell;
+					const cellElement = cellWithSelection.element;
+					const documentNode = blueprintQuery.getDocumentNode(
+						blueprint,
+						cellElement
+					);
+					blueprint.appendChild(
+						cellElement,
+						documentNode.createTextNode('bla')
+					);
+					blueprintSelection.selectNodeContents(cellElement);
 
-			const cellWithSelection = tableGridModel.getCellAtCoordinates(0, 0);
-			const cellElement = cellWithSelection.element;
-			blueprint.appendChild(
-				cellElement,
-				documentNode.createTextNode('bla')
+					tableGridModel.increaseHeaderRowCount();
+				},
+				[
+					'table',
+					{ border: '1' },
+					['tr', ['th', 'bla'], ['th'], ['th'], ['th']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+					['tr', ['td'], ['td'], ['td'], ['td']],
+				]
 			);
 
-			const startPositionId = blueprint.registerPosition(
-				cellElement,
+			assertSelectionInDocument(
+				documentId,
+				xq`/table/tr/th`,
 				0,
-				false
+				xq`/table/tr/th`,
+				1
 			);
-			const endPositionId = blueprint.registerPosition(
-				cellElement,
-				1,
-				false
-			);
-
-			const success = tableDefinition.applyToDom(
-				tableGridModel,
-				tableNode,
-				blueprint,
-				stubFormat
-			);
-			chai.assert.isTrue(success);
-
-			blueprint.realize();
-			indicesManager.getIndexSet().commitMerge();
-			const startPosition = blueprint.getPosition(startPositionId);
-			const endPosition = blueprint.getPosition(endPositionId);
-			chai.assert.deepEqual(
-				startPosition.container,
-				tableNode.firstChild.firstChild
-			);
-			chai.assert.equal(startPosition.offset, 0);
-			chai.assert.deepEqual(
-				endPosition.container,
-				tableNode.firstChild.firstChild
-			);
-			chai.assert.equal(endPosition.offset, 1);
 		});
 	});
 });

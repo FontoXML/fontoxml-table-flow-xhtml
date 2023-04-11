@@ -11,16 +11,9 @@ import {
 
 describe('XHTML tables: Column Width', () => {
 	let environment: UnitTestEnvironment;
-
 	beforeEach(() => {
 		environment = new UnitTestEnvironment();
-
-		environment.synthesizer.setCompleteStructureImplementation(() => true);
-
-		environment.validator.setCanContainImplementation(() => true);
-		environment.validator.setValidateDownImplementation(() => []);
 	});
-
 	afterEach(() => {
 		environment.destroy();
 	});
