@@ -97,14 +97,13 @@ class XhtmlTableDefinition extends TableDefinition {
 			useTh = true;
 		}
 
-		const namespaceURI =
-			options.table && options.table.namespaceURI
-				? options.table.namespaceURI
-				: '';
+		const namespaceURI = options.table?.namespaceURI
+			? options.table.namespaceURI
+			: '';
 
 		const tablePartSelectors = {
 			table: xq`${ensureXQExpression(`self::Q{${namespaceURI}}table`)}[${
-				options.table && options.table.tableFilterSelector
+				options.table?.tableFilterSelector
 					? ensureXQExpression(options.table.tableFilterSelector)
 					: xq`true()`
 			}]`,
@@ -195,7 +194,7 @@ class XhtmlTableDefinition extends TableDefinition {
 					? createAddHeaderContainerNodeStrategy(
 							namespaceURI,
 							'thead'
-					  )
+						)
 					: createRemoveHeaderContainerNodeStrategy(),
 				useTbody
 					? createAddBodyContainerNodeStrategy(namespaceURI, 'tbody')
@@ -204,10 +203,10 @@ class XhtmlTableDefinition extends TableDefinition {
 				shouldCreateColumnSpecificationNodes
 					? createRemoveColgroupNodeStrategy(
 							tablePartSelectors.columnSpecificationGroup
-					  )
+						)
 					: () => {
 							/* no-op*/
-					  },
+						},
 			],
 
 			normalizeCellNodeStrategies: [
@@ -229,7 +228,7 @@ class XhtmlTableDefinition extends TableDefinition {
 							namespaceURI,
 							'col',
 							xq`./*[${thead} or ${tbody} or ${tr}]`
-					  )
+						)
 					: undefined,
 
 			// Specification
@@ -239,7 +238,7 @@ class XhtmlTableDefinition extends TableDefinition {
 							'borders',
 							xq`./@border = "1"`
 						),
-				  ]
+					]
 				: [],
 
 			getCellSpecificationStrategies: [
@@ -262,7 +261,7 @@ class XhtmlTableDefinition extends TableDefinition {
 								'rowSeparator',
 								xq`./ancestor::*[${table}][1]/@border = "1"`
 							),
-					  ]
+						]
 					: []),
 			],
 
@@ -276,7 +275,7 @@ class XhtmlTableDefinition extends TableDefinition {
 							'1',
 							'0'
 						),
-				  ]
+					]
 				: [],
 
 			setCellNodeAttributeStrategies: [
@@ -330,7 +329,7 @@ class XhtmlTableDefinition extends TableDefinition {
 				return proportion !== 0
 					? `${proportion}${
 							columnWidthType === 'percentual' ? '%' : '*'
-					  }`
+						}`
 					: '';
 			},
 			divideByTwoStrategy(width: string) {
@@ -348,7 +347,7 @@ class XhtmlTableDefinition extends TableDefinition {
 				return proportion !== 0
 					? `${proportion / 2}${
 							columnWidthType === 'percentual' ? '%' : '*'
-					  }`
+						}`
 					: '';
 			},
 			widthsToFractionsStrategy(widths: string[]): number[] {

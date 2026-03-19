@@ -115,10 +115,9 @@ export default function configureAsXhtmlTableElements(
 	const priority = options.priority;
 
 	// Title (caption)
-	const namespaceURI =
-		options.table && options.table.namespaceURI
-			? options.table.namespaceURI
-			: '';
+	const namespaceURI = options.table?.namespaceURI
+		? options.table.namespaceURI
+		: '';
 	configureAsBlock(
 		sxModule,
 		ensureXQExpression(

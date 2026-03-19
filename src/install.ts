@@ -78,8 +78,7 @@ export default function install(): void {
 			// Whilst we pass all cellNodeIds as parameter, we are only going to use the first one,
 			// because we only need one cell to do the check.
 			const cellNode =
-				stepData.cellNodeIds &&
-				stepData.cellNodeIds.length &&
+				stepData.cellNodeIds?.length &&
 				documentsManager.getNodeById(stepData.cellNodeIds[0]);
 
 			if (
